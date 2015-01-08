@@ -13,7 +13,7 @@ To do's
 - [x] Pages
 - [x] Tags
 - [x] Pagination to index
-- [ ] Pagination to tags
+- [x] Pagination to tags
 - [ ] Date based archives
 - [ ] Pagination for archives
 - [ ] Github pages uploader
