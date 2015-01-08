@@ -22,12 +22,12 @@ To do's
 - [ ] Google CSE integration
 
 - [ ] Cli post creator
-	-[ ] New posts
-	-[ ] Edit posts
-	-[ ] Delete posts
+	- [ ] New posts
+	- [ ] Edit posts
+	- [ ] Delete posts
 
 - [ ] Visual post creator
-	-[ ] New posts
-	-[ ] Edit posts
-	-[ ] Delete posts
-	-[ ] markdown preview
+	- [ ] New posts
+	- [ ] Edit posts
+	- [ ] Delete posts
+	- [ ] markdown preview
