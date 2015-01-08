@@ -14,11 +14,13 @@ contents = FlatPages(app)
 #Home page
 @app.route('/')
 def index():
+	#Get posts and sort by timestamp
 	posts = sorted([post for post in contents
 				if post.meta.get('type', '') == 'post'], reverse = True,
-					key = lambda x: x.meta['timestamp'])[:config.SITE['limit']]
+					key = lambda x: x.meta.get('timestamp', 0))
 
-	return render_template('index.html', posts=posts)
+	#Return posts as per settings 'limit'
+	return render_template('index.html', posts=posts[:config.SITE['limit']])
 
 #For pagination
 @app.route('/<int:page_no>/')
@@ -57,11 +59,19 @@ def posts(slug):
 	return render_template('page.html', page=content[0])
 
 @app.route('/tags/<string:tag>/')
-def tags(tag):
+def tag(tag):
 	posts = [post for post in contents
 				if tag in post.meta.get('tags', [])]
 
-	return render_template('tags.html', tag = tag, posts=posts)
+	return render_template('tag.html', tag = tag, posts=posts)
+
+@app.route('/tags/')
+def tags():
+	tags = [tag for post in contents
+				for tag in post.meta.get('tags', [])]
+	tags = list(set(tags))
+
+	return render_template('tags.html', tags = tags)
 
 if __name__ == '__main__':
 	app.run()
