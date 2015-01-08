@@ -2,7 +2,7 @@
 
 {% block content %}
 	<h1>All tags</h1>
-	{% for tag in tags %}
-		<h1>{{ tag }}</h1>
+	{% for tag, occ in tags.items() %}
+		<h1>{{ tag }} - {{ occ }}</</h1>
 	{% endfor %}
 {% endblock %}
