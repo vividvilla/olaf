@@ -14,8 +14,8 @@ To do's
 - [x] Tags
 - [x] Pagination to index
 - [x] Pagination to tags
-- [ ] Date based archives
-- [ ] Pagination for archives
+- [x] Date based archives
+- [x] Pagination for archives
 - [ ] Github pages uploader
 - [ ] Disqus comments
 - [ ] Bsic theming
