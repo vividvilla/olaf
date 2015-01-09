@@ -14,10 +14,12 @@ app.config.from_object('config')
 contents = FlatPages(app)
 
 def timestamp_tostring(timestamp, format):
+	#Converts unix timestamp to date string with given format
 	return datetime.datetime.fromtimestamp(
 			int(timestamp)).strftime(format)
 
 def date_tostring(year, month, day = 1, format = '%d %b %Y'):
+	#Returns date string for given year, month and day with given format
 	date = datetime.datetime(year, month, day)
 	return date.strftime(format)
 
@@ -37,6 +39,7 @@ def get_posts(**filters):
 	'abort'		: boolean	:: Aborts with 404 error if no posts in
 								filtered results (default: False)
 	"""
+
 	posts = [post for post in contents
 				if post.meta.get('type') == 'post']
 
@@ -83,18 +86,15 @@ def get_posts(**filters):
 	return posts
 
 
-"""
-Views
-"""
+# All Views
 
-#Home page
 @app.route('/')
 def index():
 	return render_template('index.html', posts=get_posts(page_no = 1))
 
-#For pagination
 @app.route('/pages/<int:page_no>/')
 def pagination(page_no):
+	#Pagination to homepage
 	return render_template('index.html',
 			posts=get_posts(page_no = page_no), abort = True)
 
@@ -117,6 +117,9 @@ def posts(slug):
 
 	return render_template('page.html', page=content[0])
 
+
+# Tag views
+
 @app.route('/tags/')
 def tags():
 	tags = [tag for post in contents
@@ -135,18 +138,19 @@ def tag_pages(tag, page_no):
 	return render_template('tag.html', tag=tag, page_no=page_no,
 			posts=get_posts(tag=tag, page_no=page_no, abort=True))
 
+# Archive views
+
 @app.route('/archive/')
 def archive():
 	pass
 
 @app.route('/archive/<int:year>/')
 def yearly_archive(year):
-	print year
 	return render_template('tag.html', tag=year,
 		posts=get_posts(year=year, page_no=1, abort=True))
 
 @app.route('/archive/<int:year>/pages/<int:page_no>/')
-def yearly_archive_pagination(year, page_no):
+def yearly_archive_pages(year, page_no):
 	return render_template('tag.html', tag=year,
 		posts=get_posts(year=year, page_no=page_no, abort=True))
 
@@ -157,7 +161,7 @@ def monthly_archive(year, month):
 		posts=get_posts(year=year, page_no=1, abort=True))
 
 @app.route('/archive/<int:year>/<int:month>/pages/<int:page_no>/')
-def monthly_archive_pagination(year, month, page_no):
+def monthly_archive_pages(year, month, page_no):
 	date_string = date_tostring(year, month, format='%b %Y')
 	return render_template('tag.html', tag=date_string, month=month,
 		posts=get_posts(year=year, page_no=page_no, abort=True))
