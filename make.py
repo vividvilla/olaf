@@ -93,7 +93,7 @@ def index():
 	return render_template('index.html', posts=get_posts(page_no = 1))
 
 #For pagination
-@app.route('/<int:page_no>/')
+@app.route('/pages/<int:page_no>/')
 def pagination(page_no):
 	return render_template('index.html',
 			posts=get_posts(page_no = page_no), abort = True)
@@ -130,25 +130,37 @@ def tag(tag):
 	return render_template('tag.html', tag=tag,
 		posts=get_posts(tag=tag, page_no=1, abort=True))
 
-@app.route('/tags/<string:tag>/<int:page_no>/')
+@app.route('/tags/<string:tag>/pages/<int:page_no>/')
 def tag_pages(tag, page_no):
 	return render_template('tag.html', tag=tag, page_no=page_no,
 			posts=get_posts(tag=tag, page_no=page_no, abort=True))
 
 @app.route('/archive/')
-def archives(year):
+def archive():
 	pass
 
 @app.route('/archive/<int:year>/')
-def yearly_archives(year):
-	return render_template('tag.html', date=year,
+def yearly_archive(year):
+	print year
+	return render_template('tag.html', tag=year,
 		posts=get_posts(year=year, page_no=1, abort=True))
 
-@app.route('/archive/<int:year>/<int:month>')
-def monthly_archives(year, month):
+@app.route('/archive/<int:year>/pages/<int:page_no>/')
+def yearly_archive_pagination(year, page_no):
+	return render_template('tag.html', tag=year,
+		posts=get_posts(year=year, page_no=page_no, abort=True))
+
+@app.route('/archive/<int:year>/<int:month>/')
+def monthly_archive(year, month):
 	date_string = date_tostring(year, month, format='%b %Y')
-	return render_template('tag.html', date=date_string, month=month
+	return render_template('tag.html', tag=date_string, month=month,
 		posts=get_posts(year=year, page_no=1, abort=True))
+
+@app.route('/archive/<int:year>/<int:month>/pages/<int:page_no>/')
+def monthly_archive_pagination(year, month, page_no):
+	date_string = date_tostring(year, month, format='%b %Y')
+	return render_template('tag.html', tag=date_string, month=month,
+		posts=get_posts(year=year, page_no=page_no, abort=True))
 
 if __name__ == '__main__':
 	app.run()
