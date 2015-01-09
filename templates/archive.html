@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h1>Archives</h1>
+	<h2>Yearly</h2>
+	{% for year, occur in yearly %}
+		<h4>{{ year }} - {{ occur }}</h4>
+	{% endfor %}
+
+	{% for datestring, date, occur in monthly %}
+		<h4>{{ datestring }} - {{ occur }} - {{ date }}</h4>
+	{% endfor %}
+{% endblock %}
