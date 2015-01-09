@@ -1,5 +1,5 @@
 import datetime
-from collections import Counter
+from collections import Counter, OrderedDict
 
 from flask import Flask
 from flask import render_template, abort
@@ -125,7 +125,6 @@ def tags():
 	tags = [tag for post in contents
 				for tag in post.meta.get('tags', [])]
 	tags = dict(Counter(tags)) #Count tag occurances
-	print tags
 	return render_template('tags.html', tags = tags)
 
 @app.route('/tags/<string:tag>/')
@@ -142,7 +141,23 @@ def tag_pages(tag, page_no):
 
 @app.route('/archive/')
 def archive():
-	pass
+	# Get all posts dates in format (year, month)
+	dates = [(timestamp_tostring(post.meta.get('timestamp'), '%Y'),
+			timestamp_tostring(post.meta.get('timestamp'), '%m'))
+			for post in contents if post.meta.get('timestamp')]
+
+	# Get sorted yearly archive lists ex: [(year, no_occur), ...]
+	yearly = sorted(Counter([date[0] for date in dates]).items(), reverse=True)
+
+	# Get sorted yearly and monthly archive lists [((year, month), no_occur), ...]
+	monthly = sorted(Counter([date for date in dates]).items(), reverse=True)
+
+	# Get sorted yearly and monthly formatted archive lists
+	# [('date string', (year, month), no_occur), ....]
+	monthly = [(date_tostring(int(date[0][0]), int(date[0][1]),
+		format='%b %Y'), date[0], date[1]) for date in monthly]
+
+	return render_template('archive.html', yearly=yearly, monthly=monthly)
 
 @app.route('/archive/<int:year>/')
 def yearly_archive(year):
