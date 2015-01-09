@@ -1,3 +1,4 @@
+import datetime
 from collections import Counter
 
 from flask import Flask
@@ -11,6 +12,14 @@ app.config.from_object('config')
 
 #App module initialize
 contents = FlatPages(app)
+
+def timestamp_tostring(timestamp, format):
+	return datetime.datetime.fromtimestamp(
+			int(timestamp)).strftime(format)
+
+def date_tostring(year, month, day = 1, format = '%d %b %Y'):
+	date = datetime.datetime(year, month, day)
+	return date.strftime(format)
 
 def get_posts(**filters):
 	"""
@@ -45,6 +54,18 @@ def get_posts(**filters):
 		posts = [post for post in posts
 					if tag in post.meta.get('tags', [])]
 
+	#Filter based on year and month
+	year = filters.get('year')
+	if(year):
+		posts = [post for post in posts if int(timestamp_tostring(
+						post.meta.get('timestamp'), '%Y')) == year]
+
+		#Filter by month only if year is given
+		month = filters.get('month')
+		if month:
+			posts = [post for post in posts if int(timestamp_tostring(
+							post.meta.get('timestamp'), '%m')) == month]
+
 	#Filter based on page number and pagination limit
 	page_no = filters.get('page_no')
 	limit = filters.get('limit') or config.SITE['limit']
@@ -61,7 +82,10 @@ def get_posts(**filters):
 
 	return posts
 
-#Routes
+
+"""
+Views
+"""
 
 #Home page
 @app.route('/')
@@ -110,6 +134,21 @@ def tag(tag):
 def tag_pages(tag, page_no):
 	return render_template('tag.html', tag=tag, page_no=page_no,
 			posts=get_posts(tag=tag, page_no=page_no, abort=True))
+
+@app.route('/archive/')
+def archives(year):
+	pass
+
+@app.route('/archive/<int:year>/')
+def yearly_archives(year):
+	return render_template('tag.html', date=year,
+		posts=get_posts(year=year, page_no=1, abort=True))
+
+@app.route('/archive/<int:year>/<int:month>')
+def monthly_archives(year, month):
+	date_string = date_tostring(year, month, format='%b %Y')
+	return render_template('tag.html', date=date_string, month=month
+		posts=get_posts(year=year, page_no=1, abort=True))
 
 if __name__ == '__main__':
 	app.run()
