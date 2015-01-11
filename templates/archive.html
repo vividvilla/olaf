@@ -3,11 +3,15 @@
 {% block content %}
 	<h1>Archives</h1>
 	<h2>Yearly</h2>
-	{% for year, occur in yearly %}
-		<h4>{{ year }} - {{ occur }}</h4>
-	{% endfor %}
+	<ul>
+		{% for year, occur in yearly %}
+			<li><a href="{{ url_for('yearly_archive', year=year) }}">{{ year }} - {{ occur }}</a></li>
+		{% endfor %}
+	</ul>
 
-	{% for datestring, date, occur in monthly %}
-		<h4>{{ datestring }} - {{ occur }} - {{ date }}</h4>
-	{% endfor %}
+	<ul>
+		{% for datestring, date, occur in monthly %}
+				<li><a href="{{ url_for('monthly_archive', year=date[0], month=date[1]) }}">{{ datestring }} - {{ occur }} {{ date }}</a></li>
+		{% endfor %}
+	</ul>
 {% endblock %}

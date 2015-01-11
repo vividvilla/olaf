@@ -177,7 +177,7 @@ def archive():
 	# Get sorted yearly and monthly formatted archive lists
 	# [('date string', (year, month), no_occur), ....]
 	monthly = [(date_tostring(int(date[0][0]), int(date[0][1]),
-		format='%b %Y'), date[0], date[1]) for date in monthly]
+		format='%b %Y'), (int(date[0][0]), int(date[0][1])), date[1]) for date in monthly]
 
 	return render_template('archive.html', yearly=yearly, monthly=monthly)
 
