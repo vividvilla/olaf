@@ -7,7 +7,7 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<title>{{ config.SITE.title }}</title>
-		<meta name="description" content="{{ config.SITE.description }}">
+		<meta itemprop="description" name="description" content="{{ config.SITE.description }}">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.min.css') }}">
@@ -15,12 +15,28 @@
 
 		<script src="{{ url_for('static', filename='js/vendor/modernizr-2.6.2.min.js') }}"></script>
 	</head>
-	<body>
-
-		{% block content %}
-			Post content goes here
-		{% endblock %}
-
+	<body itemscope="itemscope" itemtype="http://schema.org/WebPage">
+		<header id="header" class="header">
+			<div class="title">
+				<a href="{{ url_for('posts', slug='about') }}">{{ config.SITE.name }}</a>'s super blog
+			</div>
+			<nav class="nav">
+				<ul>
+					<li><a href="/">blog</a></li>
+					<li><a href="{{ url_for('tags') }}">tags</a></li>
+					<li><a href="{{ url_for('archive') }}">archive</a></li>
+					<li><a href="{{ url_for('posts', slug='about') }}">about</a></li>
+				</ul>
+			</nav>
+		</header><!-- /header -->
+		<main class="container">
+			{% block content %}
+				Post content goes here
+			{% endblock %}
+		</main><!-- /main -->
+		<footer>
+			&#169; Copyright 2014 by {{ config.SITE.name }}
+		</footer><!-- /footer -->
 		<script src="{{ url_for('static', filename='js/main.js') }}"></script>
 
 		<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->

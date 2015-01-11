@@ -2,7 +2,9 @@
 
 {% block content %}
 	<h1>All tags</h1>
-	{% for tag, occ in tags.items() %}
-		<h1>{{ tag }} - {{ occ }}</</h1>
-	{% endfor %}
+	<ul>
+		{% for tag, occ in tags.items() %}
+			<li><a href="{{ url_for('tag_page', tag=tag ) }}">{{ tag }} - {{ occ }}</a></li>
+		{% endfor %}
+	</ul>
 {% endblock %}

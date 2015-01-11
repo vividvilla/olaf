@@ -7,5 +7,6 @@ FLATPAGES_EXTENSION = '.md'
 SITE = {
 	'title': 'My super blog',
 	'description': 'hmm..thats it',
+	'name': 'Vivek',
 	'limit': 1
 }

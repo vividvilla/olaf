@@ -16,9 +16,12 @@ To do's
 - [x] Pagination to tags
 - [x] Date based archives
 - [x] Pagination for archives
+- [ ] Basic theming
+- [ ] RSS feeds
+- [ ] XML sitemap
 - [ ] Github pages uploader
+- [ ] Github custom domain adder
 - [ ] Disqus comments
-- [ ] Bsic theming
 - [ ] Google CSE integration
 
 - [ ] Cli post creator
