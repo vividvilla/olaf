@@ -4,8 +4,8 @@ from collections import Counter, OrderedDict
 
 from flask import Flask
 from flask_frozen import Freezer
-from flask import render_template, abort
 from flask_flatpages import FlatPages
+from flask import render_template, abort, redirect, url_for
 
 import config
 
@@ -102,9 +102,15 @@ def index():
 @app.route('/pages/<int:page_no>/')
 def pagination(page_no):
 	#Pagination to homepage
+
+	# Redirect if it is a first page
+	if page_no == 1:
+		return redirect(url_for('index'))
+
 	posts, max_page = get_posts(page_no = page_no, abort = True)
 	return render_template('index.html', page_no = page_no,
-			posts=posts, next_page = (max_page > page_no))
+			posts=posts, next_page=(max_page > page_no),
+			previous_page=(page_no > 1))
 
 @app.route('/<path:slug>/')
 def posts(slug):
@@ -136,7 +142,7 @@ def tags():
 	return render_template('tags.html', tags = tags)
 
 @app.route('/tags/<string:tag>/')
-def tag(tag):
+def tag_page(tag):
 	posts, max_page = get_posts(tag=tag, page_no=1, abort=True)
 	return render_template('tag.html', tag=tag, page_no=1,
 			posts=posts, next_page=(max_page > 1))
@@ -144,8 +150,14 @@ def tag(tag):
 @app.route('/tags/<string:tag>/pages/<int:page_no>/')
 def tag_pages(tag, page_no):
 	posts, max_page = get_posts(tag=tag, page_no=page_no, abort=True)
-	return render_template('tag.html', tag=tag, page_no=page_no,
-			posts=posts, next_page=(max_page > page_no))
+
+	# Redirect if it is a first page
+	if page_no == 1:
+		return redirect(url_for('tag_page', tag=tag))
+
+	return render_template('tag.html', tag=tag, posts=posts,
+			page_no=page_no, next_page=(max_page > page_no),
+			previous_page=(page_no > 1))
 
 # Archive views
 
