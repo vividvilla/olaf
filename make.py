@@ -1,7 +1,9 @@
+import sys
 import datetime
 from collections import Counter, OrderedDict
 
 from flask import Flask
+from flask_frozen import Freezer
 from flask import render_template, abort
 from flask_flatpages import FlatPages
 
@@ -12,6 +14,7 @@ app.config.from_object('config')
 
 #App module initialize
 contents = FlatPages(app)
+freezer = Freezer(app)
 
 def timestamp_tostring(timestamp, format):
 	#Converts unix timestamp to date string with given format
@@ -182,4 +185,7 @@ def monthly_archive_pages(year, month, page_no):
 		posts=get_posts(year=year, page_no=page_no, abort=True))
 
 if __name__ == '__main__':
-	app.run()
+	if len(sys.argv) > 1 and sys.argv[1] == "build":
+		freezer.freeze()
+	else:
+		app.run()

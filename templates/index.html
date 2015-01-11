@@ -1,8 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
+	<ul>
 	{% for post in posts %}
-		<h1>{{ post.title }}</h1>
-		{{ post.path }}
+		<li><a href="{{ url_for('posts', slug=post.path[11::]) }}">{{ post.title }}</a></li>
 	{% endfor %}
+	</ul>
+	{% if not page_no %}
+		<a href="{{ url_for('pagination', page_no=(page_no + 1)) }}">Next page</a>
+	{% endif %}
 {% endblock %}
