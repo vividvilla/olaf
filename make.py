@@ -184,30 +184,40 @@ def archive():
 @app.route('/archive/<int:year>/')
 def yearly_archive(year):
 	posts, max_page = get_posts(year=year, page_no=1, abort=True)
-	return render_template('tag.html', tag=year, page_no=1,
-		posts=posts, next_page=(max_page > 1))
+	return render_template('archive_page.html', tag=year, page_no=1,
+			year=year, posts=posts, next_page=(max_page > 1))
 
 @app.route('/archive/<int:year>/pages/<int:page_no>/')
 def yearly_archive_pages(year, page_no):
+	# Redirect if it is a first page
+	if page_no == 1:
+		return redirect(url_for('yearly_archive', year=year))
+
 	posts, max_page = get_posts(year=year, page_no=page_no, abort=True)
-	return render_template('tag.html', tag=year, page_no=page_no,
-		posts=posts, next_page=(max_page > page_no))
+	return render_template('archive_page.html', tag=year, page_no=page_no,
+			year=year, posts=posts, next_page=(max_page > page_no),
+			previous_page=(page_no > 1))
 
 @app.route('/archive/<int:year>/<int:month>/')
 def monthly_archive(year, month):
 	date_string = date_tostring(year, month, format='%b %Y')
 	posts, max_page = get_posts(year=year, month=month,
 			page_no=1, abort=True)
-	return render_template('tag.html', tag=date_string, month=month,
-			page_no=1, posts=posts, next_page=(max_page > 1))
+	return render_template('archive_page.html', tag=date_string, year=year,
+			month=month, page_no=1, posts=posts, next_page=(max_page > 1))
 
 @app.route('/archive/<int:year>/<int:month>/pages/<int:page_no>/')
 def monthly_archive_pages(year, month, page_no):
+	# Redirect if it is a first page
+	if page_no == 1:
+		return redirect(url_for('monthly_archive', year=year, month=month))
+
 	date_string = date_tostring(year, month, format='%b %Y')
 	posts, max_page = get_posts(year=year, month=month,
 			page_no=page_no, abort=True)
-	return render_template('tag.html', tag=date_string, month=month,
-			page_no=page_no, posts=posts, next_page=(max_page > page_no))
+	return render_template('archive_page.html', tag=date_string, month=month,
+			year=year, page_no=page_no, posts=posts, next_page=(max_page > page_no),
+			previous_page=(page_no > 1))
 
 if __name__ == '__main__':
 	if len(sys.argv) > 1 and sys.argv[1] == "build":
