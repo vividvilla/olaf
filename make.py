@@ -75,8 +75,10 @@ def get_posts(**filters):
 	#Filter based on page number and pagination limit
 	page_no = filters.get('page_no')
 	limit = filters.get('limit') or config.SITE['limit']
+	max_page = 0;
 	if(page_no):
 		paginated = [posts[n:n+limit] for n in range(0, len(posts), limit)]
+		max_page = len(paginated)
 		try:
 			posts = paginated[page_no - 1]
 		except IndexError:
@@ -86,20 +88,23 @@ def get_posts(**filters):
 	if(not posts and filters.get('abort') == True):
 		abort(404)
 
-	return posts
+	return (posts, max_page)
 
 
 # All Views
 
 @app.route('/')
 def index():
-	return render_template('index.html', posts=get_posts(page_no = 1))
+	posts, max_page = get_posts(page_no = 1)
+	return render_template('index.html', page_no = 1,
+		posts = posts, next_page = (max_page > 1))
 
 @app.route('/pages/<int:page_no>/')
 def pagination(page_no):
 	#Pagination to homepage
-	return render_template('index.html',
-			posts=get_posts(page_no = page_no), abort = True)
+	posts, max_page = get_posts(page_no = page_no, abort = True)
+	return render_template('index.html', page_no = page_no,
+			posts=posts, next_page = (max_page > page_no))
 
 @app.route('/<path:slug>/')
 def posts(slug):
@@ -132,13 +137,15 @@ def tags():
 
 @app.route('/tags/<string:tag>/')
 def tag(tag):
-	return render_template('tag.html', tag=tag,
-		posts=get_posts(tag=tag, page_no=1, abort=True))
+	posts, max_page = get_posts(tag=tag, page_no=1, abort=True)
+	return render_template('tag.html', tag=tag, page_no=1,
+			posts=posts, next_page=(max_page > 1))
 
 @app.route('/tags/<string:tag>/pages/<int:page_no>/')
 def tag_pages(tag, page_no):
+	posts, max_page = get_posts(tag=tag, page_no=page_no, abort=True)
 	return render_template('tag.html', tag=tag, page_no=page_no,
-			posts=get_posts(tag=tag, page_no=page_no, abort=True))
+			posts=posts, next_page=(max_page > page_no))
 
 # Archive views
 
@@ -164,25 +171,31 @@ def archive():
 
 @app.route('/archive/<int:year>/')
 def yearly_archive(year):
-	return render_template('tag.html', tag=year,
-		posts=get_posts(year=year, page_no=1, abort=True))
+	posts, max_page = get_posts(year=year, page_no=1, abort=True)
+	return render_template('tag.html', tag=year, page_no=1,
+		posts=posts, next_page=(max_page > 1))
 
 @app.route('/archive/<int:year>/pages/<int:page_no>/')
 def yearly_archive_pages(year, page_no):
-	return render_template('tag.html', tag=year,
-		posts=get_posts(year=year, page_no=page_no, abort=True))
+	posts, max_page = get_posts(year=year, page_no=page_no, abort=True)
+	return render_template('tag.html', tag=year, page_no=page_no,
+		posts=posts, next_page=(max_page > page_no))
 
 @app.route('/archive/<int:year>/<int:month>/')
 def monthly_archive(year, month):
 	date_string = date_tostring(year, month, format='%b %Y')
+	posts, max_page = get_posts(year=year, month=month,
+			page_no=1, abort=True)
 	return render_template('tag.html', tag=date_string, month=month,
-		posts=get_posts(year=year, page_no=1, abort=True))
+			page_no=1, posts=posts, next_page=(max_page > 1))
 
 @app.route('/archive/<int:year>/<int:month>/pages/<int:page_no>/')
 def monthly_archive_pages(year, month, page_no):
 	date_string = date_tostring(year, month, format='%b %Y')
+	posts, max_page = get_posts(year=year, month=month,
+			page_no=page_no, abort=True)
 	return render_template('tag.html', tag=date_string, month=month,
-		posts=get_posts(year=year, page_no=page_no, abort=True))
+			page_no=page_no, posts=posts, next_page=(max_page > page_no))
 
 if __name__ == '__main__':
 	if len(sys.argv) > 1 and sys.argv[1] == "build":

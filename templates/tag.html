@@ -4,6 +4,13 @@
 	<h1>Articles tagged - {{ tag }}</h1>
 	{% for post in posts %}
 		<h1>{{ post.title }}</h1>
-		{{ post.path }}
 	{% endfor %}
+	{% if next_page %}
+		<a href="{{ url_for('tag_pages', page_no=page_no+1, tag=tag) }}">Next page</a>
+	{% endif %}
+	{% if page_no == 2 %}
+		<a href="{{ url_for('tag', tag=tag) }}">Previous page</a>
+	{% elif page_no and page_no != 1 %}
+		<a href="{{ url_for('tag_pages', page_no=page_no-1, tag=tag) }}">Previous page</a>
+	{% endif %}
 {% endblock %}

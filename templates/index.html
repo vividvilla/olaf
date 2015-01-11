@@ -6,7 +6,12 @@
 		<li><a href="{{ url_for('posts', slug=post.path[11::]) }}">{{ post.title }}</a></li>
 	{% endfor %}
 	</ul>
-	{% if not page_no %}
-		<a href="{{ url_for('pagination', page_no=(page_no + 1)) }}">Next page</a>
+	{% if next_page %}
+		<a href="{{ url_for('pagination', page_no=page_no+1) }}">Next page</a>
+	{% endif %}
+	{% if page_no == 2 %}
+		<a href="{{ url_for('index') }}">Previous page</a>
+	{% elif page_no and page_no != 1 %}
+		<a href="{{ url_for('pagination', page_no=page_no-1) }}">Previous page</a>
 	{% endif %}
 {% endblock %}
