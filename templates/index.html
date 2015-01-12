@@ -1,11 +1,19 @@
 {% extends "base.html" %}
 
+{% block pageclass %} home {% endblock %}
 {% block content %}
-	<ul>
 	{% for post in posts %}
-		<li><a href="{{ url_for('posts', slug=post.path[11::]) }}">{{ post.title }}</a></li>
+		<div class="row">
+			<div class="post-date three columns">
+				{{ timestamp_tostring(post.meta.timestamp, '%b %d, %Y').replace(" 0", " ") }}
+			</div>
+			<div class="post-description nine columns">
+				<a class="title" href="{{ url_for('posts', slug=post.path[11::]) }}">{{ post.title }}</a>
+				<span class="summary">- {{ post.meta.get('summary', '') }}</span>
+			</div>
+		</div>
 	{% endfor %}
-	</ul>
+
 	{% if next_page %}
 		<a href="{{ url_for('pagination', page_no=page_no+1, tag=tag) }}">Next page</a>
 	{% endif %}

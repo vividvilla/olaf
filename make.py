@@ -26,6 +26,10 @@ def date_tostring(year, month, day = 1, format = '%d %b %Y'):
 	date = datetime.datetime(year, month, day)
 	return date.strftime(format)
 
+#Register utility functions to be used in jinja2 templates
+app.jinja_env.globals.update(timestamp_tostring=timestamp_tostring,
+			date_tostring=date_tostring)
+
 def get_posts(**filters):
 	"""
 	Filters posts

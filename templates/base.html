@@ -10,18 +10,24 @@
 		<meta itemprop="description" name="description" content="{{ config.SITE.description }}">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.min.css') }}">
+		<!-- Fonts -->
+		<link href='http://fonts.googleapis.com/css?family=Merriweather:400italic,400,300italic,700' rel='stylesheet' type='text/css'>
+
+		<!-- Stylesheets -->
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}">
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/skeleton.css') }}">
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
 
+		<!-- Js files -->
 		<script src="{{ url_for('static', filename='js/vendor/modernizr-2.6.2.min.js') }}"></script>
 	</head>
-	<body itemscope="itemscope" itemtype="http://schema.org/WebPage">
-		<header id="header" class="header">
-			<div class="title">
+	<body itemscope="itemscope" itemtype="http://schema.org/WebPage" class="container">
+		<header id="header" class="header row">
+			<div class="title five columns">
 				<a href="{{ url_for('posts', slug='about') }}">{{ config.SITE.name }}</a>'s super blog
 			</div>
-			<nav class="nav">
-				<ul>
+			<nav class="nav seven columns">
+				<ul class="flat">
 					<li><a href="/">blog</a></li>
 					<li><a href="{{ url_for('tags') }}">tags</a></li>
 					<li><a href="{{ url_for('archive') }}">archive</a></li>
@@ -29,13 +35,13 @@
 				</ul>
 			</nav>
 		</header><!-- /header -->
-		<main class="container">
+		<main class="main row {% block pageclass %}{% endblock %}">
 			{% block content %}
 				Post content goes here
 			{% endblock %}
 		</main><!-- /main -->
-		<footer>
-			&#169; Copyright 2014 by {{ config.SITE.name }}
+		<footer class="footer row">
+			&#169; Copyright 2014 by {{ config.SITE.name or 'Vivek'}}
 		</footer><!-- /footer -->
 		<script src="{{ url_for('static', filename='js/main.js') }}"></script>
 

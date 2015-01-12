@@ -9,8 +9,7 @@ textarea {
 }
 
 html {
-    font-size: 1em;
-    line-height: 1.4;
+
 }
 
 ::-moz-selection {
@@ -58,21 +57,107 @@ textarea {
 
 
 /* ==========================================================================
-   Author's custom styles
+   custom styles
    ========================================================================== */
 
+body {
+	font-family: Georgia,"Times New Roman",Times,serif;
+	line-height: 1.5;
+	font-size: 1.9em;
+}
 
+a,
+a:hover {
+	color: #aa0000;
+}
 
+a:hover {
+	text-decoration: none;
+}
 
+h1,
+h2,
+h3,
+h4,
+header,
+footer {
+	font-family: "Myriad Pro", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
+}
 
+h1,
+h2,
+h3,
+h4 {
+	font-weight: 700;
+	color: #333;
+}
 
+h1 {
+	font-size: 3.5em;
+}
 
+h2 {
+	font-size: 1.8em;
+}
 
+h3 {
+	font-size: 1.5em;
+}
 
+h4 {
+	font-size: 1.2em;
+}
 
+/* Helper classes
+======================*/
 
+ul.flat li {
+	display: inline-block;
+	list-style: none;
+}
 
+/* Header
+======================*/
 
+header {
+	margin-top: 2em;
+	margin-bottom: 2.5em;
+	font-size: 1.2em;
+}
+
+header nav ul,
+header nav li {
+	margin: 0;
+}
+
+header nav ul {
+	float: right;
+}
+
+header nav li {
+	margin-right: 5px;
+}
+
+/* Footer
+======================*/
+
+footer {
+	text-align: right;
+	font-size: 0.8em;
+	color: #999;
+	border-top: 1px solid #f4f4f4;
+	padding: 1em 0;
+	margin: 1em 0;
+}
+
+/* Content
+======================*/
+
+/* Home page style */
+.home .post-date {
+	text-align: right;
+	font-style: italic;
+}
 
 
 /* ==========================================================================
