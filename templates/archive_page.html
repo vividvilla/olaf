@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h1>Articles tagged - {{ tag }}</h1>
+	{% for post in posts %}
+		<h1>{{ post.title }}</h1>
+	{% endfor %}
+
+	{% if month %}
+		{% if next_page %}
+			<a href="{{ url_for('monthly_archive_pages', page_no=page_no+1, year=year, month=month) }}">Next page</a>
+		{% endif %}
+		{% if previous_page %}
+			<a href="{{ url_for('monthly_archive_pages', page_no=page_no-1, year=year, month=month) }}">Previous page</a>
+		{% endif %}
+	{% else %}
+		{% if next_page %}
+			<a href="{{ url_for('yearly_archive_pages', page_no=page_no+1, year=year) }}">Next page</a>
+		{% endif %}
+		{% if previous_page %}
+			<a href="{{ url_for('yearly_archive_pages', page_no=page_no-1, year=year) }}">Previous page</a>
+		{% endif %}
+	{% endif %}
+
+{% endblock %}

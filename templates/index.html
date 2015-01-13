@@ -3,7 +3,7 @@
 {% block pageclass %} home {% endblock %}
 {% block content %}
 	{% for post in posts %}
-		<div class="row">
+		<div class="row post">
 			<div class="post-date three columns">
 				{{ timestamp_tostring(post.meta.timestamp, '%b %d, %Y').replace(" 0", " ") }}
 			</div>
