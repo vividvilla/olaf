@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-	<h1>{{ page.title }}</h1>
-	{{ page.html | safe }}
+	<div class="two columns prevent-collapse post-meta">
+		<div class="label">Posted at</div>
+		<div class="date">{{ timestamp_tostring(page.meta.timestamp, '%b %d, %Y').replace(" 0", " ") }}</div>
+	</div>
+	<div class="ten columns">
+		<h1>{{ page.title }}</h1>
+		{{ page.html | safe }}
+	</div>
 {% endblock %}

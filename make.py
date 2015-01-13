@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 import sys
 import datetime
 from collections import Counter, OrderedDict

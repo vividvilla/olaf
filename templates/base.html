@@ -11,7 +11,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
 		<!-- Fonts -->
-		<link href='http://fonts.googleapis.com/css?family=Merriweather:400italic,400,300italic,700' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Merriweather:400italic,400,300italic,300,700,700italic' rel='stylesheet' type='text/css'>
 
 		<!-- Stylesheets -->
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}">
@@ -23,10 +23,11 @@
 	</head>
 	<body itemscope="itemscope" itemtype="http://schema.org/WebPage" class="container">
 		<header id="header" class="header row">
-			<div class="title five columns">
+			<div class="two columns prevent-collapse"></div>
+			<div class="title four columns">
 				<a href="{{ url_for('posts', slug='about') }}">{{ config.SITE.name }}</a>'s super blog
 			</div>
-			<nav class="nav seven columns">
+			<nav class="nav six columns">
 				<ul class="flat">
 					<li><a href="/">blog</a></li>
 					<li><a href="{{ url_for('tags') }}">tags</a></li>

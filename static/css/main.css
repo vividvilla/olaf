@@ -61,51 +61,53 @@ textarea {
    ========================================================================== */
 
 body {
-	font-family: Georgia,"Times New Roman",Times,serif;
+	font-family: 'Merriweather', serif;
 	line-height: 1.5;
-	font-size: 1.9em;
+	font-size: 1.7em;
+	font-weight: 300;
 }
 
 a,
 a:hover {
 	color: #aa0000;
-}
-
-a:hover {
+	font-weight: 400;
 	text-decoration: none;
 }
 
-h1,
-h2,
-h3,
-h4,
-header,
-footer {
-	font-family: "Myriad Pro", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
+a:hover {
+	text-decoration: underline;
 }
 
 h1,
 h2,
 h3,
 h4 {
-	font-weight: 700;
+	font-weight: 400;
+	line-height: 1.5;
 	color: #333;
 }
 
 h1 {
-	font-size: 3.5em;
+	font-size: 2.6em;
 }
 
 h2 {
-	font-size: 1.8em;
+	font-size: 2em;
 }
 
 h3 {
-	font-size: 1.5em;
+	font-size: 1.6em;
 }
 
 h4 {
 	font-size: 1.2em;
+}
+
+.container {
+	max-width: 800px;
+	margin-left: 10%;
+	width: 80%;
+	margin-right: 20%;
 }
 
 /* Helper classes
@@ -116,13 +118,16 @@ ul.flat li {
 	list-style: none;
 }
 
+.prevent-collapse {
+	min-height: 0.1em;
+}
+
 /* Header
 ======================*/
 
 header {
 	margin-top: 2em;
-	margin-bottom: 2.5em;
-	font-size: 1.2em;
+	margin-bottom: 4em;
 }
 
 header nav ul,
@@ -154,13 +159,35 @@ footer {
 ======================*/
 
 /* Home page style */
-.home .post-date {
+.home .post-date,
+.post-meta .date {
 	text-align: right;
 	font-style: italic;
+	font-size: 0.8em;
+	color: #999;
 }
 
 .home .post {
-    margin-bottom: 2rem;
+    margin-bottom: 2em;
+}
+
+.home .title {
+	font-style: italic;
+}
+
+/* Page style
+=====================*/
+
+.post-meta {
+	text-align: right;
+	margin-top: 1em;
+}
+
+.post-meta .label {
+	font-size: 0.6em;
+	text-transform: lowercase;
+	margin-bottom: 0.5rem;
+	color: #ccc;
 }
 
 /* ==========================================================================
