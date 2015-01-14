@@ -130,6 +130,10 @@ header {
 	margin-bottom: 4em;
 }
 
+header a {
+	font-style: italic;
+}
+
 header nav ul,
 header nav li {
 	margin: 0;
