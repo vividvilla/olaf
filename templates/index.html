@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 
 {% block pageclass %} home {% endblock %}
+{% block pagelabel %}Recent articles{% endblock %}
 {% block content %}
-	<div class="label">Recent articles</div>
 	{% for post in posts %}
 		<div class="row post">
 			<div class="post-description ten columns">
 				<a class="title" href="{{ url_for('posts', slug=post.path[11::]) }}">{{ post.title }}</a>
-				<span class="summary">- {{ post.meta.get('summary', '') }}</span>
+				<span class="summary">&mdash; {{ post.meta.get('summary', '') }}</span>
 			</div>
 			<div class="post-date two columns">
 				{{ timestamp_tostring(post.meta.timestamp, '%b %d, %Y').replace(" 0", " ") }}

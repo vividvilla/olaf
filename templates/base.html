@@ -24,20 +24,22 @@
 	</head>
 	<body itemscope="itemscope" itemtype="http://schema.org/WebPage" class="container">
 		<header id="header" class="header row">
-			<div class="site-info">
-				<div class="title">
-					<a href="/">{{ config.SITE.title }}</a>
-				</div>
-				<div class="description">{{ config.SITE.description }}</div>
+			<div class="page-label five columns prevent-collapse">
+				{% block pagelabel %}{% endblock %}
 			</div>
-			<nav class="nav">
-				<ul class="flat">
-					<li><a href="/">blog</a></li>
-					<li><a href="{{ url_for('tags') }}">tags</a></li>
-					<li><a href="{{ url_for('archive') }}">archive</a></li>
-					<li><a href="{{ url_for('posts', slug='about') }}">about</a></li>
-				</ul>
-			</nav>
+			<div class="page-label site-info seven columns">
+				<span class="title">
+					<a href="/">{{ config.SITE.title }}</a>
+				</span> &mdash;
+				<nav class="nav">
+					<ul class="flat">
+						<li><a href="/">blog</a></li>
+						<li><a href="{{ url_for('tags') }}">tags</a></li>
+						<li><a href="{{ url_for('archive') }}">archive</a></li>
+						<li><a href="{{ url_for('posts', slug='about') }}">about</a></li>
+					</ul>
+				</nav>
+			</div>
 		</header><!-- /header -->
 		<main class="main row {% block pageclass %}{% endblock %}">
 			{% block content %}
