@@ -227,22 +227,26 @@ footer {
 	font-weight: 400;
 }
 
-.tag ul {
+.tag ul,
+ul.tags {
 	margin-top: 2rem;
 }
 
-.tag ul li {
+.tag ul li,
+ul.tags li {
 	padding: 0;
 	margin: 0;
 }
 
-.tag ul li a {
+.tag ul li a,
+ul.tags li a {
 	color: #333;
 	text-decoration: underline;
 	font-weight: 500;
 }
 
-.tag ul li a:hover {
+.tag ul li a:hover,
+ul.tags li a:hover {
 	text-decoration: none;
 }
 

@@ -2,17 +2,15 @@
 
 {% block content %}
 	<h1 class="page-title">Archives</h1>
-	<h2 class="page-title">Yearly</h2>
-	<ul>
-		{% for year, occur in yearly %}
-			<li><a href="{{ url_for('yearly_archive', year=year) }}">{{ year }} - {{ occur }}</a></li>
-		{% endfor %}
-	</ul>
-
-	<h2 class="page-title">Monthly</h2>
-	<ul>
-		{% for datestring, date, occur in monthly %}
-				<li><a href="{{ url_for('monthly_archive', year=date[0], month=date[1]) }}">{{ datestring }} - {{ occur }} {{ date }}</a></li>
+	<ul class="tags">
+		{% for year, year_data in archive.items() %}
+			<li><a href="{{ url_for('yearly_archive', year=year) }}">{{ year }}</a> - {{ year_data['count'] }} entries
+				<ul>
+					{% for month in year_data['months'] %}
+						<li><a href="{{ url_for('monthly_archive', year=year, month=month[0]) }}">{{ date_tostring(year, month[0], format='%B') }}</a> - {{ month[1] }} entries</li>
+					{% endfor %}
+				</ul>
+			</li>
 		{% endfor %}
 	</ul>
 {% endblock %}

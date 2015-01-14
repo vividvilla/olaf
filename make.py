@@ -25,7 +25,7 @@ def timestamp_tostring(timestamp, format):
 
 def date_tostring(year, month, day = 1, format = '%d %b %Y'):
 	#Returns date string for given year, month and day with given format
-	date = datetime.datetime(year, month, day)
+	date = datetime.datetime(int(year), int(month), int(day))
 	return date.strftime(format)
 
 #Register utility functions to be used in jinja2 templates
@@ -180,12 +180,14 @@ def archive():
 	# Get sorted yearly and monthly archive lists [((year, month), no_occur), ...]
 	monthly = sorted(Counter([date for date in dates]).items(), reverse=True)
 
-	# Get sorted yearly and monthly formatted archive lists
-	# [('date string', (year, month), no_occur), ....]
-	monthly = [(date_tostring(int(date[0][0]), int(date[0][1]),
-		format='%b %Y'), (int(date[0][0]), int(date[0][1])), date[1]) for date in monthly]
+	yearly_dict = OrderedDict()
+	for i in yearly:
+		year = i[0]
+		yearly_dict[year] = {}
+		yearly_dict[year]['count'] = i[1]
+		yearly_dict[year]['months'] = [(j[0][1], j[1]) for j in monthly if j[0][0] == year]
 
-	return render_template('archive.html', yearly=yearly, monthly=monthly)
+	return render_template('archive.html', archive = yearly_dict)
 
 @app.route('/archive/<int:year>/')
 def yearly_archive(year):
