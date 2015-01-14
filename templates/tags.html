@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-	<h1>All tags</h1>
+	<h1 class="page-title">All tags</h1>
 	<ul>
 		{% for tag, occ in tags.items() %}
 			<li><a href="{{ url_for('tag_page', tag=tag ) }}">{{ tag }} - {{ occ }}</a></li>

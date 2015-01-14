@@ -80,8 +80,6 @@ h1,
 h2,
 h3,
 h4 {
-	font-family: 'IM Fell English', serif;
-	font-weight: 400;
 	line-height: 1.2;
 	color: #333;
 }
@@ -103,10 +101,7 @@ h4 {
 }
 
 .container {
-	max-width: 900px;
-	margin-left: 10%;
-	width: 80%;
-	margin-right: 20%;
+	max-width: 800px;
 }
 
 /* Helper classes
@@ -115,6 +110,7 @@ h4 {
 ul.flat li {
 	display: inline-block;
 	list-style: none;
+	margin-left: 0;
 }
 
 .prevent-collapse {
@@ -127,6 +123,16 @@ ul.flat li {
 	color: #999;
 }
 
+.page-title {
+	font-style: italic;
+	margin: 0;
+}
+
+ul {
+	list-style: disc;
+	margin-left: 40px;
+}
+
 /* Header
 ======================*/
 
@@ -135,17 +141,6 @@ header {
 	margin-bottom: 3em;
 }
 
-/*header .title {
-	font-size: 1.8em;
-	margin-bottom: 10px;
-}
-
-header .description {
-	font-style: italic;
-	font-size: 0.8em;
-	color: #666;
-}
-*/
 header .site-info {
 	margin-bottom: 1em;
 	text-align: right;
@@ -166,7 +161,6 @@ header nav ul {
 
 header nav li {
 	margin-right: 5px;
-	font-style: italic;
 }
 
 /* Footer
@@ -196,7 +190,7 @@ footer {
     margin-bottom: 2em;
 }
 
-.home .title {
+.home .site-title {
 	font-weight: 400;
 }
 
@@ -205,6 +199,10 @@ footer {
 	font-weight: 400;
 	color: #999;
 	margin-bottom: 1em;
+}
+
+.home .page-title {
+	font-weight: 500;
 }
 
 /* Page style
@@ -227,6 +225,25 @@ footer {
 .post-meta .date {
 	font-style: italic;
 	font-weight: 400;
+}
+
+.tag ul {
+	margin-top: 2rem;
+}
+
+.tag ul li {
+	padding: 0;
+	margin: 0;
+}
+
+.tag ul li a {
+	color: #333;
+	text-decoration: underline;
+	font-weight: 500;
+}
+
+.tag ul li a:hover {
+	text-decoration: none;
 }
 
 /* ==========================================================================
