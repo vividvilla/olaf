@@ -12,6 +12,7 @@
 
 		<!-- Fonts -->
 		<link href='http://fonts.googleapis.com/css?family=Merriweather:400italic,400,300italic,300,700,700italic' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=IM+Fell+English:400,400italic' rel='stylesheet' type='text/css'>
 
 		<!-- Stylesheets -->
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}">
@@ -23,10 +24,13 @@
 	</head>
 	<body itemscope="itemscope" itemtype="http://schema.org/WebPage" class="container">
 		<header id="header" class="header row">
-			<div class="title six columns">
-				<a href="{{ url_for('posts', slug='about') }}">{{ config.SITE.name }}</a>'s super blog
+			<div class="site-info">
+				<div class="title">
+					<a href="/">{{ config.SITE.title }}</a>
+				</div>
+				<div class="description">{{ config.SITE.description }}</div>
 			</div>
-			<nav class="nav six columns">
+			<nav class="nav">
 				<ul class="flat">
 					<li><a href="/">blog</a></li>
 					<li><a href="{{ url_for('tags') }}">tags</a></li>
@@ -41,7 +45,8 @@
 			{% endblock %}
 		</main><!-- /main -->
 		<footer class="footer row">
-			&#169; Copyright 2014 by {{ config.SITE.name or 'Vivek'}}
+			<div class="">&#169; Copyright 2014 by {{ config.SITE.name or 'Vivek'}}</div>
+			<div class="">Blog frozen by - <a href="https://github.com/vividvilla/frog">Frog</a></div>
 		</footer><!-- /footer -->
 		<script src="{{ url_for('static', filename='js/main.js') }}"></script>
 

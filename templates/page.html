@@ -1,12 +1,15 @@
 {% extends "base.html" %}
 
+{% block pageclass %}page{% endblock %}
 {% block content %}
-	<div class="two columns prevent-collapse post-meta">
-		<div class="label">Posted at</div>
-		<div class="date">{{ timestamp_tostring(page.meta.timestamp, '%b %d, %Y').replace(" 0", " ") }}</div>
-	</div>
-	<div class="ten columns">
-		<h1>{{ page.title }}</h1>
+		<h1 class="title">{{ page.title }}</h1>
+		<div class="post-meta">
+			{% if page.meta.get('timestamp') %}
+				<span class="label">Posted at &mdash; </span>
+				<span class="date">
+					{{ timestamp_tostring(page.meta.timestamp, '%b %d, %Y').replace(" 0", " ") }}
+				</span>
+			{% endif %}
+		</div>
 		{{ page.html | safe }}
-	</div>
 {% endblock %}

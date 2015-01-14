@@ -70,7 +70,6 @@ body {
 a,
 a:hover {
 	color: #aa0000;
-	font-weight: 400;
 	text-decoration: none;
 }
 
@@ -82,13 +81,14 @@ h1,
 h2,
 h3,
 h4 {
+	font-family: 'IM Fell English', serif;
 	font-weight: 400;
-	line-height: 1.5;
+	line-height: 1.2;
 	color: #333;
 }
 
 h1 {
-	font-size: 2.6em;
+	font-size: 3em;
 }
 
 h2 {
@@ -128,10 +128,22 @@ ul.flat li {
 header {
 	margin-top: 2em;
 	margin-bottom: 4em;
+	text-align: center;
 }
 
-header a {
+header .title {
+	font-size: 1.8em;
+	margin-bottom: 10px;
+}
+
+header .description {
 	font-style: italic;
+	font-size: 0.8em;
+	color: #666;
+}
+
+header .site-info {
+	margin-bottom: 1em;
 }
 
 header nav ul,
@@ -140,11 +152,13 @@ header nav li {
 }
 
 header nav ul {
-	float: right;
+	/*float: right;*/
 }
 
 header nav li {
 	margin-right: 5px;
+	font-size: 0.9em;
+	font-style: italic;
 }
 
 /* Footer
@@ -152,7 +166,7 @@ header nav li {
 
 footer {
 	text-align: right;
-	font-size: 0.8em;
+	font-size: 0.75em;
 	color: #999;
 	border-top: 1px solid #f4f4f4;
 	padding: 1em 0;
@@ -163,8 +177,7 @@ footer {
 ======================*/
 
 /* Home page style */
-.home .post-date,
-.post-meta .date {
+.home .post-date {
 	text-align: right;
 	font-style: italic;
 	font-size: 0.8em;
@@ -176,22 +189,37 @@ footer {
 }
 
 .home .title {
-	font-style: italic;
+	font-weight: 700;
+	color: #666;
+}
+
+.home .label {
+	font-size: 0.75em;
+	font-weight: 400;
+	color: #999;
+	margin-bottom: 1em;
 }
 
 /* Page style
 =====================*/
 
-.post-meta {
-	text-align: right;
-	margin-top: 1em;
+.page .title {
+	margin-bottom: 0;
 }
 
-.post-meta .label {
-	font-size: 0.6em;
-	text-transform: lowercase;
-	margin-bottom: 0.5rem;
-	color: #ccc;
+.post-meta {
+	margin-bottom: 2em;
+	padding-left: 5px;
+}
+
+.post-meta .label,
+.post-meta .date {
+	font-size: 0.8em;
+}
+
+.post-meta .date {
+	font-style: italic;
+	font-weight: 400;
 }
 
 /* ==========================================================================
