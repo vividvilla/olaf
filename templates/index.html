@@ -7,7 +7,7 @@
 		<div class="row post">
 			<div class="post-description ten columns">
 				<a class="page-title" href="{{ url_for('posts', slug=post.path[11::]) }}">{{ post.title }}</a>
-				<span class="summary">&mdash; {{ post.meta.get('summary', '') }}</span>
+				<span class="summary">&mdash; {{ post.meta.get('summary', post.body[:config.SITE.summary_offset]+'...') }}</span>
 			</div>
 			<div class="post-date two columns">
 				{{ timestamp_tostring(post.meta.timestamp, '%b %d, %Y').replace(" 0", " ") }}

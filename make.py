@@ -4,10 +4,13 @@ import sys
 import datetime
 from collections import Counter, OrderedDict
 
+import PyRSS2Gen
 from flask import Flask
+from urlparse import urljoin
 from flask_frozen import Freezer
+from werkzeug.contrib.atom import AtomFeed
 from flask_flatpages import FlatPages, pygments_style_defs
-from flask import render_template, abort, redirect, url_for
+from flask import render_template, abort, redirect, url_for, request
 
 import config
 
@@ -18,7 +21,7 @@ app.config.from_object('config')
 contents = FlatPages(app)
 freezer = Freezer(app)
 
-def timestamp_tostring(timestamp, format):
+def timestamp_tostring(timestamp, format = '%d %m %Y'):
 	#Converts unix timestamp to date string with given format
 	return datetime.datetime.fromtimestamp(
 			int(timestamp)).strftime(format)
@@ -35,7 +38,7 @@ app.jinja_env.globals.update(timestamp_tostring=timestamp_tostring,
 #Pygments style path
 @app.route('/pygments.css')
 def pygments_css():
-    return pygments_style_defs('tango'), 200, {'Content-Type': 'text/css'}
+	return pygments_style_defs('tango'), 200, {'Content-Type': 'text/css'}
 
 def get_posts(**filters):
 	"""
@@ -140,6 +143,7 @@ def posts(slug):
 	if len(content) > 1:
 		raise Exception('Duplicate slug')
 
+	print content[0].body
 	return render_template('page.html', page=content[0])
 
 
@@ -205,6 +209,31 @@ def monthly_archive(year, month):
 	posts, max_page = get_posts(year=year, month=month, abort=True)
 	return render_template('archive_page.html', tag=date_string, year=year,
 			month=month, posts=posts)
+
+# Ato, feed generator
+
+@app.route('/recent.atom')
+def recent_feed():
+	feed = AtomFeed('Recent Articles',
+					feed_url=request.url, url=request.url_root)
+
+	posts, max_page = get_posts()
+	feed_limit = config.SITE.get('feed_limit', 10)
+
+	for post in posts[:feed_limit]:
+		dated = datetime.datetime.fromtimestamp(int(post.meta['timestamp']))
+		updated = dated
+		if post.meta.get('updated'):
+			updated = datetime.datetime.fromtimestamp(int(post.meta['updated']))
+
+		feed.add(post.meta.get('title'), unicode(post.body),
+					content_type='html',
+					author=post.meta.get('author', config.SITE.get('author', '')),
+					url=urljoin(request.url_root, post.path[11::]),
+					updated=updated,
+					published=dated)
+
+	return feed.get_response()
 
 if __name__ == '__main__':
 	if len(sys.argv) > 1 and sys.argv[1] == "build":
