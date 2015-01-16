@@ -6,7 +6,7 @@ from collections import Counter, OrderedDict
 
 from flask import Flask
 from flask_frozen import Freezer
-from flask_flatpages import FlatPages
+from flask_flatpages import FlatPages, pygments_style_defs
 from flask import render_template, abort, redirect, url_for
 
 import config
@@ -31,6 +31,11 @@ def date_tostring(year, month, day = 1, format = '%d %b %Y'):
 #Register utility functions to be used in jinja2 templates
 app.jinja_env.globals.update(timestamp_tostring=timestamp_tostring,
 			date_tostring=date_tostring)
+
+#Pygments style path
+@app.route('/pygments.css')
+def pygments_css():
+    return pygments_style_defs('tango'), 200, {'Content-Type': 'text/css'}
 
 def get_posts(**filters):
 	"""

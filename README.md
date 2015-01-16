@@ -16,13 +16,15 @@ To do's
 - [x] Pagination to tags
 - [x] Date based archives
 - [x] Pagination for archives
-- [ ] Basic theming
+- [x] Basic theming
+- [x] Native syntax highlighting
 - [ ] RSS feeds
 - [ ] XML sitemap
 - [ ] Github pages uploader
 - [ ] Github custom domain adder
 - [ ] Disqus comments
 - [ ] Google CSE integration
+- [ ] Google analytics integration
 
 - [ ] Cli post creator
 	- [ ] New posts
