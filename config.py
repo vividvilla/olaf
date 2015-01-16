@@ -12,5 +12,7 @@ SITE = {
 	'summary_offset': 180,
 	'feed_limit': 15,
 	'analytics': 'UA-XXX-VVV',
-	'disqus': True
+	'disqus': True,
+	'github_domain': 'vivek.github.io'
 }
+

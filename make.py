@@ -9,7 +9,7 @@ from urlparse import urljoin
 from flask_frozen import Freezer
 from werkzeug.contrib.atom import AtomFeed
 from flask_flatpages import FlatPages, pygments_style_defs
-from flask import render_template, abort, redirect, url_for, request
+from flask import render_template, abort, redirect, url_for, request, make_response
 
 import config
 
@@ -19,6 +19,7 @@ app.config.from_object('config')
 #App module initialize
 contents = FlatPages(app)
 freezer = Freezer(app)
+exclude_from_sitemap = [] #List of urls to be excluded from XML sitemap
 
 def timestamp_tostring(timestamp, format = '%d %m %Y'):
 	#Converts unix timestamp to date string with given format
@@ -31,6 +32,7 @@ def date_tostring(year, month, day = 1, format = '%d %b %Y'):
 	return date.strftime(format)
 
 def font_size(min, max, high, n):
+	# Calculate font size for tags
 	return (n/high)*(max-min) + min
 
 #Register utility functions to be used in jinja2 templates
@@ -42,6 +44,8 @@ app.jinja_env.globals.update(timestamp_tostring=timestamp_tostring,
 @app.route('/pygments.css')
 def pygments_css():
 	return pygments_style_defs('tango'), 200, {'Content-Type': 'text/css'}
+
+exclude_from_sitemap.append('/pygments.css') # Excludes url from sitemap
 
 def get_posts(**filters):
 	"""
@@ -242,6 +246,45 @@ def recent_feed():
 					published=dated)
 
 	return feed.get_response()
+
+# XML sitemap
+
+# a route for generating sitemap.xml
+@app.route('/sitemap.xml', methods=['GET'])
+def sitemap():
+	"""Generate sitemap.xml. Makes a list of urls and date modified."""
+
+	pages=[]
+
+	#Set last updated date for static pages as 10 days before
+	ten_days_ago= (datetime.datetime.now() -
+				datetime.timedelta(days=10)).date().isoformat()
+
+	# Add static pages
+	for rule in app.url_map.iter_rules():
+		if ("GET" in rule.methods and len(rule.arguments) == 0
+				and rule.rule not in exclude_from_sitemap):
+			pages.append([rule.rule, ten_days_ago])
+
+	# Add posts
+	posts, max_page = get_posts()
+
+	for post in posts:
+		# Get post updation or creation date
+		if post.meta.get('updated'):
+			updated = datetime.datetime.fromtimestamp(
+					int(post.meta['updated'])).date().isoformat()
+		else:
+			updated = datetime.datetime.fromtimestamp(
+					int(post.meta['timestamp'])).date().isoformat()
+		# Add posts url
+		pages.append([post.path[10::], updated])
+
+	sitemap_xml = render_template('sitemap.xml', pages=pages)
+	response = make_response(sitemap_xml)
+	response.headers["Content-Type"] = "application/xml"
+
+	return response
 
 if __name__ == '__main__':
 	if len(sys.argv) > 1 and sys.argv[1] == "build":

@@ -21,9 +21,10 @@ To do's
 - [x] Atom feeds
 - [x] Disqus comments
 - [x] Google analytics integration
-- [ ] XML sitemap
+- [x] XML sitemap
+- [ ] 404 page style
 - [ ] Github pages uploader
-- [ ] Github custom domain adder
+- [x] Github custom domain adder
 - [ ] Google CSE integration
 
 - [ ] Cli post creator
