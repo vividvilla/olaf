@@ -250,6 +250,17 @@ ul.tags li a:hover {
 	text-decoration: none;
 }
 
+.pagination a {
+    color: #333;
+}
+
+.pagination .next {
+    text-align: right;
+}
+
+.pagination .previous {
+    text-align: left;
+}
 /* ==========================================================================
    Media Queries
    ========================================================================== */

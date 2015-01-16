@@ -231,4 +231,4 @@ if __name__ == '__main__':
 	if len(sys.argv) > 1 and sys.argv[1] == "build":
 		freezer.freeze()
 	else:
-		app.run()
+		app.run(port = 4000)

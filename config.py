@@ -8,5 +8,5 @@ SITE = {
 	'title': 'My super blog',
 	'description': 'hmm..thats it',
 	'name': 'Vivek',
-	'limit': 5
+	'limit': 1
 }
