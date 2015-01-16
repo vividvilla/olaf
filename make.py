@@ -28,9 +28,13 @@ def date_tostring(year, month, day = 1, format = '%d %b %Y'):
 	date = datetime.datetime(int(year), int(month), int(day))
 	return date.strftime(format)
 
+def font_size(min, max, high, n):
+	return (n/high)*(max-min) + min
+
 #Register utility functions to be used in jinja2 templates
 app.jinja_env.globals.update(timestamp_tostring=timestamp_tostring,
-			date_tostring=date_tostring)
+			date_tostring=date_tostring, font_size=font_size)
+
 
 def get_posts(**filters):
 	"""
@@ -144,14 +148,16 @@ def posts(slug):
 def tags():
 	tags = [tag for post in contents
 				for tag in post.meta.get('tags', [])]
-	tags = dict(Counter(tags)) #Count tag occurances
-	return render_template('tags.html', tags = tags)
+	tags = sorted(Counter(tags).items()) #Count tag occurances
+	max_occ = max([tag[1] for tag in tags])
+
+	return render_template('tags.html', tags = tags, max_occ = max_occ)
 
 @app.route('/tags/<string:tag>/')
 def tag_page(tag):
 	posts, max_page = get_posts(tag=tag, page_no=1, abort=True)
 	return render_template('tag.html', tag=tag, page_no=1,
-			posts=posts, next_page=(max_page > 1))
+			posts=posts, len = len(posts), next_page=(max_page > 1))
 
 @app.route('/tags/<string:tag>/pages/<int:page_no>/')
 def tag_pages(tag, page_no):
@@ -166,6 +172,10 @@ def tag_pages(tag, page_no):
 			previous_page=(page_no > 1))
 
 # Archive views
+
+@app.route('/list/')
+def list():
+	return render_template("list.html", posts = get_posts()[0])
 
 @app.route('/archive/')
 def archive():

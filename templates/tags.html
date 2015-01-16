@@ -2,9 +2,9 @@
 
 {% block content %}
 	<h1 class="page-title">All tags</h1>
-	<ul>
-		{% for tag, occ in tags.items() %}
-			<li><a href="{{ url_for('tag_page', tag=tag ) }}">{{ tag }} - {{ occ }}</a></li>
+	<ul class="tags tags-cloud">
+		{% for tag in tags %}
+			<li><a href="{{ url_for('tag_page', tag=tag[0] ) }}" style="font-size: {{ font_size(100, 200, max_occ, tag[1]) }}%">{{ tag[0] }}</a></li>
 		{% endfor %}
 	</ul>
 {% endblock %}

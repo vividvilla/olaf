@@ -12,4 +12,21 @@
 			{% endif %}
 		</div>
 		{{ page.html | safe }}
+
+		<div class="post-meta">
+			{% if page.meta.get('updated') %}
+				<span class="label">Updated at &mdash; </span>
+				<span class="date">
+					{{ timestamp_tostring(page.meta.updated, '%b %d, %Y').replace(" 0", " ") }}
+				</span>
+			{% endif %}
+			{% if page.meta.get('tags') %}
+				<ul class="tags tags-cloud">
+					<li>Tagged :</li>
+					{% for tag in page.meta.get('tags') %}
+						<li><a href="{{ url_for('tag_page', tag=tag ) }}">{{ tag }}</a></li>
+					{% endfor %}
+				</ul>
+			{% endif %}
+		</div>
 {% endblock %}

@@ -12,6 +12,12 @@ You could spend it with the people you love, soaking up time with them, really p
 
 You could create something. You could make the world better. You could put your stamp on the world by creating art, or making people's lives better.
 
+```
+!python
+def font_size(min, max, high, n):
+	return (n/high)*(max-min) + min
+```
+
 Any of those choices, or a combination of them, would be a worthy way to spend that month.
 
 What wouldn't be worthy, in my opinion: watching crappy TV (a few really good shows during the month might be an exception), constantly being distracted, constantly reading the news and social media, being mean or selfish all the time, shopping, feeling unmotivated and doing nothing with that time, worrying, regretting.
