@@ -4,7 +4,6 @@ import sys
 import datetime
 from collections import Counter, OrderedDict
 
-import PyRSS2Gen
 from flask import Flask
 from urlparse import urljoin
 from flask_frozen import Freezer
@@ -147,7 +146,6 @@ def posts(slug):
 	if len(content) > 1:
 		raise Exception('Duplicate slug')
 
-	print content[0].body
 	return render_template('page.html', page=content[0])
 
 
@@ -236,7 +234,7 @@ def recent_feed():
 		if post.meta.get('updated'):
 			updated = datetime.datetime.fromtimestamp(int(post.meta['updated']))
 
-		feed.add(post.meta.get('title'), unicode(post.body),
+		feed.add(post.meta.get('title'), unicode(post.html),
 					content_type='html',
 					author=post.meta.get('author', config.SITE.get('author', '')),
 					url=urljoin(request.url_root, post.path[11::]),

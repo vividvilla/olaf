@@ -18,13 +18,13 @@ To do's
 - [x] Pagination for archives
 - [x] Basic theming
 - [x] Native syntax highlighting
-- [ ] RSS feeds
+- [x] Atom feeds
+- [x] Disqus comments
+- [x] Google analytics integration
 - [ ] XML sitemap
 - [ ] Github pages uploader
 - [ ] Github custom domain adder
-- [ ] Disqus comments
 - [ ] Google CSE integration
-- [ ] Google analytics integration
 
 - [ ] Cli post creator
 	- [ ] New posts

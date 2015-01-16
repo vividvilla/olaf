@@ -29,4 +29,9 @@
 				</ul>
 			{% endif %}
 		</div>
+
+		{% if config.SITE.get('disqus') %}
+			{% include "disqus.html" %}
+		{% endif %}
+
 {% endblock %}

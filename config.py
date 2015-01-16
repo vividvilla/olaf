@@ -10,5 +10,7 @@ SITE = {
 	'author': 'Vivek',
 	'limit': 3,
 	'summary_offset': 180,
-	'feed_limit': 15
+	'feed_limit': 15,
+	'analytics': 'UA-XXX-VVV',
+	'disqus': True
 }

@@ -6,27 +6,55 @@ summary: Do you see any Teletubbies in here? Do you see a slender plastic tag cl
 
 Lately I have been struck with the idea of how limited our lives are, and how little time we have to make something of them.
 
-Imagine if you had a month to live: how would you spend it?
+# Heading 1
 
 You could spend it with the people you love, soaking up time with them, really paying attention to every word they said. You could go out and have some amazing experiences, explore the world. You could spend it learning as much as you can, in books and by studying life itself.
 
-You could create something. You could make the world better. You could put your stamp on the world by creating art, or making people's lives better.
+## Heading 2
+
+You could spend it with the people you love, soaking up time with them, really paying attention to every word they said. You could go out and have some amazing experiences, explore the world. You could spend it learning as much as you can, in books and by studying life itself.
+
+### Heading 3
+
+You could spend it with the people you love, soaking up time with them, really paying attention to every word they said. You could go out and have some amazing experiences, explore the world. You could spend it learning as much as you can, in books and by studying life itself.
+
+#### Heading 4
+
+You could spend it with the people you love, soaking up time with them, really paying attention to every word they said. You could go out and have some amazing experiences, explore the world. You could spend it learning as much as you can, in books and by studying life itself.
+
+##### Heading 5
+
+You could spend it with the people you love, soaking up time with them, really paying attention to every word they said. You could go out and have some amazing experiences, explore the world. You could spend it learning as much as you can, in books and by studying life itself.
+
+###### Heading 6
+
+You could spend it with the people you love, soaking up time with them, really paying attention to every word they said. You could go out and have some amazing experiences, explore the world. You could spend it learning as much as you can, in books and by studying life itself.
+
+## Typography
+
+You could spend it with the people you love, This is [an example](http://example.com/ "Title") inline link. soaking up time with them, **This is bold** and *emphasis* really paying attention to every word they said. While this is `code block()` and following is a `pre` tag
+
+	print 'this is pre tag'
+
+Following is the syntax highlighted code block
 
 	#!python
 
 	def hello_world():
 		print "hello world !!!"
 
-Any of those choices, or a combination of them, would be a worthy way to spend that month.
+This is blockquote, Will make it better now
 
-What wouldn't be worthy, in my opinion: watching crappy TV (a few really good shows during the month might be an exception), constantly being distracted, constantly reading the news and social media, being mean or selfish all the time, shopping, feeling unmotivated and doing nothing with that time, worrying, regretting.
+> 'I want to do with you what spring does with the cherry trees.' <cite>cited ~Pablo Neruda</cite>*
 
-You could argue that any of those latter activities are worthwhile, and that's fine; the point is to decide what's worthy of your final month of living.
+Unordered list
 
-Make a choice. Decide what you will squeeze into those precious few days, because you don't have many of them.
+*   Red
+*   Green
+*   Blue
 
-Each moment is limited, fleeting, precious. Let's not waste another one.
+Ordered list
 
-Let's live each moment, in love with life.
-
-> 'I want to do with you what spring does with the cherry trees.' **~Pablo Neruda**
+1.	Red
+2.  Green
+3.  Blue
