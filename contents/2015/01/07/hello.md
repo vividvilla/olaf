@@ -12,11 +12,10 @@ You could spend it with the people you love, soaking up time with them, really p
 
 You could create something. You could make the world better. You could put your stamp on the world by creating art, or making people's lives better.
 
-```
-!python
-def font_size(min, max, high, n):
-	return (n/high)*(max-min) + min
-```
+	#!python
+
+	def hello_world():
+		print "hello world !!!"
 
 Any of those choices, or a combination of them, would be a worthy way to spend that month.
 

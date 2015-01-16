@@ -137,6 +137,27 @@ ul {
 	margin-left: 40px;
 }
 
+.codehilitetable td {
+    border: none;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-right: 0;
+}
+
+.codehilitetable td pre {
+    margin-bottom: 0;
+    margin-top: 0;
+}
+
+.codehilitetable td.linenos {
+    color: #999;
+    font-size: 0.9em;
+}
+
+.codehilite {
+    background: transparent;
+}
+
 /* Header
 ======================*/
 
@@ -266,6 +287,25 @@ ul.tags-cloud {
 ul.tags-cloud li {
 	margin-right: 10px;
 	display: inline-block;
+}
+
+/* Pagination
+=====================*/
+
+.pagination {
+    padding: 2rem 0;
+}
+
+.pagination a {
+    color: #666;
+}
+
+.pagination .next {
+    text-align: right;
+}
+
+.pagination .previous {
+    text-align: left;
 }
 
 /* ==========================================================================

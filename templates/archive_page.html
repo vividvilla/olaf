@@ -11,20 +11,4 @@
 		{% endfor %}
 	</ul>
 
-	{% if month %}
-		{% if next_page %}
-			<a href="{{ url_for('monthly_archive_pages', page_no=page_no+1, year=year, month=month) }}">Next page</a>
-		{% endif %}
-		{% if previous_page %}
-			<a href="{{ url_for('monthly_archive_pages', page_no=page_no-1, year=year, month=month) }}">Previous page</a>
-		{% endif %}
-	{% else %}
-		{% if next_page %}
-			<a href="{{ url_for('yearly_archive_pages', page_no=page_no+1, year=year) }}">Next page</a>
-		{% endif %}
-		{% if previous_page %}
-			<a href="{{ url_for('yearly_archive_pages', page_no=page_no-1, year=year) }}">Previous page</a>
-		{% endif %}
-	{% endif %}
-
 {% endblock %}
