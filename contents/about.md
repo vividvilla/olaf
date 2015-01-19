@@ -10,6 +10,6 @@ I am a supporter of Linux and Open source Softwares, Made some minor [contributi
 
 Forgot to add it..I have hold degree of Bachelor of Technology (Electronics and Communication major). [[View Linkedin profile for more](http://www.linkedin.com/in/vividvilla)]
 
-## Contact Me
+## Contact me
 
 I am obsessed with checking Emails, So you can [reach me through Email](http://vivekr.net/contact/) much faster than a phone call.

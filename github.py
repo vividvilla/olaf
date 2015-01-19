@@ -1,10 +1,8 @@
 import os
 import sys
+import argparse
 
 import config
-
-# Creates CNAME file with custom domain
-# Upload /build directory to github repository
 
 """ Shell script colors """
 bcolors = {
@@ -19,47 +17,59 @@ bcolors = {
 }
 
 def update_cname():
+	""" Create CNAME file or update if its defined
+		in settings else delete CNAME file """
+
 	if config.SITE.get('github_domain'):
 		f = open('build/CNAME', 'w+')
 		f.write(config.SITE['github_domain'])
 		f.close()
 		print 'CNAME updated'
-		return True
-
-def upload(commit):
-	if not os.path.isdir("build/.git"):
-		git_init()
 	else:
-		print commit
-	# os.system('./upload.sh {}'.format(config.SITE['github_repo']))
+		try:
+			os.remove('build/CNAME')
+		except OSError:
+			pass
+
+def upload(commit, branch):
+	""" """
+	if not os.path.isdir("build/.git"):
+		print bcolors['OKGREEN'] + 'Initializing git repo' + bcolors['ENDC']
+		git_init()
+
+	add_commit_push(commit, branch)
+	print bcolors['OKGREEN'] + 'completed' + bcolors['ENDC']
 
 def git_init():
+	""" If not .git folder in build/ directory,
+		initialize git and add git remote url """
+
 	if config.SITE.get('github_repo'):
 		os.system('cd build && git init && git remote add origin {} && cd ..'.format(
 				config.SITE['github_repo']))
 	else:
+		""" Exit if git remote ulr not defined in settings """
 		print (bcolors['FAIL'] + "You need to add github repo "
 					"url in config file" + bcolors['ENDC'])
 		exit()
 
-def add_commit_push(message = "Usual post update", branch = "master"):
-	os.system('./upload.sh')
-	# os.system('cd build && git add .')
-	# os.system('cd build && git commit -m {}'.format(message))
-	# os.system('git pull origin {branch} && git push origin {branch}'.format(
-	# 		branch = branch)
-	# os.system('cd ..')
+def add_commit_push(message, branch):
+	os.system('cd build && git add .')
+	os.system('cd build && git commit -m "{}"'.format(message))
+	os.system('cd build && git pull origin {repo} && git push origin {repo}'.format(
+			repo = branch))
 
 if __name__ == '__main__':
-	# git_init()
-	add_commit_push()
-	# if len(sys.argv) > 1:
-	# 	if sys.argv[1] == "update_cname":
-	# 		update_cname()
-	# 	elif sys.argv[1] == "upload":
-	# 		try:
-	# 			commit_message = sys.argv[2]
-	# 		except IndexError:
-	# 			commit_message = 'Usual post update'
+	parser = argparse.ArgumentParser(description='Frog Github helper')
+	parser.add_argument('-m', type=str, default='blog updated',
+			help='commit message')
+	parser.add_argument('-b', type=str, default='master',
+			help='Git branch')
+	parser.add_argument('-c', action='store_true', help='CNAME update')
 
-	# 		upload(commit_message)
+	args = parser.parse_args()
+
+	if args.c:
+		update_cname()
+	else:
+		upload(args.m, args.b)

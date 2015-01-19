@@ -3,6 +3,7 @@ DEBUG = True
 FLATPAGES_ROOT = 'contents'
 FLATPAGES_AUTO_RELOAD = DEBUG
 FLATPAGES_EXTENSION = '.md'
+FREEZER_DESTINATION_IGNORE = '.git*'
 
 SITE = {
 	'title': 'My super blog',

@@ -23,8 +23,8 @@ To do's
 - [x] Google analytics integration
 - [x] XML sitemap
 - [ ] 404 page style
-- [x] Github custom domain adder
 - [ ] Github pages uploader
+- [x] Github custom domain adder
 - [ ] Google CSE integration
 
 - [ ] Cli post creator
