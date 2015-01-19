@@ -41,14 +41,6 @@ def font_size(min, max, high, n):
 app.jinja_env.globals.update(timestamp_tostring=timestamp_tostring,
 			date_tostring=date_tostring, font_size=font_size)
 
-
-#Pygments style path
-@app.route('/pygments.css')
-def pygments_css():
-	return pygments_style_defs('tango'), 200, {'Content-Type': 'text/css'}
-
-exclude_from_sitemap.append('/pygments.css') # Excludes url from sitemap
-
 def get_posts(**filters):
 	"""
 	Filters posts
@@ -115,6 +107,17 @@ def get_posts(**filters):
 
 
 # All Views
+
+#Pygments style path
+@app.route('/pygments.css')
+def pygments_css():
+	return pygments_style_defs('tango'), 200, {'Content-Type': 'text/css'}
+
+exclude_from_sitemap.append('/pygments.css') # Excludes url from sitemap
+
+@app.route('/404.html')
+def custom_404():
+	return render_template('404.html')
 
 @app.route('/')
 def index():

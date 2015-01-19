@@ -24,6 +24,8 @@ To do's
 - [x] XML sitemap
 - [x] Github pages uploader
 - [x] Github custom domain adder
+- [x] custom 404 page
+- [ ] Mobile responsive design
 - [ ] Google CSE integration // Later
 
 - [ ] Cli post creator

@@ -12,8 +12,8 @@
 
 		<link href="{{ url_for('recent_feed') }}" rel="alternate" title="Recent Changes" type="application/atom+xml">
 		<!-- Fonts -->
-		<link href='http://fonts.googleapis.com/css?family=Merriweather:400italic,400,300italic,300,700,700italic' rel='stylesheet' type='text/css'>
-		<link href='http://fonts.googleapis.com/css?family=IM+Fell+English:400,400italic' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Raleway:500,100,300' rel='stylesheet' type='text/css'>
 
 		<!-- Stylesheets -->
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}">
@@ -24,12 +24,12 @@
 		<!-- Js files -->
 		<script src="{{ url_for('static', filename='js/vendor/modernizr-2.6.2.min.js') }}"></script>
 	</head>
-	<body itemscope="itemscope" itemtype="http://schema.org/WebPage" class="container">
+	<body itemscope="itemscope" itemtype="http://schema.org/WebPage" class="container {% block pageclass %}{% endblock %}">
 		<header id="header" class="header row">
 			<div class="page-label five columns prevent-collapse">
 				{% block pagelabel %}{% endblock %}
 			</div>
-			<div class="page-label site-info seven columns">
+			<div class="site-info seven columns">
 				<span class="site-title">
 					<a href="/">{{ config.SITE.title }}</a>
 				</span> &mdash;
@@ -43,7 +43,7 @@
 				</nav>
 			</div>
 		</header><!-- /header -->
-		<main class="main row {% block pageclass %}{% endblock %}">
+		<main class="main row">
 			{% block content %}
 				Post content goes here
 			{% endblock %}

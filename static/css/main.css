@@ -61,9 +61,10 @@ textarea {
    ========================================================================== */
 
 body {
-	font-family: 'Merriweather', serif;
-	font-size: 1.5em;
+	font-family: 'Ubuntu', sans-serif;
+	font-size: 1.6em;
 	font-weight: 300;
+	color: #333;
 }
 
 a,
@@ -82,8 +83,10 @@ h3,
 h4,
 h5,
 h6 {
+	font-family: 'Raleway', sans-serif;
 	line-height: 1.2;
 	color: #333;
+	font-weight: 100;
 }
 
 h1 {
@@ -103,10 +106,12 @@ h4 {
 }
 
 h5 {
+	font-weight: 300;
 	font-size: 1em;
 }
 
 h6 {
+	font-weight: 300;
 	font-size: 0.9em;
 }
 
@@ -128,13 +133,11 @@ ul.flat li {
 }
 
 .page-label {
-	font-size: 0.9em;
-	font-weight: 400;
+	/*font-size: 0.9em;*/
 	color: #999;
 }
 
 .page-title {
-	font-style: italic;
 	margin: 0;
 }
 
@@ -215,28 +218,24 @@ footer {
 /* Home page style */
 .home .post-date {
 	text-align: right;
-	font-style: italic;
 	font-size: 0.8em;
 	color: #999;
+	font-family: 'Raleway', sans-serif;
 }
 
 .home .post {
     margin-bottom: 2em;
 }
 
-.home .site-title {
-	font-weight: 400;
-}
-
 .home .label {
 	font-size: 0.75em;
-	font-weight: 400;
 	color: #999;
 	margin-bottom: 1em;
 }
 
 .home .page-title {
-	font-weight: 500;
+	font-weight: 300;
+	font-family: 'Raleway', sans-serif;
 }
 
 /* Page style
@@ -250,6 +249,8 @@ footer {
 	color: #999;
 	margin-bottom: 2em;
 	padding-left: 5px;
+	font-family: 'Raleway', sans-serif;
+	font-weight: 100;
 }
 
 .post-meta .label,
@@ -258,8 +259,7 @@ footer {
 }
 
 .post-meta .date {
-	font-style: italic;
-	font-weight: 400;
+
 }
 
 /* Tags
@@ -280,7 +280,6 @@ ul.tags li {
 ul.tags li a {
 	color: #333;
 	text-decoration: underline;
-	font-weight: 500;
 }
 
 .tag ul li a:hover,
@@ -316,6 +315,31 @@ ul.tags-cloud li {
 
 .pagination .previous {
     text-align: left;
+}
+
+/* 404 page style
+===============================*/
+
+.fout-not-four {
+	text-align: center;
+}
+
+.fout-not-four main {
+	padding: 4em 0 10rem 0;
+}
+
+.fout-not-four .title {
+	font-size: 8em;
+}
+
+.fout-not-four .page-label {
+	display: none;
+}
+
+.fout-not-four .footer,
+.fout-not-four .site-info {
+	text-align: center;
+	width: 100%;
 }
 
 /* ==========================================================================
