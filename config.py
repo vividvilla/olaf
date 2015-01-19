@@ -13,6 +13,7 @@ SITE = {
 	'feed_limit': 15,
 	'analytics': 'UA-XXX-VVV',
 	'disqus': True,
-	'github_domain': 'vivek.github.io'
+	'github_domain': 'vivek.github.io',
+	'github_repo': 'https://github.com/vividvilla/vividvilla.github.io.git'
 }
 

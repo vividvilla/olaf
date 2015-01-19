@@ -8,8 +8,6 @@ I am not a professional blogger but like to share things I learned and did, Curr
 
 I am a supporter of Linux and Open source Softwares, Made some minor [contributions to Opensource world](http://vivek.techiestuffs.com/my-projects/). I love to code, Prefer Python over any other programming language. [[View my Github repositories](https://github.com/vividvilla)]
 
-Traveling and Photography are the activities which helps be rejuvenate when I get bored with usual stuffs. Nowadays I am pretty busy with my first startup, So you can get to see some stories based on startup here.
-
 Forgot to add it..I have hold degree of Bachelor of Technology (Electronics and Communication major). [[View Linkedin profile for more](http://www.linkedin.com/in/vividvilla)]
 
 ## Contact Me
