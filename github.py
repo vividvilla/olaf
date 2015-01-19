@@ -32,7 +32,6 @@ def update_cname():
 			pass
 
 def upload(commit, branch):
-	""" """
 	if not os.path.isdir("build/.git"):
 		print bcolors['OKGREEN'] + 'Initializing git repo' + bcolors['ENDC']
 		git_init()
@@ -61,15 +60,15 @@ def add_commit_push(message, branch):
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser(description='Frog Github helper')
-	parser.add_argument('-m', type=str, default='blog updated',
+	parser.add_argument('-m', '--message', type=str, default='new update',
 			help='commit message')
-	parser.add_argument('-b', type=str, default='master',
+	parser.add_argument('-b', '--branch', type=str, default='master',
 			help='Git branch')
-	parser.add_argument('-c', action='store_true', help='CNAME update')
+	parser.add_argument('-c', '--cname', action='store_true', help='CNAME update')
 
 	args = parser.parse_args()
 
-	if args.c:
+	if args.cname:
 		update_cname()
 	else:
-		upload(args.m, args.b)
+		upload(args.message, args.branch)

@@ -2,14 +2,16 @@
 
 import sys
 import datetime
+import argparse
 from collections import Counter, OrderedDict
 
 from flask import Flask
 from urlparse import urljoin
 from flask_frozen import Freezer
 from werkzeug.contrib.atom import AtomFeed
+from flask import render_template, abort, redirect, \
+		url_for, request, make_response
 from flask_flatpages import FlatPages, pygments_style_defs
-from flask import render_template, abort, redirect, url_for, request, make_response
 
 import config
 
@@ -287,7 +289,15 @@ def sitemap():
 	return response
 
 if __name__ == '__main__':
-	if len(sys.argv) > 1 and sys.argv[1] == "build":
+	parser = argparse.ArgumentParser(description='frog app')
+	parser.add_argument('-b', '--build', action='store_true', help='Freeze site')
+	parser.add_argument('-p', '--port', type=int, default=5000,
+			help='Port to run app')
+
+	args = parser.parse_args()
+
+	if args.build:
+		print "successfully freezed app"
 		freezer.freeze()
 	else:
-		app.run(port = 4000)
+		app.run(port = args.port)

@@ -22,10 +22,9 @@ To do's
 - [x] Disqus comments
 - [x] Google analytics integration
 - [x] XML sitemap
-- [ ] 404 page style
-- [ ] Github pages uploader
+- [x] Github pages uploader
 - [x] Github custom domain adder
-- [ ] Google CSE integration
+- [ ] Google CSE integration // Later
 
 - [ ] Cli post creator
 	- [ ] New posts
