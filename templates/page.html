@@ -30,7 +30,7 @@
 			{% endif %}
 		</div>
 
-		{% if config.SITE.get('disqus') %}
+		{% if config.SITE.get('disqus') and page.meta.get('type') == 'post' %}
 			{% include "disqus.html" %}
 		{% endif %}
 

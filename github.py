@@ -4,7 +4,7 @@ import argparse
 
 import config
 
-""" Shell script colors """
+#Shell script colors
 bcolors = {
 	"HEADER": "\033[95m",
 	"OKBLUE": "\033[94m",
@@ -37,14 +37,15 @@ def upload(commit, branch):
 		git_init()
 
 	add_commit_push(commit, branch)
-	print bcolors['OKGREEN'] + 'completed' + bcolors['ENDC']
+	print (bcolors['OKGREEN'] + 'Successfully updated recent changes.'
+			+ bcolors['ENDC'])
 
 def git_init():
 	""" If not .git folder in build/ directory,
 		initialize git and add git remote url """
 
 	if config.SITE.get('github_repo'):
-		os.system('cd build && git init && git remote add origin {} && cd ..'.format(
+		os.system('cd build && git init && git remote add origin {}'.format(
 				config.SITE['github_repo']))
 	else:
 		""" Exit if git remote ulr not defined in settings """
@@ -53,10 +54,18 @@ def git_init():
 		exit()
 
 def add_commit_push(message, branch):
-	os.system('cd build && git add .')
-	os.system('cd build && git commit -m "{}"'.format(message))
-	os.system('cd build && git pull origin {repo} && git push origin {repo}'.format(
+	add_message = os.system('cd build && git add .')
+	commit_status = os.system('cd build && git commit -m "{}"'.format(message))
+	pull_status = os.system('cd build && git pull origin {repo}'.format(
 			repo = branch))
+
+	if pull_status == 256:
+		print (bcolors['FAIL'] + "MERGE CONFLICT" + bcolors['ENDC'] +
+					"Discarding remote changes and pushing local changes")
+		os.system('cd build && git checkout --ours .')
+		os.system('cd build && git add -u && git commit -m "{}"'.format(
+				"Ignored remote changes"))
+		os.system('cd build && git push origin {}'.format(branch))
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser(description='Frog Github helper')
