@@ -25,7 +25,9 @@ To do's
 - [x] Github pages uploader
 - [x] Github custom domain adder
 - [x] custom 404 page
+- [ ] Favicon
 - [ ] Mobile responsive design
+- [ ] Set page description tag for SEO
 - [ ] Google CSE integration // Later
 
 - [ ] Cli post creator

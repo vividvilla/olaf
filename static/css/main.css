@@ -450,8 +450,13 @@ ul.tags-cloud li {
 
     pre,
     blockquote {
+        padding: 5px 10px;
         border: 1px solid #999;
         page-break-inside: avoid;
+    }
+
+    .codehilitetable td.linenos {
+        display: none;
     }
 
     thead {

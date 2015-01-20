@@ -51,7 +51,7 @@ def git_init():
 		""" Exit if git remote ulr not defined in settings """
 		print (bcolors['FAIL'] + "You need to add github repo "
 					"url in config file" + bcolors['ENDC'])
-		exit()
+		sys.exit()
 
 def add_commit_push(message, branch):
 	add_message = os.system('cd build && git add .')
