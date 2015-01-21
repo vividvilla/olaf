@@ -1,12 +1,8 @@
-# Olaf
-## because some blogs are worth freezing for.
+### Olaf - because some blogs are worth freezing for.
 
-Olaf freezes your complex and slower dynamic blog to simple and faster static blog.
-Olaf is made of ice...No, but Python(Flask).
+Olaf freezes your complex and slower dynamic blog to simple and faster static blog. BTW its not made of ice but Python(Flask).
 
 ![Olaf dancing](https://d13yacurqjgara.cloudfront.net/users/21927/screenshots/1831989/dribbble.gif "Olaf")
-
-## Current features
 
 ### Basic features
 	- Markdown support
@@ -33,7 +29,7 @@ Olaf is made of ice...No, but Python(Flask).
 	- Importers for other blogging platforms
 	- PDF Generator (Publish entire site as a ebook)
 
-## To do's
+### To do's
 
 - [x] Posts
 - [x] Pages
