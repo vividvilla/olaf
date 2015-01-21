@@ -30,8 +30,8 @@ To do's
 - [ ] Set page description tag for SEO
 - [ ] Google CSE integration // Later
 
-- [ ] Cli post creator
-	- [ ] New posts
+- [x] Cli post creator
+	- [x] New posts
 	- [ ] Edit posts
 	- [ ] Delete posts
 

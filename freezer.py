@@ -20,7 +20,7 @@ app.config.from_object('config')
 
 #App module initialize
 contents = FlatPages(app)
-freezer = Freezer(app)
+freeze = Freezer(app)
 exclude_from_sitemap = [] #List of urls to be excluded from XML sitemap
 
 def timestamp_tostring(timestamp, format = '%d %m %Y'):
@@ -293,14 +293,14 @@ def sitemap():
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser(description='frog app')
-	parser.add_argument('-b', '--build', action='store_true', help='Freeze site')
+	parser.add_argument('-f', '--freeze', action='store_true', help='Freeze site')
 	parser.add_argument('-p', '--port', type=int, default=5000,
-			help='Port to run app')
+			help='Port to run app [default: 5000]')
 
 	args = parser.parse_args()
 
-	if args.build:
-		print "successfully freezed app"
-		freezer.freeze()
+	if args.freeze:
+		print "Successfully freezed."
+		freeze.freeze()
 	else:
 		app.run(port = args.port)

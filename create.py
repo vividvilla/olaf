@@ -25,12 +25,12 @@ bcolors = {
 }
 
 # Colored std out messages
-def console_message(message, type, upper = True):
+def console_message(message, type, upper = True, newline = False):
 	if upper:
 		message = message.upper()
 
 	sys.stdout.write(bcolors[type] + bcolors['BOLD'] +
-			'\n' + message + '\n' + bcolors['ENDC'])
+			'\n' + message + bcolors['ENDC'] + '\n' if newline else '')
 
 # Create a directory in current path
 def create_directory(path):
@@ -63,7 +63,7 @@ def get_input():
 			'[default: post]: ') or 'post'
 
 	if not page_type in ('post', 'page'):
-		console_message('Invalid page type.', 'FAIL')
+		console_message('Invalid page type.', 'FAIL', newline = True)
 		sys.exit()
 
 	# Get creation date
@@ -189,7 +189,7 @@ def create(data):
 				'existing post ? (y/n): ') or 'n')
 
 		if not overwrite:
-			console_message('Aborted', 'WARNING')
+			console_message('Aborted', 'WARNING', newline = True)
 			return None
 
 	# Write post meta to file
@@ -199,7 +199,7 @@ def create(data):
 		f.write('\n\n' + 'Your content goes here, Happy blogging !!!')
 
 	console_message('Successfully created post at : {}'.format(full_path),
-			'OKGREEN', upper = False)
+			'OKGREEN', upper = False, newline = True)
 
 	# Open created file in preferred text editor
 	open_file = util.strtobool(raw_input('\nDo you want to open the file '
@@ -226,17 +226,17 @@ def quick_create(type, filename):
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser(description='Frog Commandline content creator')
-	parser.add_argument('-qpost', type=str, help='Quickly create a post [required: slug/filename]')
-	parser.add_argument('-qpage', type=str, help='Quickly create a page [required: slug/filename]')
-	parser.add_argument('-time', '--unixtime', action='store_true', help='Get unix time')
+	parser.add_argument('-post', type=str, help='Quickly create a post [required: slug/filename]')
+	parser.add_argument('-page', type=str, help='Quickly create a page [required: slug/filename]')
+	parser.add_argument('-t', '--time', action='store_true', help='Get unix time')
 
 	args = parser.parse_args()
 
-	if args.qpost:
-		quick_create('post', args.qpost)
-	elif args.qpage:
-		quick_create('page', args.qpage)
-	elif args.unixtime:
+	if args.post:
+		quick_create('post', args.post)
+	elif args.page:
+		quick_create('page', args.page)
+	elif args.time:
 		console_message(get_unix_time(), 'OKGREEN')
 	else:
 		create_manually()

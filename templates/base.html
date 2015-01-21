@@ -9,6 +9,7 @@
 		<title>{{ config.SITE.title }}</title>
 		<meta itemprop="description" name="description" content="{{ config.SITE.description }}">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
 
 		<link href="{{ url_for('recent_feed') }}" rel="alternate" title="Recent Changes" type="application/atom+xml">
 		<!-- Fonts -->
