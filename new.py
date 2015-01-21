@@ -8,6 +8,7 @@ Warn about duplicate slug
 
 import os
 import sys
+import argparse
 from distutils import util
 from datetime import datetime
 
@@ -23,7 +24,34 @@ bcolors = {
 	"UNDERLINE": "\033[4m"
 }
 
+# Colored std out messages
+def console_message(message, type, upper = True):
+	if upper:
+		message = message.upper()
+
+	sys.stdout.write(bcolors[type] + bcolors['BOLD'] +
+			'\n' + message + '\n' + bcolors['ENDC'])
+
+# Create a directory in current path
+def create_directory(path):
+	if not os.path.isdir(path):
+		os.makedirs(path)
+	return path
+
+# Detailed post creator
 def get_input():
+	"""
+	Utility for getting content meta data via Commandline
+
+	returns user specified data:
+		content_type : 'post' or 'page'
+		created_date : current date or user specified date
+		title: content title
+		slug/filename : taken from title if user hasn't specified
+		summary : conten summary
+		tags : applicable only to 'post' content type
+	"""
+
 	# Initial header messages
 	console_message('\nCreate new content', 'HEADER')
 	console_message('\nYou can always change these settings later \n',
@@ -46,14 +74,17 @@ def get_input():
 	console_message('Set content title', 'OKBLUE')
 	title = raw_input('\nEnter title : ')
 
-	create_slug = True
+	create_slug = True # By default dont take slug from title
+
+	# Prompt user for a custom slug or create it from title
 	if title:
 		create_slug = util.strtobool(raw_input('\nWant to create custom post slug ? \n'
 				'(else it will create from post title you have provided) [default: no] \n'
 				'Enter your choice: (y/n): ') or 'n')
 	else:
-		title = 'My awesome post title'
+		title = 'Title of your new content'
 
+	# Get slug
 	if create_slug:
 		# Get page file name
 		console_message('Set content slug', 'OKBLUE')
@@ -70,7 +101,8 @@ def get_input():
 
 	# Get summary
 	console_message('Set content summary', 'OKBLUE')
-	summary = raw_input('\nEnter {} summary : '.format(page_type))
+	summary = (raw_input('\nEnter {} summary : '.format(page_type)) or
+			'Summary of your new content in few words')
 
 	# Get tags (post specific fields)
 	if page_type == 'post':
@@ -83,18 +115,15 @@ def get_input():
 
 	return (page_type, created_date, filename, title, summary, tags)
 
-def console_message(message, type, upper = True):
-	if upper:
-		message = message.upper()
-
-	sys.stdout.write(bcolors[type] + bcolors['BOLD'] +
-			'\n' + message + bcolors['ENDC'])
-
 def get_date():
+	"""
+	Utility for getting date via Commandline
+	"""
+
 	set_date = util.strtobool(
 		raw_input('\nSet as current date ? (y/n): ') or 'y')
 
-	# Return current date
+	# Return current date if user asks for it
 	if set_date:
 		return datetime.now()
 
@@ -121,22 +150,28 @@ def get_date():
 		else:
 			return post_date or datetime.now()
 
-def create_directory(path):
-	create_path = 'contents/' + path
-	if not os.path.isdir(create_path):
-		os.makedirs(create_path)
-	return create_path
+def create(data):
+	"""
+	Create a content with provided date
 
-def create_post():
-	page_type, date, filename, title, summary, tags = get_input()
+	'data' contains list/tuple of
+		content_type
+		date
+		filename
+		title
+		summary
+		tags [can be empty]
+	"""
+
+	page_type, date, filename, title, summary, tags = data
 
 	# Lis of post meta
 	post_meta = [('type', page_type), ('timestamp', date.strftime('%s')),
-			('title', title), ('summary', summary)]
+			('updated', date.strftime('%s')), ('title', title), ('summary', summary)]
 
 	if page_type == 'post':
 		# If its a post then add tags
-		path = create_directory(date.strftime('%Y/%m/%d/'))
+		path = create_directory('contents/' + date.strftime('%Y/%m/%d/'))
 		post_meta.append(('tags', str(tags)))
 	elif page_type == 'page':
 		# It its a page then create file in contents directory
@@ -145,6 +180,7 @@ def create_post():
 	# Fina file path
 	full_path = path + filename + '.md'
 
+	# If file exists ask for a overwrite
 	overwrite = False
 	if os.path.exists(full_path):
 		console_message('File already exists with same date and same name',
@@ -153,7 +189,7 @@ def create_post():
 				'existing post ? (y/n): ') or 'n')
 
 		if not overwrite:
-			console_message('Aborted. ', 'WARNING')
+			console_message('Aborted', 'WARNING')
 			return None
 
 	# Write post meta to file
@@ -162,11 +198,45 @@ def create_post():
 			f.write((meta[0] + ': ' + meta[1] or '') + ' \n')
 		f.write('\n\n' + 'Your content goes here, Happy blogging !!!')
 
-	console_message('Successfully created post at {}. '.format(full_path.strip()),
-			'OKGREEN')
+	console_message('Successfully created post at : {}'.format(full_path),
+			'OKGREEN', upper = False)
 
-def update_post():
-	pass
+	# Open created file in preferred text editor
+	open_file = util.strtobool(raw_input('\nDo you want to open the file '
+		'in your preferred text editor ? (y/n): ') or 'n')
+
+	if open_file:
+		text_editor = raw_input('\nPlease enter your preferred text editor '
+				'(vim, vi, nano, subl, etc.. : ')
+
+		if text_editor:
+			os.system('{} {}'.format(text_editor, full_path))
+
+def create_manually():
+	create(get_input())
+
+def get_unix_time():
+	date = get_date()
+	return date.strftime('%s')
+
+def quick_create(type, filename):
+	filename = filename.strip().replace(' ', '-')
+	create((type, datetime.now(), filename,
+			'My new post', 'Summary of my new post', []))
 
 if __name__ == '__main__':
-	create_post()
+	parser = argparse.ArgumentParser(description='Frog Commandline content creator')
+	parser.add_argument('-qpost', type=str, help='Quickly create a post [required: slug/filename]')
+	parser.add_argument('-qpage', type=str, help='Quickly create a page [required: slug/filename]')
+	parser.add_argument('-time', '--unixtime', action='store_true', help='Get unix time')
+
+	args = parser.parse_args()
+
+	if args.qpost:
+		quick_create('post', args.qpost)
+	elif args.qpage:
+		quick_create('page', args.qpage)
+	elif args.unixtime:
+		console_message(get_unix_time(), 'OKGREEN')
+	else:
+		create_manually()
