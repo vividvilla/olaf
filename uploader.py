@@ -68,7 +68,7 @@ def add_commit_push(message, branch):
 		os.system('cd build && git push origin {}'.format(branch))
 
 if __name__ == '__main__':
-	parser = argparse.ArgumentParser(description='Frog Github helper')
+	parser = argparse.ArgumentParser(description='Olaf Github helper')
 	parser.add_argument('-m', '--message', type=str, default='new update',
 			help='commit message')
 	parser.add_argument('-b', '--branch', type=str, default='master',

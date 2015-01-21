@@ -1,13 +1,39 @@
-blog
-====
+# Olaf
+## because some blogs are worth freezing for.
 
-Personal blog
+Olaf freezes your complex and slower dynamic blog to simple and faster static blog.
+Olaf is made of ice...No, but Python(Flask).
 
-Design inspired by - https://begriffs.com/
+![Olaf dancing](https://d13yacurqjgara.cloudfront.net/users/21927/screenshots/1831989/dribbble.gif "Olaf")
 
+## Current features
 
-To do's
-=======
+### Basic features
+	- Markdown support
+	- Posts
+	- Pages
+	- Custom content slug
+	- Tags
+	- Archives
+	- Synatx highlighting
+	- Comments (Disqus)
+	- XML sitemap
+	- Atom feed
+	- Google Analytics integration
+	- Minimal design with responsive layout
+
+### Other features
+	- Github pages uploader
+	- Commandline content generator
+
+### Features you can expect in future
+	- Ghost/WordPress like GUI content creator editor
+	- Admin tools
+	- Custom themes
+	- Importers for other blogging platforms
+	- PDF Generator (Publish entire site as a ebook)
+
+## To do's
 
 - [x] Posts
 - [x] Pages
@@ -25,7 +51,7 @@ To do's
 - [x] Github pages uploader
 - [x] Github custom domain adder
 - [x] custom 404 page
-- [ ] Favicon
+- [x] Favicon
 - [ ] Mobile responsive design
 - [ ] Set page description tag for SEO
 - [ ] Google CSE integration // Later

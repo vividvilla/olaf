@@ -225,7 +225,7 @@ def quick_create(type, filename):
 			'My new post', 'Summary of my new post', []))
 
 if __name__ == '__main__':
-	parser = argparse.ArgumentParser(description='Frog Commandline content creator')
+	parser = argparse.ArgumentParser(description='Olaf Commandline content creator')
 	parser.add_argument('-post', type=str, help='Quickly create a post [required: slug/filename]')
 	parser.add_argument('-page', type=str, help='Quickly create a page [required: slug/filename]')
 	parser.add_argument('-t', '--time', action='store_true', help='Get unix time')

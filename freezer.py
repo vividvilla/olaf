@@ -292,7 +292,8 @@ def sitemap():
 	return response
 
 if __name__ == '__main__':
-	parser = argparse.ArgumentParser(description='frog app')
+	parser = argparse.ArgumentParser(
+		description='Olaf - because some blogs are worth freezing for.')
 	parser.add_argument('-f', '--freeze', action='store_true', help='Freeze site')
 	parser.add_argument('-p', '--port', type=int, default=5000,
 			help='Port to run app [default: 5000]')
