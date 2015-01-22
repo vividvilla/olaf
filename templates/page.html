@@ -14,7 +14,7 @@
 		{{ page.html | safe }}
 
 		<div class="post-meta">
-			{% if page.meta.get('updated') %}
+			{% if page.meta.get('updated') and page.meta.get('timestamp') != page.meta['updated'] %}
 				<span class="label">Updated at &mdash; </span>
 				<span class="date">
 					{{ timestamp_tostring(page.meta.updated, '%b %d, %Y').replace(" 0", " ") }}

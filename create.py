@@ -1,9 +1,12 @@
-# Inteface for creating pages
-
+# -*- coding: utf-8 -*-
 """
-yet to do
+    Olaf
+    ~~~~~~~~~
 
-Warn about duplicate slug
+    Simple commandline utility for creating post/page
+
+    :copyright: (c) 2015 by Vivek R.
+    :license: BSD, see LICENSE for more details.
 """
 
 import os
@@ -11,33 +14,10 @@ import sys
 import argparse
 from distutils import util
 from datetime import datetime
-import config
 
-#Shell script colors
-bcolors = {
-	"HEADER": "\033[95m",
-	"OKBLUE": "\033[94m",
-	"OKGREEN": "\033[92m",
-	"WARNING": "\033[93m",
-	"FAIL": "\033[91m",
-	"ENDC": "\033[0m",
-	"BOLD": "\033[1m",
-	"UNDERLINE": "\033[4m"
-}
-
-# Colored std out messages
-def console_message(message, type, upper = True, newline = False):
-	if upper:
-		message = message.upper()
-
-	sys.stdout.write(bcolors[type] + bcolors['BOLD'] +
-			'\n' + message + bcolors['ENDC'] + '\n' if newline else '')
-
-# Create a directory in current path
-def create_directory(path):
-	if not os.path.isdir(path):
-		os.makedirs(path)
-	return path
+from olaf import config
+from utils import bcolors, console_message, \
+		create_directory, get_unix_time
 
 # Detailed post creator
 def get_input():
@@ -215,10 +195,6 @@ def create(data):
 
 def create_manually():
 	create(get_input())
-
-def get_unix_time():
-	date = get_date()
-	return date.strftime('%s')
 
 def quick_create(type, filename):
 	filename = filename.strip().replace(' ', '-')

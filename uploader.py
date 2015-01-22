@@ -1,20 +1,19 @@
+# -*- coding: utf-8 -*-
+"""
+    Olaf
+    ~~~~~~~~~
+
+    Github pages uploader utility
+
+    :copyright: (c) 2015 by Vivek R.
+    :license: BSD, see LICENSE for more details.
+"""
+
 import os
-import sys
 import argparse
 
-import config
-
-#Shell script colors
-bcolors = {
-	"HEADER": "\033[95m",
-	"OKBLUE": "\033[94m",
-	"OKGREEN": "\033[92m",
-	"WARNING": "\033[93m",
-	"FAIL": "\033[91m",
-	"ENDC": "\033[0m",
-	"BOLD": "\033[1m",
-	"UNDERLINE": "\033[4m"
-}
+from olaf import config
+from utils import console_message
 
 def update_cname():
 	""" Create CNAME file or update if its defined
@@ -24,7 +23,7 @@ def update_cname():
 		f = open('build/CNAME', 'w+')
 		f.write(config.SITE['github_domain'])
 		f.close()
-		print 'CNAME updated'
+		console_message('CNAME updated', 'OKGREEN')
 	else:
 		try:
 			os.remove('build/CNAME')
@@ -33,12 +32,11 @@ def update_cname():
 
 def upload(commit, branch):
 	if not os.path.isdir("build/.git"):
-		print bcolors['OKGREEN'] + 'Initializing git repo' + bcolors['ENDC']
+		console_message('Initializing git repo', 'OKGREEN')
 		git_init()
 
 	add_commit_push(commit, branch)
-	print (bcolors['OKGREEN'] + 'Successfully updated recent changes.'
-			+ bcolors['ENDC'])
+	console_message('Successfully updated recent changes.o', 'OKGREEN')
 
 def git_init():
 	""" If not .git folder in build/ directory,
@@ -49,8 +47,9 @@ def git_init():
 				config.SITE['github_repo']))
 	else:
 		""" Exit if git remote ulr not defined in settings """
-		print (bcolors['FAIL'] + "You need to add github repo "
-					"url in config file" + bcolors['ENDC'])
+		console_message('You need to add github repo '
+					'url in config file', 'FAIL')
+		import sys
 		sys.exit()
 
 def add_commit_push(message, branch):
@@ -60,8 +59,9 @@ def add_commit_push(message, branch):
 			repo = branch))
 
 	if pull_status == 256:
-		print (bcolors['FAIL'] + "MERGE CONFLICT" + bcolors['ENDC'] +
-					"Discarding remote changes and pushing local changes")
+		console_message('MERGE CONFLICT', 'FAIL')
+		console_message('Discarding remote changes and pushing local changes')
+
 		os.system('cd build && git checkout --ours .')
 		os.system('cd build && git add -u && git commit -m "{}"'.format(
 				"Ignored remote changes"))
@@ -77,10 +77,6 @@ if __name__ == '__main__':
 	parser.add_argument('-c', '--cname', action='store_true', help='CNAME update')
 
 	args = parser.parse_args()
-
-	if not os.path.exits('config.py'):
-		os.system('cp config-sample.py config.py')
-		sys.stdout.write('created default config file')
 
 	if args.cname:
 		update_cname()

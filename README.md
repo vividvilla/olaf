@@ -17,6 +17,7 @@ Olaf freezes your complex and slower dynamic blog to simple and faster static bl
 	- Atom feed
 	- Google Analytics integration
 	- Minimal design with responsive layout
+	- Custom home page
 
 ### Other features
 	- Github pages uploader
@@ -28,6 +29,7 @@ Olaf freezes your complex and slower dynamic blog to simple and faster static bl
 	- Custom themes
 	- Importers for other blogging platforms
 	- PDF Generator (Publish entire site as a ebook)
+	- 301 redirect url
 
 ### To do's
 

@@ -1,4 +1,13 @@
-#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+"""
+    Olaf
+    ~~~~~~~~~
+
+    Main utility to run and freeze blog
+
+    :copyright: (c) 2015 by Vivek R.
+    :license: BSD, see LICENSE for more details.
+"""
 
 import sys
 import os
@@ -14,6 +23,9 @@ from flask import render_template, abort, redirect, \
 		url_for, request, make_response
 from flask_flatpages import FlatPages, pygments_style_defs
 
+from utils import timestamp_tostring, date_tostring, \
+		font_size, console_message
+
 # If config file not found copy sample config
 if not os.path.exists('config.py'):
 	os.system('cp config-sample.py config.py')
@@ -28,20 +40,6 @@ app.config.from_object('config')
 contents = FlatPages(app)
 freeze = Freezer(app)
 exclude_from_sitemap = [] #List of urls to be excluded from XML sitemap
-
-def timestamp_tostring(timestamp, format = '%d %m %Y'):
-	#Converts unix timestamp to date string with given format
-	return datetime.datetime.fromtimestamp(
-			int(timestamp)).strftime(format)
-
-def date_tostring(year, month, day = 1, format = '%d %b %Y'):
-	#Returns date string for given year, month and day with given format
-	date = datetime.datetime(int(year), int(month), int(day))
-	return date.strftime(format)
-
-def font_size(min, max, high, n):
-	# Calculate font size for tags
-	return (n/high)*(max-min) + min
 
 #Register utility functions to be used in jinja2 templates
 app.jinja_env.globals.update(timestamp_tostring=timestamp_tostring,
@@ -117,31 +115,73 @@ def get_posts(**filters):
 
 	return (posts, post_meta)
 
-# All Views
+def get_posts_by_slug(slug):
+	#Check for slug in root which means pages
+	content = [page for page in contents if page.path == slug]
 
-#Pygments style path
-@app.route('/pygments.css')
-def pygments_css():
-	return pygments_style_defs('tango'), 200, {'Content-Type': 'text/css'}
+	#Check for slug in posts if not found in pages
+	if not content:
+		content = [post for post in contents
+					if post.path[11::] == slug]
+	return content
 
-exclude_from_sitemap.append('/pygments.css') # Excludes url from sitemap
+
+
+""" Views """
 
 @app.route('/404.html')
 def custom_404():
+	""" Custom 404 page view """
 	return render_template('404.html')
 
-@app.route('/')
-def index():
+@app.route('/pygments.css')
+def pygments_css():
+	""" Default pygments style """
+	return (pygments_style_defs(config.SITE.get('pygments', 'tango'),
+			200, {'Content-Type': 'text/css'})
+
+exclude_from_sitemap.append('/pygments.css') # Excludes url from sitemap
+
+# Index vidw
+
+def get_index():
+	""" Check if custom home page set else return default index view """
+	if config.SITE.get('custom_home_page'):
+		content = get_posts_by_slug(config.SITE['custom_home_page'])
+
+		# Exception if slug not found both in pages and posts
+		if not content:
+			raise Exception('Custom home page url not found')
+
+		# Exception if duplicates found
+		if len(content) > 1:
+			raise Exception('Duplicate slug')
+
+		return custom_index
+	else:
+		return default_index
+
+def default_index():
+	""" Default index view """
 	posts, post_meta = get_posts(page_no = 1)
 	return render_template('index.html', page_no = 1,
 		posts = posts, next_page = (post_meta['max_pages'] > 1))
 
+def custom_index():
+	""" Custom home page view """
+	content = get_posts_by_slug(config.SITE['custom_home_page'])
+	content[0].meta['type'] = 'page'
+	return render_template('page.html', page=content[0])
+
+# Set home page
+app.add_url_rule('/', 'index', get_index())
+
 @app.route('/pages/<int:page_no>/')
 def pagination(page_no):
-	#Pagination to homepage
+	""" Home page pagination view """
 
-	# Redirect if it is a first page
-	if page_no == 1:
+	# Redirect if it is a first page (except when custom home page is set)
+	if page_no == 1 and not config.SITE.get('custom_home_page'):
 		return redirect(url_for('index'))
 
 	posts, post_meta = get_posts(page_no = page_no, abort = True)
@@ -151,13 +191,8 @@ def pagination(page_no):
 
 @app.route('/<path:slug>/')
 def posts(slug):
-	#Check for slug in root which means pages
-	content = [page for page in contents if page.path == slug]
-
-	#Check for slug in posts if not found in pages
-	if not content:
-		content = [post for post in contents
-					if post.path[11::] == slug]
+	""" Individual post/page view """
+	content = get_posts_by_slug(slug)
 
 	if not content:
 		abort(404) #Slug not found both in pages and posts
@@ -173,6 +208,7 @@ def posts(slug):
 
 @app.route('/tags/')
 def tags():
+	""" List of tags view """
 	tags = [tag for post in contents
 				for tag in post.meta.get('tags', [])]
 	tags = sorted(Counter(tags).items()) #Count tag occurances
@@ -182,6 +218,7 @@ def tags():
 
 @app.route('/tags/<string:tag>/')
 def tag_page(tag):
+	""" Individual tag view """
 	posts, post_meta = get_posts(tag=tag, page_no=1, abort=True)
 	return render_template('tag.html', tag=tag, posts=posts,
 			page_no=1, next_page=(post_meta['max_pages'] > 1),
@@ -189,6 +226,7 @@ def tag_page(tag):
 
 @app.route('/tags/<string:tag>/pages/<int:page_no>/')
 def tag_pages(tag, page_no):
+	""" Pagination for Individual tags """
 	posts, post_meta = get_posts(tag=tag, page_no=page_no, abort=True)
 
 	# Redirect if it is a first page
@@ -203,10 +241,12 @@ def tag_pages(tag, page_no):
 
 @app.route('/list/')
 def list():
+	""" All posts list view """
 	return render_template("list.html", posts = get_posts()[0])
 
 @app.route('/archive/')
 def archive():
+	""" Date based archive view """
 	# Get all posts dates in format (year, month)
 	dates = [(timestamp_tostring(post.meta.get('timestamp'), '%Y'),
 			timestamp_tostring(post.meta.get('timestamp'), '%m'))
@@ -229,11 +269,13 @@ def archive():
 
 @app.route('/archive/<int:year>/')
 def yearly_archive(year):
+	""" Yearly archive view """
 	posts, post_meta = get_posts(year=year, abort=True)
 	return render_template('archive_page.html', tag=year, year=year, posts=posts)
 
 @app.route('/archive/<int:year>/<int:month>/')
 def monthly_archive(year, month):
+	""" Monthly archive view """
 	date_string = date_tostring(year, month, format='%b %Y')
 	posts, post_meta = get_posts(year=year, month=month, abort=True)
 	return render_template('archive_page.html', tag=date_string, year=year,
@@ -243,6 +285,7 @@ def monthly_archive(year, month):
 
 @app.route('/recent.atom')
 def recent_feed():
+	""" Atom feed generator """
 	feed = AtomFeed('Recent Articles',
 					feed_url=request.url, url=request.url_root)
 
@@ -269,8 +312,7 @@ def recent_feed():
 # a route for generating sitemap.xml
 @app.route('/sitemap.xml', methods=['GET'])
 def sitemap():
-	"""Generate sitemap.xml. Makes a list of urls and date modified."""
-
+	""" XML sitemap generator """
 	pages=[]
 
 	#Set last updated date for static pages as 10 days before
@@ -312,7 +354,7 @@ if __name__ == '__main__':
 	args = parser.parse_args()
 
 	if args.freeze:
-		print "Successfully freezed."
+		console_message('Successfully freezed.', 'OKGREEN', newline = True)
 		freeze.freeze()
 	else:
 		app.run(port = args.port)
