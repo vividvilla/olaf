@@ -259,24 +259,15 @@ footer {
 /* Tags
 ====================*/
 
-.tag ul,
 ul.tags {
 	margin-top: 2rem;
 }
 
-.tag ul li,
 ul.tags li {
 	padding: 0;
 	margin: 0;
 }
 
-.tag ul li a,
-ul.tags li a {
-/*	color: #333;
-	text-decoration: underline;*/
-}
-
-.tag ul li a:hover,
 ul.tags li a:hover {
 	text-decoration: none;
 }

@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% block page_title %}{{ page.title }}{% endblock %}
+{% block page_description %}{{ page.meta.get('summary', page.body[:160]) }}{% endblock %}
 
 {% block pageclass %}page{% endblock %}
 {% block content %}
