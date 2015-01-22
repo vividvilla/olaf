@@ -50,7 +50,7 @@ Olaf freezes your complex and slower dynamic blog to simple and faster static bl
 - [x] Github custom domain adder
 - [x] custom 404 page
 - [x] Favicon
-- [ ] Mobile responsive design
+- [x] Mobile responsive design
 - [ ] Set page description tag for SEO
 - [ ] Google CSE integration // Later
 
