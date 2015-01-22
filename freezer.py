@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
 import sys
+import os
 import datetime
 import argparse
 from collections import Counter, OrderedDict
@@ -12,6 +13,11 @@ from werkzeug.contrib.atom import AtomFeed
 from flask import render_template, abort, redirect, \
 		url_for, request, make_response
 from flask_flatpages import FlatPages, pygments_style_defs
+
+# If config file not found copy sample config
+if not os.path.exists('config.py'):
+	os.system('cp config-sample.py config.py')
+	sys.stdout.write('created config file')
 
 import config
 
@@ -297,7 +303,6 @@ if __name__ == '__main__':
 	parser.add_argument('-f', '--freeze', action='store_true', help='Freeze site')
 	parser.add_argument('-p', '--port', type=int, default=5000,
 			help='Port to run app [default: 5000]')
-
 	args = parser.parse_args()
 
 	if args.freeze:

@@ -65,7 +65,8 @@ def add_commit_push(message, branch):
 		os.system('cd build && git checkout --ours .')
 		os.system('cd build && git add -u && git commit -m "{}"'.format(
 				"Ignored remote changes"))
-		os.system('cd build && git push origin {}'.format(branch))
+
+	os.system('cd build && git push origin {}'.format(branch))
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser(description='Olaf Github helper')
@@ -76,6 +77,10 @@ if __name__ == '__main__':
 	parser.add_argument('-c', '--cname', action='store_true', help='CNAME update')
 
 	args = parser.parse_args()
+
+	if not os.path.exits('config.py'):
+		os.system('cp config-sample.py config.py')
+		sys.stdout.write('created default config file')
 
 	if args.cname:
 		update_cname()

@@ -11,6 +11,7 @@ import sys
 import argparse
 from distutils import util
 from datetime import datetime
+import config
 
 #Shell script colors
 bcolors = {
@@ -171,14 +172,14 @@ def create(data):
 
 	if page_type == 'post':
 		# If its a post then add tags
-		path = create_directory('contents/' + date.strftime('%Y/%m/%d/'))
+		path = create_directory(config.FLATPAGES_ROOT + date.strftime('/%Y/%m/%d/'))
 		post_meta.append(('tags', str(tags)))
 	elif page_type == 'page':
 		# It its a page then create file in contents directory
-		path = 'contents/'
+		path = config.FLATPAGES_ROOT + '/'
 
 	# Fina file path
-	full_path = path + filename + '.md'
+	full_path = path + filename + config.FLATPAGES_EXTENSION
 
 	# If file exists ask for a overwrite
 	overwrite = False
@@ -196,7 +197,7 @@ def create(data):
 	with open(full_path, 'wb+') as f:
 		for meta in post_meta:
 			f.write((meta[0] + ': ' + meta[1] or '') + ' \n')
-		f.write('\n\n' + 'Your content goes here, Happy blogging !!!')
+		f.write('\n' + 'Your content goes here, Happy blogging !!!')
 
 	console_message('Successfully created post at : {}'.format(full_path),
 			'OKGREEN', upper = False, newline = True)
