@@ -60,7 +60,7 @@ def add_commit_push(message, branch):
 
 	if pull_status == 256:
 		console_message('MERGE CONFLICT', 'FAIL')
-		console_message('Discarding remote changes and pushing local changes')
+		console_message('Discarding remote changes and pushing local changes', '')
 
 		os.system('cd build && git checkout --ours .')
 		os.system('cd build && git add -u && git commit -m "{}"'.format(
