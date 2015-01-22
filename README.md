@@ -53,6 +53,10 @@ Olaf freezes your complex and slower dynamic blog to simple and faster static bl
 - [x] Mobile responsive design
 - [x] Set page description tag for SEO
 - [ ] Google CSE integration // Later
+- [ ] Clean up api (posts and page)
+- [ ] Unit tests
+- [ ] Document settings
+- [ ] Documentation
 
 - [x] Cli post creator
 	- [x] New posts
