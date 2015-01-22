@@ -2,7 +2,7 @@
 
 Olaf freezes your complex and slower dynamic blog to simple and faster static blog. BTW its not made of ice but Python(Flask).
 
-![Olaf dancing](https://d13yacurqjgara.cloudfront.net/users/21927/screenshots/1831989/dribbble.gif "Olaf")
+![Olaf dancing](https://raw.githubusercontent.com/vividvilla/olaf/master/static/img/olaf.gif "Olaf")
 
 ### Basic features
 	- Markdown support
