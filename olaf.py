@@ -137,8 +137,9 @@ def custom_404():
 @app.route('/pygments.css')
 def pygments_css():
 	""" Default pygments style """
-	return (pygments_style_defs(config.SITE.get('pygments', 'tango'),
-			200, {'Content-Type': 'text/css'})
+	pyments_style = config.SITE.get('pygments') or 'tango'
+	return (pygments_style_defs(pyments_style),
+				200, {'Content-Type': 'text/css'})
 
 exclude_from_sitemap.append('/pygments.css') # Excludes url from sitemap
 

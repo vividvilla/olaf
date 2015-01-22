@@ -8,10 +8,6 @@ textarea {
     color: #222;
 }
 
-html {
-
-}
-
 ::-moz-selection {
     background: #b3d4fc;
     text-shadow: none;
@@ -344,15 +340,67 @@ ul.tags-cloud li {
    Media Queries
    ========================================================================== */
 
-@media only screen and (min-width: 35em) {
-
-}
-
 @media print,
        (-o-min-device-pixel-ratio: 5/4),
        (-webkit-min-device-pixel-ratio: 1.25),
        (min-resolution: 120dpi) {
 
+}
+
+/* Large screens ----------- */
+@media only screen  and (min-width : 1824px) {
+	body {
+		font-size: 1.8em;
+	}
+
+	.container {
+		max-width: 960px;
+	}
+}
+
+/* Tablet lanscape and desktop */
+@media only screen and (max-width: 1024px) {
+}
+
+/* Tablets potrait */
+@media only screen and (max-width: 768px) {
+	body {
+		font-size: 1.5em;
+	}
+
+	header .page-label {
+		display: none;
+	}
+
+	header .columns,
+	main .columns {
+		width: 100% !important;
+		margin: 0;
+		text-align: left;
+	}
+
+	header .columns {
+		padding: 5px 0;
+	}
+
+	.home .post-date,
+	footer {
+		text-align: left;
+	}
+}
+
+/* Smartphones landscape */
+@media only screen and (max-width: 480px) {
+	body {
+		font-size: 1.4em;
+	}
+}
+
+/* Smartphones potrait */
+@media only screen and (max-width: 300px) {
+	body {
+		font-size: 1.3em;
+	}
 }
 
 /* ==========================================================================
@@ -488,3 +536,4 @@ ul.tags-cloud li {
         page-break-after: avoid;
     }
 }
+
