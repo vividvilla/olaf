@@ -4,6 +4,10 @@
 
 {% block content %}
 	<h1 class="page-title">All tags</h1>
+	{% if not tags %}
+		<div class="post-meta"></div>
+		Perhaps you need to write something or add tags to your posts.
+	{% endif %}
 	<ul class="tags tags-cloud">
 		{% for tag in tags %}
 			<li><a href="{{ url_for('tag_page', tag=tag[0] ) }}" style="font-size: {{ font_size(100, 200, max_occ, tag[1]) }}%">{{ tag[0] }}</a></li>

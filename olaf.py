@@ -241,12 +241,12 @@ def tag_pages(tag, page_no):
 
 # Archive views
 
-@app.route('/list/posts')
+@app.route('/list/posts/')
 def list_posts():
 	""" All posts list view """
 	return render_template("list_posts.html", posts = get_posts()[0])
 
-@app.route('/list/pages')
+@app.route('/list/pages/')
 def list_pages():
 	""" All pages list view """
 	pages = [page for page in contents

@@ -4,6 +4,10 @@
 
 {% block content %}
 	<h1 class="page-title">Archives</h1>
+	{% if not archive %}
+		<div class="post-meta"></div>
+		Perhaps you need to write some posts.
+	{% endif %}
 	<ul class="tags">
 		{% for year, year_data in archive.items() %}
 			<li><a href="{{ url_for('yearly_archive', year=year) }}">{{ year }}</a> - {{ year_data['count'] }} entries
