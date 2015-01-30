@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block page_title %}Pages list{% endblock %}
+{% block page_description %}List of all pages.{% endblock %}
+
+{% block pageclass %} List of all pages {% endblock %}
+
+{% block content %}
+	<h1 class="page-title">List of all pages</h1>
+	<ul class="tags">
+		{% for page in pages %}
+			<li><a href="{{ url_for('posts', slug=page.path) }}">{{ page.title }}</a></li>
+		{% endfor %}
+	</ul>
+{% endblock %}
+
