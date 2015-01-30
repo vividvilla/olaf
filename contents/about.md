@@ -1,4 +1,5 @@
 title: About
+type: page
 
 Hi there ! I don&#8217;t know how you ended up here but thank you for taking interest on me.
 

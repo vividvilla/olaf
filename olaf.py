@@ -213,7 +213,8 @@ def tags():
 	tags = [tag for post in contents
 				for tag in post.meta.get('tags', [])]
 	tags = sorted(Counter(tags).items()) #Count tag occurances
-	max_occ = max([tag[1] for tag in tags])
+
+	max_occ = 0 if not tags else max([tag[1] for tag in tags])
 
 	return render_template('tags.html', tags = tags, max_occ = max_occ)
 
@@ -240,10 +241,18 @@ def tag_pages(tag, page_no):
 
 # Archive views
 
-@app.route('/list/')
-def list():
+@app.route('/list/posts')
+def list_posts():
 	""" All posts list view """
-	return render_template("list.html", posts = get_posts()[0])
+	return render_template("list_posts.html", posts = get_posts()[0])
+
+@app.route('/list/pages')
+def list_pages():
+	""" All pages list view """
+	pages = [page for page in contents
+				if page.meta.get('type') == 'page']
+
+	return render_template("list_pages.html", pages = pages)
 
 @app.route('/archive/')
 def archive():
