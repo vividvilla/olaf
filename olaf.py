@@ -361,10 +361,12 @@ if __name__ == '__main__':
 	parser.add_argument('-f', '--freeze', action='store_true', help='Freeze site')
 	parser.add_argument('-p', '--port', type=int, default=5000,
 			help='Port to run app [default: 5000]')
+	parser.add_argument('-host', '--host', type=str, default='127.0.0.1',
+			help='Port to run app [default: 5000]')
 	args = parser.parse_args()
 
 	if args.freeze:
 		console_message('Successfully freezed.', 'OKGREEN', newline = True)
 		freeze.freeze()
 	else:
-		app.run(port = args.port)
+		app.run(port = args.port, host = args.host)
