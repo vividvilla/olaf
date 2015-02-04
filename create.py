@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """
-    Olaf
-    ~~~~~~~~~
+	Olaf
+	~~~~~~~~~
 
-    Simple commandline utility for creating post/page
+	Simple commandline utility for creating post/page
 
-    :copyright: (c) 2015 by Vivek R.
-    :license: BSD, see LICENSE for more details.
+	:copyright: (c) 2015 by Vivek R.
+	:license: BSD, see LICENSE for more details.
 """
 
 import os
@@ -17,7 +17,8 @@ from datetime import datetime
 
 from olaf import config
 from utils import bcolors, console_message, \
-		create_directory, get_unix_time
+	create_directory, get_unix_time
+
 
 # Detailed post creator
 def get_input():
@@ -36,15 +37,15 @@ def get_input():
 	# Initial header messages
 	console_message('\nCreate new content', 'HEADER')
 	console_message('\nYou can always change these settings later \n',
-			'OKBLUE', upper = False)
+			'OKBLUE', upper=False)
 
 	# Get page type
 	console_message('Set content type', 'OKBLUE')
 	page_type = raw_input('\nEnter page type (post/page)'
 			'[default: post]: ') or 'post'
 
-	if not page_type in ('post', 'page'):
-		console_message('Invalid page type.', 'FAIL', newline = True)
+	if page_type not in ('post', 'page'):
+		console_message('Invalid page type.', 'FAIL', newline=True)
 		sys.exit()
 
 	# Get creation date
@@ -54,14 +55,14 @@ def get_input():
 	# Get title
 	console_message('Set content title', 'OKBLUE')
 	title = raw_input('\nEnter title : ')
-
-	create_slug = True # By default dont take slug from title
+	create_slug = True  # By default dont take slug from title
 
 	# Prompt user for a custom slug or create it from title
 	if title:
-		create_slug = util.strtobool(raw_input('\nWant to create custom post slug ? \n'
-				'(else it will create from post title you have provided) [default: no] \n'
-				'Enter your choice: (y/n): ') or 'n')
+		create_slug = util.strtobool(raw_input(
+			'\nWant to create custom post slug ? \n'
+			'(else it will create from post title you have provided) [default: no] \n'
+			'Enter your choice: (y/n): ') or 'n')
 	else:
 		title = 'Title of your new content'
 
@@ -92,9 +93,10 @@ def get_input():
 		try:
 			tags = [i.strip() for i in raw_tags.split(',')]
 		except ValueError as e:
-			console_message(e.message, 'FAIL', upper = False)
+			console_message(e.message, 'FAIL', upper=False)
 
 	return (page_type, created_date, filename, title, summary, tags)
+
 
 def get_date():
 	"""
@@ -123,13 +125,14 @@ def get_date():
 			hour, minutes = [int(i.strip()) for i in time.split(',')]
 			post_date = datetime(year, month, day, hour, minutes)
 		except ValueError as e:
-			console_message(e.message, 'FAIL', upper = False)
+			console_message(e.message, 'FAIL', upper=False)
 			retry = util.strtobool(raw_input('\nWant to re-enter the date '
 					'(Current date will be set if not) ? (y/n): ') or 'n')
 		if retry:
 			pass
 		else:
 			return post_date or datetime.now()
+
 
 def create(data):
 	"""
@@ -170,7 +173,7 @@ def create(data):
 				'existing post ? (y/n): ') or 'n')
 
 		if not overwrite:
-			console_message('Aborted', 'WARNING', newline = True)
+			console_message('Aborted', 'WARNING', newline=True)
 			return None
 
 	# Write post meta to file
@@ -180,7 +183,7 @@ def create(data):
 		f.write('\n' + 'Your content goes here, Happy blogging !!!')
 
 	console_message('Successfully created post at : {}'.format(full_path),
-			'OKGREEN', upper = False, newline = True)
+			'OKGREEN', upper=False, newline=True)
 
 	# Open created file in preferred text editor
 	open_file = util.strtobool(raw_input('\nDo you want to open the file '
@@ -193,19 +196,26 @@ def create(data):
 		if text_editor:
 			os.system('{} {}'.format(text_editor, full_path))
 
+
 def create_manually():
 	create(get_input())
+
 
 def quick_create(type, filename):
 	filename = filename.strip().replace(' ', '-')
 	create((type, datetime.now(), filename,
 			'My new post', 'Summary of my new post', []))
 
+
 if __name__ == '__main__':
-	parser = argparse.ArgumentParser(description='Olaf Commandline content creator')
-	parser.add_argument('-post', type=str, help='Quickly create a post [required: slug/filename]')
-	parser.add_argument('-page', type=str, help='Quickly create a page [required: slug/filename]')
-	parser.add_argument('-t', '--time', action='store_true', help='Get unix time')
+	parser = argparse.ArgumentParser(
+		description='Olaf Commandline content creator')
+	parser.add_argument(
+		'-post', type=str, help='Quickly create a post [required: slug/filename]')
+	parser.add_argument(
+		'-page', type=str, help='Quickly create a page [required: slug/filename]')
+	parser.add_argument(
+		'-t', '--time', action='store_true', help='Get unix time')
 
 	args = parser.parse_args()
 
