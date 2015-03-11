@@ -15,6 +15,7 @@ import datetime
 import argparse
 from collections import Counter, OrderedDict
 
+import click
 from flask import Flask
 from urlparse import urljoin
 from flask_frozen import Freezer
@@ -378,3 +379,60 @@ if __name__ == '__main__':
 		freeze.freeze()
 	else:
 		app.run(port=args.port, host=args.host)
+
+
+@click.group()
+def cli():
+	'''
+	Olaf command line utility
+	'''
+	pass
+
+@cli.command()
+@click.option('--theme', default='basic',
+	help='blog theme (default: basic)')
+@click.option('--port', default=5000,
+	help='port to run (default: 5000)')
+@click.option('--host', default='127.0.0.1',
+	help='hostname to run (default: 127.0.0.1)')
+def run(theme, port, host):
+	'''
+	run olaf local server
+	'''
+	pass
+
+@cli.command()
+@click.option('--theme', default='basic',
+	help='blog theme (default: basic)')
+@click.argument('path', type=click.Path())
+def freeze(theme, path):
+	'''
+	freeze blog to static files
+	'''
+	pass
+
+@cli.command()
+@click.option('--message', default='new updates',
+	help='commit message')
+@click.option('--branch', default='master',
+	help='branch to be pushed (default: master)')
+def upload():
+	'''
+	Git upload helper
+	'''
+	pass
+
+@cli.command()
+def cname():
+	'''
+	Update CNAME file
+	'''
+	pass
+
+@cli.command()
+@click.argument('project_name', type=str, required=True)
+def createsite(project_name):
+	'''
+	create a blog
+	'''
+	pass

@@ -55,8 +55,10 @@ Olaf freezes your complex and slower dynamic blog to simple and faster static bl
 - [ ] Google CSE integration // Later
 - [ ] Clean up api (posts and page)
 - [ ] Unit tests
-- [ ] Document settings
-- [ ] Documentation
+- [ ] Document example settings
+- [ ] Project Documentation
+- [ ] Package as a installer
+- [ ] Pluggable themes
 
 - [x] Cli post creator
 	- [x] New posts
