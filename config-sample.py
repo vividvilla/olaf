@@ -1,6 +1,6 @@
 DEBUG = True
 
-FLATPAGES_ROOT = 'contents' # Directory to store markdown files
+#FLATPAGES_ROOT = '_contents' # Directory to store markdown files
 FLATPAGES_AUTO_RELOAD = DEBUG # Useful for development purpose
 FLATPAGES_EXTENSION = '.md' # Default extension for markdown file
 FREEZER_DESTINATION_IGNORE = '.git*' # Will ignore .git directory under build/ instead of overwriting everytime you freeze
@@ -16,6 +16,6 @@ SITE = {
 	'analytics': 'UA-XXX-VVV', # Optional
 	'disqus': True, # Optional
 	'github_domain': 'vivek.github.io', # Optional
-	'github_repo': 'https://github.com/vividvilla/vividvilla.github.io.git' # Optional
+	'github_repo': 'https://github.com/vividvilla/vividvilla.github.io.git', # Optional
 	'pygments': '' # set pygments style
 }

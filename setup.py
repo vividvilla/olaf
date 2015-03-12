@@ -11,4 +11,4 @@ setup(
 		[console_scripts]
 		olaf=olaf:cli
 	'''
-	)
+)

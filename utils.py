@@ -12,6 +12,7 @@
 import os
 import sys
 import datetime
+from unicodedata import normalize
 
 #Shell script colors
 bcolors = {
@@ -60,3 +61,15 @@ def date_tostring(year, month, day = 1, format = '%d %b %Y'):
 def font_size(min, max, high, n):
 	# Calculate font size for tags
 	return (n/high)*(max-min) + min
+
+def slugify(text, encoding=None,
+         permitted_chars='abcdefghijklmnopqrstuvwxyz0123456789-'):
+	# sanatize slug
+    if isinstance(text, str):
+        text = text.decode(encoding or 'ascii')
+    clean_text = text.strip().replace(' ', '-').lower()
+    while '--' in clean_text:
+        clean_text = clean_text.replace('--', '-')
+    ascii_text = normalize('NFKD', clean_text).encode('ascii', 'ignore')
+    strict_text = map(lambda x: x if x in permitted_chars else '', ascii_text)
+    return ''.join(strict_text)
