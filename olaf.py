@@ -12,26 +12,24 @@
 import os
 import sys
 import shutil
-import datetime
-import argparse
 
 import click
 
 import blog
-from utils import console_message, slugify
+from utils import slugify
 
 path = os.path.abspath(__file__)
 dir_path = os.path.dirname(path)
 current_path = os.getcwd()
 default_themes = ['basic']
 
+
 def create_project_site(project_name):
 	try:
 		# create project directory
 		os.mkdir(project_name)
 	except OSError as e:
-		click.secho('Error while creating site - {}'.format(e),
-			fg='red')
+		click.secho('Error while creating site - {}'.format(e), fg='red')
 		sys.exit(0)
 
 	try:
@@ -40,25 +38,29 @@ def create_project_site(project_name):
 			os.path.join(dir_path, 'config-sample.py'),
 			os.path.join(current_path, project_name, 'config.py'))
 	except IOError:
-		click.secho('Error while creating site - {}'.format(e),
-			fg='red')
+		click.secho('Error while creating site - {}'.format(e), fg='red')
 		sys.exit(0)
 
 	try:
 		# create init file
-		open(os.path.join(current_path, project_name, '__init__.py'),
-			'a').close()
+		open(
+			os.path.join(current_path, project_name, '__init__.py'),
+			'a'
+		).close()
 		# disqus file
-		open(os.path.join(current_path, project_name, 'disqus.html'),
-			'a').close()
+		open(
+			os.path.join(current_path, project_name, 'disqus.html'),
+			'a'
+		).close()
 		# create contents directory
 		os.mkdir(os.path.join(current_path, project_name, '_contents'))
 		os.mkdir(os.path.join(current_path, project_name, '_contents', 'posts'))
 		os.mkdir(os.path.join(current_path, project_name, '_contents', 'pages'))
 	except OSError:
-		click.secho('Error while creating site - {}'.format(e),
-			fg='red')
+		click.secho(
+			'Error while creating site - {}'.format(e), fg='red')
 		sys.exit(0)
+
 
 @click.group()
 def cli():
@@ -67,6 +69,7 @@ def cli():
 	'''
 	pass
 
+
 @cli.command()
 @click.argument('project_name', type=str, required=True)
 @click.option('--demo', type=bool, default=True)
@@ -74,8 +77,7 @@ def createsite(project_name, demo):
 	'''
 	create a blog
 	'''
-
-	project_name = slugify(project_name) # santize project name
+	project_name = slugify(project_name)  # santize project name
 	create_project_site(project_name)
 	click.secho('site "{}" has been successfully created'.format(
 		project_name), fg='green')
@@ -84,27 +86,32 @@ def createsite(project_name, demo):
 	if demo:
 		shutil.copyfile(
 			os.path.join(dir_path, 'demo-files', 'hello-world.md'),
-			os.path.join(current_path,
-				project_name, '_contents', 'posts', 'hello-world.md'))
+			os.path.join(
+				current_path, project_name, '_contents',
+				'posts', 'hello-world.md'))
 
 		shutil.copyfile(
 			os.path.join(dir_path, 'demo-files', 'typography.md'),
-			os.path.join(current_path,
-				project_name, '_contents', 'posts', 'typography.md'))
+			os.path.join(
+				current_path, project_name, '_contents',
+				'posts', 'typography.md'))
 
 		shutil.copyfile(
 			os.path.join(dir_path, 'demo-files', 'sample-page.md'),
-			os.path.join(current_path,
-				project_name, '_contents', 'pages', 'sample-page.md'))
+			os.path.join(
+				current_path, project_name, '_contents',
+				'pages', 'sample-page.md'))
 
 	click.secho('demo files successfully populated', fg='green')
 
+
 @cli.command()
-@click.option('--theme', default='basic',
-	help='blog theme (default: basic)')
-@click.option('--port', default=5000,
-	help='port to run (default: 5000)')
-@click.option('--host', default='127.0.0.1',
+@click.option(
+	'--theme', default='basic', help='blog theme (default: basic)')
+@click.option(
+	'--port', default=5000, help='port to run (default: 5000)')
+@click.option(
+	'--host', default='127.0.0.1',
 	help='hostname to run (default: 127.0.0.1)')
 def run(theme, port, host):
 	'''
@@ -114,7 +121,8 @@ def run(theme, port, host):
 
 	# check if inside site directory
 	if not os.path.exists(config_path):
-		click.secho('Cannot find config file, please make sure'
+		click.secho(
+			'Cannot find config file, please make sure'
 			' you are inside the site directory', fg='red')
 		sys.exit(0)
 
@@ -129,13 +137,14 @@ def run(theme, port, host):
 	contents_path = os.path.join(current_path, '_contents')
 
 	# create app
-	app = blog.create_app(config_path,
-		theme_path, contents_path, current_path)
+	app = blog.create_app(
+		config_path, theme_path, contents_path, current_path)
 	app.run(port=port, host=host)
 
+
 @cli.command()
-@click.option('--theme', default='basic',
-	help='blog theme (default: basic)')
+@click.option(
+	'--theme', default='basic', help='blog theme (default: basic)')
 @click.argument('path', type=click.Path())
 def freeze(theme, path):
 	'''
@@ -143,16 +152,19 @@ def freeze(theme, path):
 	'''
 	pass
 
+
 @cli.command()
-@click.option('--message', default='new updates',
-	help='commit message')
-@click.option('--branch', default='master',
+@click.option(
+	'--message', default='new updates', help='commit message')
+@click.option(
+	'--branch', default='master',
 	help='branch to be pushed (default: master)')
 def upload():
 	'''
 	Git upload helper
 	'''
 	pass
+
 
 @cli.command()
 def cname():
@@ -161,6 +173,7 @@ def cname():
 	'''
 	pass
 
+
 @cli.command()
 def utils():
 	'''
@@ -168,12 +181,14 @@ def utils():
 	'''
 	pass
 
+
 @cli.command()
 def importer():
 	'''
 	Importer tools
 	'''
 	pass
+
 
 @cli.command()
 def export():
@@ -183,20 +198,20 @@ def export():
 	pass
 
 
-if __name__ == '__main__':
-	parser = argparse.ArgumentParser(
-		description='Olaf - because some blogs are worth freezing for.')
-	parser.add_argument('-f', '--freeze', action='store_true', help='Freeze site')
-	parser.add_argument(
-		'-p', '--port', type=int, default=5000,
-		help='Port to run app [default: 5000]')
-	parser.add_argument(
-		'-host', '--host', type=str, default='127.0.0.1',
-		help='Port to run app [default: 5000]')
-	args = parser.parse_args()
+# if __name__ == '__main__':
+# 	parser = argparse.ArgumentParser(
+# 		description='Olaf - because some blogs are worth freezing for.')
+# 	parser.add_argument('-f', '--freeze', action='store_true', help='Freeze site')
+# 	parser.add_argument(
+# 		'-p', '--port', type=int, default=5000,
+# 		help='Port to run app [default: 5000]')
+# 	parser.add_argument(
+# 		'-host', '--host', type=str, default='127.0.0.1',
+# 		help='Port to run app [default: 5000]')
+# 	args = parser.parse_args()
 
-	if args.freeze:
-		console_message('Successfully freezed.', 'OKGREEN', newline=True)
-		freeze.freeze()
-	else:
-		app.run(port=args.port, host=args.host)
+# 	if args.freeze:
+# 		console_message('Successfully freezed.', 'OKGREEN', newline=True)
+# 		freeze.freeze()
+# 	else:
+# 		app.run(port=args.port, host=args.host)
