@@ -22,7 +22,6 @@ from flask import render_template, abort, redirect, url_for, \
 	request, make_response
 from flask_flatpages import FlatPages, pygments_style_defs
 
-import config
 from utils import timestamp_tostring, date_tostring, \
 	font_size, date_format
 
@@ -40,12 +39,11 @@ def create_app(config_path, theme_path, contents_path, current_path):
 
 	app.config.from_pyfile(config_path)
 	app.config.update(FLATPAGES_ROOT=contents_path)
+	config = app.config
 
 	# App module initialize
 	contents = FlatPages(app)
 	freeze = Freezer(app)
-
-	# import pdb; pdb.set_trace()
 
 	def check_content_type(path, content_type):
 		if content_type == 'post':
@@ -133,7 +131,7 @@ def create_app(config_path, theme_path, contents_path, current_path):
 
 		# Filter based on page number and pagination limit
 		page_no = filters.get('page_no')
-		limit = filters.get('limit') or config.SITE['limit']
+		limit = filters.get('limit') or config['SITE']['limit']
 		max_pages = 0
 		if(page_no):
 			paginated = [posts[n:n + limit] for n in range(0, len(posts), limit)]
@@ -170,7 +168,7 @@ def create_app(config_path, theme_path, contents_path, current_path):
 	@app.route('/pygments.css')
 	def pygments_css():
 		""" Default pygments style """
-		pyments_style = config.SITE.get('pygments') or 'tango'
+		pyments_style = config['SITE'].get('pygments') or 'tango'
 		return (pygments_style_defs(pyments_style), 200, {'Content-Type': 'text/css'})
 
 	exclude_from_sitemap.append('/pygments.css')  # Excludes url from sitemap
@@ -178,8 +176,8 @@ def create_app(config_path, theme_path, contents_path, current_path):
 
 	def get_index():
 		""" Check if custom home page set else return default index view """
-		if config.SITE.get('custom_home_page'):
-			content = get_post_by_slug(config.SITE['custom_home_page'])
+		if config['SITE'].get('custom_home_page'):
+			content = get_post_by_slug(config['SITE']['custom_home_page'])
 
 			# Exception if slug not found both in pages and posts
 			if not content:
@@ -203,7 +201,7 @@ def create_app(config_path, theme_path, contents_path, current_path):
 
 	def custom_index():
 		""" Custom home page view """
-		content = get_post_by_slug(config.SITE['custom_home_page'])
+		content = get_post_by_slug(config['SITE']['custom_home_page'])
 		content[0].meta['type'] = 'page'
 		return render_template('page.html', page=content[0])
 
@@ -216,7 +214,7 @@ def create_app(config_path, theme_path, contents_path, current_path):
 		""" Home page pagination view """
 
 		# Redirect if it is a first page (except when custom home page is set)
-		if page_no == 1 and not config.SITE.get('custom_home_page'):
+		if page_no == 1 and not config['SITE'].get('custom_home_page'):
 			return redirect(url_for('index'))
 
 		posts, post_meta = get_posts(page_no=page_no, abort=True)
@@ -344,7 +342,7 @@ def create_app(config_path, theme_path, contents_path, current_path):
 		feed = AtomFeed('Recent Articles',
 						feed_url=request.url, url=request.url_root)
 		posts, max_page = get_posts()
-		feed_limit = config.SITE.get('feed_limit', 10)
+		feed_limit = config['SITE'].get('feed_limit', 10)
 
 		for post in posts[:feed_limit]:
 			dated = post.meta['date']
@@ -354,7 +352,7 @@ def create_app(config_path, theme_path, contents_path, current_path):
 
 			feed.add(post.meta.get('title'), unicode(post.html),
 						content_type='html',
-						author=post.meta.get('author', config.SITE.get('author', '')),
+						author=post.meta.get('author', config['SITE'].get('author', '')),
 						url=urljoin(request.url_root, post.path.split('posts/')[1]),
 						updated=updated,
 						published=dated)
