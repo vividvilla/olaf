@@ -31,7 +31,7 @@ dir_path = os.path.dirname(path)
 
 exclude_from_sitemap = []  # List of urls to be excluded from XML sitemap
 
-def create_app(config_path, theme_path, contents_path):
+def create_app(config_path, theme_path, contents_path, current_path):
 	app = Flask(
 		__name__,
 		template_folder=os.path.join(theme_path, 'templates'),
@@ -237,7 +237,13 @@ def create_app(config_path, theme_path, contents_path):
 		if len(content) > 1:
 			raise Exception('Duplicate slug')
 
-		return render_template('page.html', page=content[0])
+		disqus_html = ''
+		disqus_file_path = os.path.join(current_path, 'disqus.html')
+		with open (disqus_file_path, 'r') as f:
+			disqus_html = f.read()
+
+		return render_template('page.html', page=content[0],
+			disqus_html=disqus_html)
 
 
 	# Tag views
@@ -372,16 +378,22 @@ def create_app(config_path, theme_path, contents_path):
 				pages.append([rule.rule, ten_days_ago])
 
 		# Add posts
-		posts, max_page = get_posts()
+		# posts, max_page = get_posts()
 
-		for post in posts:
-			# Get post updation or creation date
-			if post.meta.get('updated'):
-				updated = post.meta['updated'].isoformat()
-			else:
-				updated = post.meta['date'].isoformat()
-			# Add posts url
-			pages.append([post.path.split('posts/')[1], updated])
+		# for post in posts:
+		# 	# Get post updation or creation date
+		# 	if post.meta.get('updated'):
+		# 		updated = post.meta['updated'].isoformat()
+		# 	else:
+		# 		updated = post.meta['date'].isoformat()
+		# 	# Add posts url
+		# 	pages.append([post.path.split('posts/')[1], updated])
+
+		# pages = [page for page in contents
+		# 	if page.path.startswith('pages/')]
+
+		# for page in pages:
+		# 	pass
 
 		sitemap_xml = render_template('sitemap.xml', pages=pages)
 		response = make_response(sitemap_xml)

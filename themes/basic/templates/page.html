@@ -33,7 +33,8 @@
 		</div>
 
 		{% if config.SITE.get('disqus') and content_type(page.path, 'post') %}
-			{% include "disqus.html" %}
+			<!-- {% include "disqus.html" %} -->
+			{{ disqus_html | safe }}
 		{% endif %}
 
 {% endblock %}

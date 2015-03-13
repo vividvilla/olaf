@@ -1,6 +1,5 @@
-type: post
-timestamp: 1421861379
-updated: 1421861379
+date: 2015-03-09
+updated: 2015-03-10
 title: Hello world!
 summary: This will be the summary of the post.
 tags: [sample]

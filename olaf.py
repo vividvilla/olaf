@@ -17,7 +17,7 @@ import argparse
 
 import click
 
-import apps
+import blog
 from utils import console_message, slugify
 
 path = os.path.abspath(__file__)
@@ -48,8 +48,13 @@ def create_project_site(project_name):
 		# create init file
 		open(os.path.join(current_path, project_name, '__init__.py'),
 			'a').close()
+		# disqus file
+		open(os.path.join(current_path, project_name, 'disqus.html'),
+			'a').close()
 		# create contents directory
 		os.mkdir(os.path.join(current_path, project_name, '_contents'))
+		os.mkdir(os.path.join(current_path, project_name, '_contents', 'posts'))
+		os.mkdir(os.path.join(current_path, project_name, '_contents', 'pages'))
 	except OSError:
 		click.secho('Error while creating site - {}'.format(e),
 			fg='red')
@@ -77,7 +82,22 @@ def createsite(project_name, demo):
 
 	# populate demo files (True by default)
 	if demo:
-		pass
+		shutil.copyfile(
+			os.path.join(dir_path, 'demo-files', 'hello-world.md'),
+			os.path.join(current_path,
+				project_name, '_contents', 'posts', 'hello-world.md'))
+
+		shutil.copyfile(
+			os.path.join(dir_path, 'demo-files', 'typography.md'),
+			os.path.join(current_path,
+				project_name, '_contents', 'posts', 'typography.md'))
+
+		shutil.copyfile(
+			os.path.join(dir_path, 'demo-files', 'sample-page.md'),
+			os.path.join(current_path,
+				project_name, '_contents', 'pages', 'sample-page.md'))
+
+	click.secho('demo files successfully populated', fg='green')
 
 @cli.command()
 @click.option('--theme', default='basic',
@@ -109,7 +129,8 @@ def run(theme, port, host):
 	contents_path = os.path.join(current_path, '_contents')
 
 	# create app
-	app = apps.create_app(config_path, theme_path, contents_path)
+	app = blog.create_app(config_path,
+		theme_path, contents_path, current_path)
 	app.run(port=port, host=host)
 
 @cli.command()
