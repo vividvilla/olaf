@@ -53,6 +53,9 @@ def timestamp_tostring(timestamp, format = '%d %m %Y'):
 	return datetime.datetime.fromtimestamp(
 			int(timestamp)).strftime(format)
 
+def date_format(date, format = '%d %m %Y'):
+	return date.strftime(format)
+
 def date_tostring(year, month, day = 1, format = '%d %b %Y'):
 	#Returns date string for given year, month and day with given format
 	date = datetime.datetime(int(year), int(month), int(day))

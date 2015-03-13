@@ -8,7 +8,7 @@
 	<h1 class="page-title">List of all articles</h1>
 	<ul class="tags">
 		{% for post in posts %}
-			<li><a href="{{ url_for('posts', slug=post.path[11::]) }}">{{ post.title }}</a>, written on &mdash; {{ timestamp_tostring(post.meta.timestamp, '%b %d, %Y').replace(" 0", " ") }}</li>
+			<li><a href="{{ url_for('posts', slug=post.path.split('posts/')) }}">{{ post.title }}</a>, written on &mdash; date_format(post.meta['date'], '%b %d, %Y').replace(" 0", " ") }}</li>
 		{% endfor %}
 	</ul>
 {% endblock %}

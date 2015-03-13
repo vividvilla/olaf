@@ -10,7 +10,7 @@
 				<span class="summary">&mdash; {{ post.meta.get('summary', post.body[:config.SITE.summary_offset]+'...') }}</span>
 			</div>
 			<div class="post-date two columns">
-				{{ timestamp_tostring(post.meta.timestamp, '%b %d, %Y').replace(" 0", " ") }}
+				{{ date_format(post.meta['date'], '%b %d, %Y').replace(" 0", " ") }}
 			</div>
 		</div>
 	{% endfor %}

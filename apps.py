@@ -9,8 +9,8 @@
 	:license: BSD, see LICENSE for more details.
 """
 
-import sys
 import os
+import sys
 import datetime
 from collections import Counter, OrderedDict
 
@@ -23,7 +23,8 @@ from flask import render_template, abort, redirect, url_for, \
 from flask_flatpages import FlatPages, pygments_style_defs
 
 import config
-from utils import timestamp_tostring, date_tostring, font_size
+from utils import timestamp_tostring, date_tostring, \
+	font_size, date_format
 
 path = os.path.abspath(__file__)
 dir_path = os.path.dirname(path)
@@ -44,12 +45,24 @@ def create_app(config_path, theme_path, contents_path):
 	contents = FlatPages(app)
 	freeze = Freezer(app)
 
-	import pdb; pdb.set_trace()
+	# import pdb; pdb.set_trace()
+
+	def check_content_type(path, content_type):
+		if content_type == 'post':
+			if path.startswith('posts/'):
+				return True
+
+		if content_type == 'page':
+			if path.startswith('pages/'):
+				return True
+
+		return False
 
 	# Register utility functions to be used in jinja2 templates
 	app.jinja_env.globals.update(
 		timestamp_tostring=timestamp_tostring,
-		date_tostring=date_tostring, font_size=font_size)
+		date_tostring=date_tostring, font_size=font_size,
+		content_type=check_content_type, date_format=date_format)
 
 	def check_duplicate_slugs(contents):
 		slugs = []
@@ -64,7 +77,7 @@ def create_app(config_path, theme_path, contents_path):
 				raise ValueError('Duplicate slug : {}'.format())
 
 	# check for duplicate slugs
-	check_duplicate_slugs()
+	check_duplicate_slugs(contents)
 
 	def get_posts(**filters):
 		"""
@@ -274,7 +287,7 @@ def create_app(config_path, theme_path, contents_path):
 	def list_pages():
 		""" All pages list view """
 		pages = [page for page in contents
-					if page.meta.get('type') == 'page']
+					if page.path.startswith('pages/')]
 
 		return render_template("list_pages.html", pages=pages)
 
