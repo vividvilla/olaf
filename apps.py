@@ -51,6 +51,21 @@ def create_app(config_path, theme_path, contents_path):
 		timestamp_tostring=timestamp_tostring,
 		date_tostring=date_tostring, font_size=font_size)
 
+	def check_duplicate_slugs(contents):
+		slugs = []
+		for post in contents:
+			slug = ''
+			if post.path.startswith('pages/'):
+				slug = post.path.split('pages/')[1]
+			elif post.path.startswith('posts/'):
+				slug = post.path.split('posts/')[1]
+
+			if slug and slug in slugs:
+				raise ValueError('Duplicate slug : {}'.format())
+
+	# check for duplicate slugs
+	check_duplicate_slugs()
+
 	def get_posts(**filters):
 		"""
 		Filters posts
@@ -124,14 +139,12 @@ def create_app(config_path, theme_path, contents_path):
 		return (posts, post_meta)
 
 
-	def get_posts_by_slug(slug):
-		# Check for slug in root which means pages
-		content = [page for page in contents if page.path == slug]
-
-		# Check for slug in posts if not found in pages
-		if not content:
-			content = [post for post in contents if post.path[11::] == slug]
+	def get_post_by_slug(slug):
+		# Check for slug
+		content = [page for page in contents
+			if page.path.split('/')[1] == slug]
 		return content
+
 
 	""" Views """
 
@@ -153,7 +166,7 @@ def create_app(config_path, theme_path, contents_path):
 	def get_index():
 		""" Check if custom home page set else return default index view """
 		if config.SITE.get('custom_home_page'):
-			content = get_posts_by_slug(config.SITE['custom_home_page'])
+			content = get_post_by_slug(config.SITE['custom_home_page'])
 
 			# Exception if slug not found both in pages and posts
 			if not content:
@@ -177,7 +190,7 @@ def create_app(config_path, theme_path, contents_path):
 
 	def custom_index():
 		""" Custom home page view """
-		content = get_posts_by_slug(config.SITE['custom_home_page'])
+		content = get_post_by_slug(config.SITE['custom_home_page'])
 		content[0].meta['type'] = 'page'
 		return render_template('page.html', page=content[0])
 
@@ -202,7 +215,7 @@ def create_app(config_path, theme_path, contents_path):
 	@app.route('/<path:slug>/')
 	def posts(slug):
 		""" Individual post/page view """
-		content = get_posts_by_slug(slug)
+		content = get_post_by_slug(slug)
 
 		if not content:
 			abort(404)  # Slug not found both in pages and posts
@@ -323,7 +336,7 @@ def create_app(config_path, theme_path, contents_path):
 			feed.add(post.meta.get('title'), unicode(post.html),
 						content_type='html',
 						author=post.meta.get('author', config.SITE.get('author', '')),
-						url=urljoin(request.url_root, post.path[11::]),
+						url=urljoin(request.url_root, post.path.split('posts/')[1]),
 						updated=updated,
 						published=dated)
 
@@ -355,7 +368,7 @@ def create_app(config_path, theme_path, contents_path):
 			else:
 				updated = post.meta['date'].isoformat()
 			# Add posts url
-			pages.append([post.path[10::], updated])
+			pages.append([post.path.split('posts/')[1], updated])
 
 		sitemap_xml = render_template('sitemap.xml', pages=pages)
 		response = make_response(sitemap_xml)
