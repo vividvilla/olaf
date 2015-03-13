@@ -44,6 +44,8 @@ def create_app(config_path, theme_path, contents_path):
 	contents = FlatPages(app)
 	freeze = Freezer(app)
 
+	import pdb; pdb.set_trace()
+
 	# Register utility functions to be used in jinja2 templates
 	app.jinja_env.globals.update(
 		timestamp_tostring=timestamp_tostring,
@@ -66,7 +68,9 @@ def create_app(config_path, theme_path, contents_path):
 									filtered results (default: False)
 		"""
 
-		posts = [post for post in contents if post.meta.get('type') == 'post']
+		posts = [post for post in contents
+			if (post.path.startswith('posts/') and
+				post.meta.get('date') and post.meta.get('title'))]
 
 		# Filter conditions
 
@@ -74,25 +78,26 @@ def create_app(config_path, theme_path, contents_path):
 		sort = filters.get('sort', True)
 		if(sort):
 			posts.sort(
-				key=lambda x: x.meta['timestamp'],
+				key=lambda x: x.meta['date'],
 				reverse=filters.get('reverse', True))
 
 		# Filter based on tag
 		tag = filters.get('tag')
 		if(tag):
-			posts = [post for post in posts if tag in post.meta.get('tags', [])]
+			posts = [post for post in posts
+				if tag in post.meta.get('tags', [])]
 
 		# Filter based on year and month
 		year = filters.get('year')
 		if(year):
-			posts = [post for post in posts if int(timestamp_tostring(
-				post.meta.get('timestamp'), '%Y')) == year]
+			posts = [post for post in posts
+				if post.meta['date'].year == year]
 
 			# Filter by month only if year is given
 			month = filters.get('month')
 			if month:
-				posts = [post for post in posts if int(timestamp_tostring(
-					post.meta.get('timestamp'), '%m')) == month]
+				posts = [post for post in posts
+					if post.meta['date'].month == month]
 
 		# Get total number of posts without pagination
 		post_meta = {}
@@ -265,9 +270,8 @@ def create_app(config_path, theme_path, contents_path):
 	def archive():
 		""" Date based archive view """
 		# Get all posts dates in format (year, month)
-		dates = [(timestamp_tostring(post.meta.get('timestamp'), '%Y'),
-				timestamp_tostring(post.meta.get('timestamp'), '%m'))
-				for post in contents if post.meta.get('timestamp')]
+		dates = [(post.meta['date'].year, post.meta['date'].month)
+				for post in contents if post.meta.get('date')]
 
 		# Get sorted yearly archive lists ex: [(year, no_occur), ...]
 		yearly = sorted(Counter([date[0] for date in dates]).items(), reverse=True)
@@ -311,10 +315,10 @@ def create_app(config_path, theme_path, contents_path):
 		feed_limit = config.SITE.get('feed_limit', 10)
 
 		for post in posts[:feed_limit]:
-			dated = datetime.datetime.fromtimestamp(int(post.meta['timestamp']))
+			dated = post.meta['date']
 			updated = dated
 			if post.meta.get('updated'):
-				updated = datetime.datetime.fromtimestamp(int(post.meta['updated']))
+				updated = post.meta['updated']
 
 			feed.add(post.meta.get('title'), unicode(post.html),
 						content_type='html',
@@ -347,11 +351,9 @@ def create_app(config_path, theme_path, contents_path):
 		for post in posts:
 			# Get post updation or creation date
 			if post.meta.get('updated'):
-				updated = datetime.datetime.fromtimestamp(
-					int(post.meta['updated'])).date().isoformat()
+				updated = post.meta['updated'].isoformat()
 			else:
-				updated = datetime.datetime.fromtimestamp(
-					int(post.meta['timestamp'])).date().isoformat()
+				updated = post.meta['date'].isoformat()
 			# Add posts url
 			pages.append([post.path[10::], updated])
 

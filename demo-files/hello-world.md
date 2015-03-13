@@ -1,7 +1,7 @@
-type: Hello world!
+type: post
 timestamp: 1421861379
 updated: 1421861379
-title: My new post
+title: Hello world!
 summary: This will be the summary of the post.
 tags: [sample]
 
