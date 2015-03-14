@@ -203,11 +203,10 @@ def create_app(config_path, theme_path, contents_path, current_path):
 		""" Custom home page view """
 		content = get_post_by_slug(config['SITE']['custom_home_page'])
 		content[0].meta['type'] = 'page'
-		return render_template('page.html', page=content[0])
+		return render_template('content.html', content=content[0])
 
 	# Set home page
 	app.add_url_rule('/', 'index', get_index())
-
 
 	@app.route('/pages/<int:page_no>/')
 	def pagination(page_no):
@@ -221,7 +220,6 @@ def create_app(config_path, theme_path, contents_path, current_path):
 		return render_template('index.html', page_no=page_no,
 				posts=posts, next_page=(post_meta['max_pages'] > page_no),
 				previous_page=(page_no > 1))
-
 
 	@app.route('/<path:slug>/')
 	def posts(slug):
@@ -240,9 +238,8 @@ def create_app(config_path, theme_path, contents_path, current_path):
 		with open (disqus_file_path, 'r') as f:
 			disqus_html = f.read()
 
-		return render_template('page.html', page=content[0],
+		return render_template('content.html', content=content[0],
 			disqus_html=disqus_html)
-
 
 	# Tag views
 
@@ -257,7 +254,6 @@ def create_app(config_path, theme_path, contents_path, current_path):
 
 		return render_template('tags.html', tags=tags, max_occ=max_occ)
 
-
 	@app.route('/tags/<string:tag>/')
 	def tag_page(tag):
 		""" Individual tag view """
@@ -265,7 +261,6 @@ def create_app(config_path, theme_path, contents_path, current_path):
 		return render_template('tag.html', tag=tag, posts=posts,
 				page_no=1, next_page=(post_meta['max_pages'] > 1),
 				len = post_meta['total_pages'])
-
 
 	@app.route('/tags/<string:tag>/pages/<int:page_no>/')
 	def tag_pages(tag, page_no):
@@ -280,12 +275,10 @@ def create_app(config_path, theme_path, contents_path, current_path):
 				page_no=page_no, next_page=(post_meta['max_pages'] > page_no),
 				len = post_meta['total_pages'], previous_page=(page_no > 1))
 
-
 	@app.route('/list/posts/')
 	def list_posts():
 		""" All posts list view """
 		return render_template("list_posts.html", posts=get_posts()[0])
-
 
 	@app.route('/list/pages/')
 	def list_pages():
@@ -294,7 +287,6 @@ def create_app(config_path, theme_path, contents_path, current_path):
 					if page.path.startswith('pages/')]
 
 		return render_template("list_pages.html", pages=pages)
-
 
 	@app.route('/archive/')
 	def archive():
