@@ -1,10 +1,5 @@
 DEBUG = True
 
-#FLATPAGES_ROOT = '_contents' # Directory to store markdown files
-FLATPAGES_AUTO_RELOAD = DEBUG # Useful for development purpose
-FLATPAGES_EXTENSION = '.md' # Default extension for markdown file
-FREEZER_DESTINATION_IGNORE = '.git*' # Will ignore .git directory under build/ instead of overwriting everytime you freeze
-
 SITE = {
 	'title': 'Your blog title', # Required
 	'description': 'Your blog description', # Required

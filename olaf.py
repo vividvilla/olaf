@@ -144,13 +144,38 @@ def run(theme, port, host):
 @cli.command()
 @click.option(
 	'--theme', default='basic', help='blog theme (default: basic)')
-@click.argument('path', type=click.Path())
-def freeze(theme, path):
+@click.option(
+	'--path', default=False,
+	help='Freeze directory (default: current directory)')
+@click.option(
+	'--static', default=False, type=bool,
+	help='Freeze with relative urls (Run without web server)'
+		' (default: False)')
+def freeze(theme, path, static):
 	'''
 	freeze blog to static files
 	'''
-	pass
+	# get theme directory
+	if theme in default_themes:
+		# If theme in bundled themes list then get from default themes directory
+		theme_path = os.path.join(dir_path, 'themes', theme)
+	else:
+		# If theme not found in bundled themes then get from sites directory
+		theme_path = os.path.join(current_path, 'themes', theme)
 
+	if path:
+		path = os.path.join(current_path, slugify(path))
+
+	try:
+		# create app
+		app = blog.create_app(
+			current_path,
+			theme_path,
+			freeze_path = path,
+			freeze_static = static)
+		blog.freeze.freeze()
+	except ValueError as e:
+		click.secho(e, fg='red')
 
 @cli.command()
 @click.option(
@@ -195,22 +220,3 @@ def export():
 	Export tools
 	'''
 	pass
-
-
-# if __name__ == '__main__':
-# 	parser = argparse.ArgumentParser(
-# 		description='Olaf - because some blogs are worth freezing for.')
-# 	parser.add_argument('-f', '--freeze', action='store_true', help='Freeze site')
-# 	parser.add_argument(
-# 		'-p', '--port', type=int, default=5000,
-# 		help='Port to run app [default: 5000]')
-# 	parser.add_argument(
-# 		'-host', '--host', type=str, default='127.0.0.1',
-# 		help='Port to run app [default: 5000]')
-# 	args = parser.parse_args()
-
-# 	if args.freeze:
-# 		console_message('Successfully freezed.', 'OKGREEN', newline=True)
-# 		freeze.freeze()
-# 	else:
-# 		app.run(port=args.port, host=args.host)

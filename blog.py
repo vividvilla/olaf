@@ -33,7 +33,7 @@ app = Blueprint('app', __name__)  # create blueprint
 
 exclude_from_sitemap = []  # List of urls to be excluded from XML sitemap
 
-def create_app(current_path, theme_path):
+def create_app(current_path, theme_path, **kwargs):
 	"""
 	Create app with dynamic configurations
 	"""
@@ -45,8 +45,22 @@ def create_app(current_path, theme_path):
 	# update configurations
 	flask_app.config.from_pyfile(os.path.join(
 		current_path, 'config.py'))
-	flask_app.config.update(current_path=current_path)
+
+	freeze_path = current_path
+	if kwargs.get('freeze_path'):
+		freeze_path = kwargs['freeze_path']
+
+	freeze_static = False
+	if kwargs.get('freeze_static'):
+		freeze_static = True
+
 	flask_app.config.update(
+		current_path=current_path,
+		FREEZER_DESTINATION=freeze_path,
+		FREEZER_RELATIVE_URLS=freeze_static,
+		FREEZER_REMOVE_EXTRA_FILES=False,
+		FLATPAGES_AUTO_RELOAD=True,
+		FLATPAGES_EXTENSION='.md',
 		FLATPAGES_ROOT=os.path.join(current_path, '_contents'))
 
 	# initialize with current flask app
@@ -476,22 +490,24 @@ def sitemap():
 			)
 
 	# Add posts
-	# posts, max_page = get_posts()
+	posts, max_page = get_posts()
 
-	# for post in posts:
-	# 	# Get post updation or creation date
-	# 	if post.meta.get('updated'):
-	# 		updated = post.meta['updated'].isoformat()
-	# 	else:
-	# 		updated = post.meta['date'].isoformat()
-	# 	# Add posts url
-	# 	pages.append([post.path.split('posts/')[1], updated])
+	for content in contents:
+		# Get post update or creation date
+		if content.meta.get('updated'):
+			updated = content.meta['updated'].isoformat()
+		elif content.meta.get('date'):
+			updated = content.meta['date'].isoformat()
+		else:
+			updated = ten_days_ago
 
-	# pages = [page for page in contents
-	# 	if page.path.startswith('pages/')]
-
-	# for page in pages:
-	# 	pass
+		# Add posts url
+		resources.append(
+			{
+				'url': urljoin(domain_url, content.slug),
+				'modified': updated
+			}
+		)
 
 	sitemap_xml = render_template('sitemap.xml', resources=resources)
 	response = make_response(sitemap_xml)
