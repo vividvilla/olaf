@@ -10,10 +10,10 @@
 	{% endif %}
 	<ul class="tags">
 		{% for year, year_data in archive.items() %}
-			<li><a href="{{ url_for('yearly_archive', year=year) }}">{{ year }}</a> - {{ year_data['count'] }} entries
+			<li><a href="{{ url_for('flask_app.yearly_archive', year=year) }}">{{ year }}</a> - {{ year_data['count'] }} entries
 				<ul>
 					{% for month in year_data['months'] %}
-						<li><a href="{{ url_for('monthly_archive', year=year, month=month[0]) }}">{{ date_tostring(year, month[0], format='%B') }}</a> - {{ month[1] }} entries</li>
+						<li><a href="{{ url_for('flask_app.monthly_archive', year=year, month=month[0]) }}">{{ date_tostring(year, month[0], format='%B') }}</a> - {{ month[1] }} entries</li>
 					{% endfor %}
 				</ul>
 			</li>

@@ -8,7 +8,7 @@
 	<h1 class="page-title">List of all pages</h1>
 	<ul class="tags">
 		{% for page in pages %}
-			<li><a href="{{ url_for('posts', slug=page.path.split('pages/')[1]) }}">{{ page.title }}</a></li>
+			<li><a href="{{ url_for('flask_app.posts', slug=page.path.split('pages/')[1]) }}">{{ page.title }}</a></li>
 		{% endfor %}
 	</ul>
 {% endblock %}
