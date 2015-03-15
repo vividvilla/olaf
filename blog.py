@@ -25,11 +25,13 @@ from flask_flatpages import FlatPages, pygments_style_defs
 from utils import timestamp_tostring, date_tostring, \
 	font_size, date_format
 
+# initialize extensions
 contents = FlatPages()
 freeze = Freezer()
-app = Blueprint('app', __name__)
-exclude_from_sitemap = []  # List of urls to be excluded from XML sitemap
 
+app = Blueprint('app', __name__)  # create blueprint
+
+exclude_from_sitemap = []  # List of urls to be excluded from XML sitemap
 
 def create_app(current_path, theme_path):
 	"""
@@ -57,6 +59,9 @@ def create_app(current_path, theme_path):
 	# check for duplicate slugs
 	check_duplicate_slugs(contents)
 
+	# filter contents for posts and pages only
+	filter_valid_contents(contents)
+
 	with flask_app.app_context():
 		# Set home page
 		flask_app.add_url_rule('/', 'app.index', get_index())
@@ -73,9 +78,23 @@ def create_app(current_path, theme_path):
 	return flask_app
 
 
+def filter_valid_contents(contents):
+	"""
+	filter contents to only post and pages and
+	add url attribute to individual content.
+	"""
+	contents = [post for post in contents if (
+		post.path.startswith('posts/') or
+		post.path.startswith('pages/'))]
+
+	for post in contents:
+		if(post.path.startswith('posts/')
+			or post.path.startswith('pages/')):
+			post.slug = post.path[6:]
+
 def check_content_type(path, content_type):
 	"""
-	Check for specific content type
+	check for specific content type
 	"""
 	if content_type == 'post':
 		if path.startswith('posts/'):
@@ -103,7 +122,6 @@ def check_duplicate_slugs(contents):
 		if slug and slug in slugs:
 			raise ValueError('Duplicate slug : {}'.format())
 
-
 def get_posts(**filters):
 	"""
 	Filters posts
@@ -124,8 +142,9 @@ def get_posts(**filters):
 	posts = [post for post in contents if (
 		post.path.startswith('posts/') and
 		post.meta.get('date') and
-		post.meta.get('title')
-		)]
+		post.meta.get('title'))]
+
+	# import pdb; pdb.set_trace()
 
 	# Filter conditions
 
@@ -183,15 +202,13 @@ def get_post_by_slug(slug):
 	"""
 	filter contents by slug
 	"""
-	content = [post for post in contents
-		if post.path.split('/')[1] == slug]
+	content = [post for post in contents if post.slug == slug]
 	return content
 
 
 """
 Views
 """
-
 
 @app.route('/404.html')
 def custom_404():
@@ -253,7 +270,7 @@ def custom_index():
 @app.route('/pages/<int:page_no>/')
 def pagination(page_no):
 	"""
-	Home page pagination view
+	home page pagination view
 	"""
 	# Redirect if it is a first page (except when custom home page is set)
 	if page_no == 1 and not current_app.config['SITE'].get('custom_home_page'):
@@ -406,6 +423,10 @@ def recent_feed():
 	posts, max_page = get_posts()
 	feed_limit = current_app.config['SITE'].get('feed_limit', 10)
 
+	domain_url = current_app.config['SITE'].get('domain_url')
+	if not domain_url:
+		domain_url = request.url_root
+
 	for post in posts[:feed_limit]:
 		dated = post.meta['date']
 		updated = dated
@@ -418,7 +439,7 @@ def recent_feed():
 			content_type='html',
 			author=post.meta.get(
 				'author', current_app.config['SITE'].get('author', '')),
-			url=urljoin(request.url_root, post.path.split('posts/')[1]),
+			url=urljoin(domain_url, post.slug),
 			updated=updated,
 			published=dated)
 
@@ -430,18 +451,29 @@ def sitemap():
 	"""
 	XML sitemap generator
 	"""
-	pages = []
+	resources = []
 
 	# Set last updated date for static pages as 10 days before
 	ten_days_ago = (
 		datetime.datetime.now() -
 		datetime.timedelta(days=10)).date().isoformat()
 
+	# import pdb; pdb.set_trace()
+
+	domain_url = current_app.config['SITE'].get('domain_url')
+	if not domain_url:
+		domain_url = request.url_root
+
 	# Add static pages
-	for rule in app.url_map.iter_rules():
+	for rule in current_app.url_map.iter_rules():
 		if ("GET" in rule.methods and len(rule.arguments) == 0 and
 			rule.rule not in exclude_from_sitemap):
-			pages.append([rule.rule, ten_days_ago])
+			resources.append(
+				{
+					'url': urljoin(domain_url, rule.rule),
+					'modified': ten_days_ago
+				}
+			)
 
 	# Add posts
 	# posts, max_page = get_posts()
@@ -461,7 +493,7 @@ def sitemap():
 	# for page in pages:
 	# 	pass
 
-	sitemap_xml = render_template('sitemap.xml', pages=pages)
+	sitemap_xml = render_template('sitemap.xml', resources=resources)
 	response = make_response(sitemap_xml)
 	response.headers["Content-Type"] = "application/xml"
 

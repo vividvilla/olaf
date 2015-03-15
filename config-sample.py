@@ -14,7 +14,8 @@ SITE = {
 	'summary_offset': 180, # Optional
 	'feed_limit': 15, # Optional
 	'analytics': 'UA-XXX-VVV', # Optional
-	'disqus': True, # Optional
+	'disqus': True, # Optional,
+	'domain_url': 'http://vivek.github.io', # with http or https
 	'github_domain': 'vivek.github.io', # Optional
 	'github_repo': 'https://github.com/vividvilla/vividvilla.github.io.git', # Optional
 	'pygments': '' # set pygments style

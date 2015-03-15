@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    {% for page in pages %}
+    {% for resource in resources %}
     <url>
-        <loc>{{page[0]|safe}}</loc>
-        <lastmod>{{page[1]}}</lastmod>
+        <loc>{{ resource.url | safe }}</loc>
+        <lastmod>{{ resource.modified }}</lastmod>
     </url>
     {% endfor %}
 </urlset>
