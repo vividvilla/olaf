@@ -28,7 +28,7 @@
 				<ul class="tags tags-cloud">
 					<li>Tagged :</li>
 					{% for tag in content.meta.get('tags') %}
-						<li><a href="{{ url_for('flask_app.tag_page', tag=tag ) }}">{{ tag }}</a></li>
+						<li><a href="{{ url_for('app.tag_page', tag=tag ) }}">{{ tag }}</a></li>
 					{% endfor %}
 				</ul>
 			{% endif %}

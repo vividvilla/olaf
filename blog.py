@@ -10,7 +10,6 @@
 """
 
 import os
-import sys
 import datetime
 from collections import Counter, OrderedDict
 
@@ -26,44 +25,44 @@ from flask_flatpages import FlatPages, pygments_style_defs
 from utils import timestamp_tostring, date_tostring, \
 	font_size, date_format
 
-path = os.path.abspath(__file__)
-dir_path = os.path.dirname(path)
-
-exclude_from_sitemap = []  # List of urls to be excluded from XML sitemap
-
 contents = FlatPages()
 freeze = Freezer()
-flask_app = Blueprint('flask_app', __name__)
+app = Blueprint('app', __name__)
+exclude_from_sitemap = []  # List of urls to be excluded from XML sitemap
+
 
 def create_app(current_path, theme_path):
-	app = Flask(
+	"""
+	Create app with dynamic configurations
+	"""
+	flask_app = Flask(
 		__name__,
 		template_folder=os.path.join(theme_path, 'templates'),
-		static_folder=os.path.join(theme_path, 'static')
-		)
+		static_folder=os.path.join(theme_path, 'static'))
 
-	app.config.from_pyfile(os.path.join(current_path, 'config.py'))
-	app.config.update(current_path=current_path)
-	app.config.update(
+	# update configurations
+	flask_app.config.from_pyfile(os.path.join(
+		current_path, 'config.py'))
+	flask_app.config.update(current_path=current_path)
+	flask_app.config.update(
 		FLATPAGES_ROOT=os.path.join(current_path, '_contents'))
 
-	contents.init_app(app)
-	freeze.init_app(app)
+	# initialize with current flask app
+	contents.init_app(flask_app)
+	freeze.init_app(flask_app)
 
-	app.register_blueprint(flask_app)
+	# Register blueprint as root
+	flask_app.register_blueprint(app)
 
 	# check for duplicate slugs
 	check_duplicate_slugs(contents)
 
-
-	with app.app_context():
-		# within this block, current_app points to app.
-
+	with flask_app.app_context():
 		# Set home page
-		app.add_url_rule('/', 'flask_app.index', get_index())
+		flask_app.add_url_rule('/', 'app.index', get_index())
 
 		# Register utility functions to be used in jinja2 templates
-		app.jinja_env.globals.update(
+		flask_app.jinja_env.globals.update(
 			timestamp_tostring=timestamp_tostring,
 			date_tostring=date_tostring,
 			font_size=font_size,
@@ -71,10 +70,13 @@ def create_app(current_path, theme_path):
 			date_format=date_format,
 			config=current_app.config)
 
-	# import pdb; pdb.set_trace()
-	return app
+	return flask_app
+
 
 def check_content_type(path, content_type):
+	"""
+	Check for specific content type
+	"""
 	if content_type == 'post':
 		if path.startswith('posts/'):
 			return True
@@ -85,7 +87,11 @@ def check_content_type(path, content_type):
 
 	return False
 
+
 def check_duplicate_slugs(contents):
+	"""
+	check for duplicate slugs
+	"""
 	slugs = []
 	for post in contents:
 		slug = ''
@@ -96,6 +102,7 @@ def check_duplicate_slugs(contents):
 
 		if slug and slug in slugs:
 			raise ValueError('Duplicate slug : {}'.format())
+
 
 def get_posts(**filters):
 	"""
@@ -114,9 +121,11 @@ def get_posts(**filters):
 								filtered results (default: False)
 	"""
 
-	posts = [post for post in contents
-		if (post.path.startswith('posts/') and
-			post.meta.get('date') and post.meta.get('title'))]
+	posts = [post for post in contents if (
+		post.path.startswith('posts/') and
+		post.meta.get('date') and
+		post.meta.get('title')
+		)]
 
 	# Filter conditions
 
@@ -171,23 +180,32 @@ def get_posts(**filters):
 
 
 def get_post_by_slug(slug):
-	# Check for slug
-	content = [page for page in contents
-		if page.path.split('/')[1] == slug]
+	"""
+	filter contents by slug
+	"""
+	content = [post for post in contents
+		if post.path.split('/')[1] == slug]
 	return content
 
 
-""" Views """
+"""
+Views
+"""
 
-@flask_app.route('/404.html')
+
+@app.route('/404.html')
 def custom_404():
-	""" Custom 404 page view """
+	"""
+	custom 404 page view
+	"""
 	return render_template('404.html')
 
 
-@flask_app.route('/pygments.css')
+@app.route('/pygments.css')
 def pygments_css():
-	""" Default pygments style """
+	"""
+	default pygments style
+	"""
 	pyments_style = current_app.config['SITE'].get('pygments') or 'tango'
 	return (pygments_style_defs(pyments_style), 200, {'Content-Type': 'text/css'})
 
@@ -195,7 +213,9 @@ exclude_from_sitemap.append('/pygments.css')  # Excludes url from sitemap
 
 
 def get_index():
-	""" Check if custom home page set else return default index view """
+	"""
+	check if custom home page set else return default index view
+	"""
 	if current_app.config['SITE'].get('custom_home_page'):
 		content = get_post_by_slug(current_app.config['SITE']['custom_home_page'])
 
@@ -213,22 +233,28 @@ def get_index():
 
 
 def default_index():
-	""" Default index view """
+	"""
+	default index view
+	"""
 	posts, post_meta = get_posts(page_no=1)
 	return render_template('index.html',
 		page_no=1, posts=posts, next_page=post_meta['max_pages'] > 1)
 
 
 def custom_index():
-	""" Custom home page view """
+	"""
+	custom home page view
+	"""
 	content = get_post_by_slug(current_app.config['SITE']['custom_home_page'])
 	content[0].meta['type'] = 'page'
 	return render_template('content.html', content=content[0])
 
-@flask_app.route('/pages/<int:page_no>/')
-def pagination(page_no):
-	""" Home page pagination view """
 
+@app.route('/pages/<int:page_no>/')
+def pagination(page_no):
+	"""
+	Home page pagination view
+	"""
 	# Redirect if it is a first page (except when custom home page is set)
 	if page_no == 1 and not current_app.config['SITE'].get('custom_home_page'):
 		return redirect(url_for('.index'))
@@ -238,9 +264,12 @@ def pagination(page_no):
 			posts=posts, next_page=(post_meta['max_pages'] > page_no),
 			previous_page=(page_no > 1))
 
-@flask_app.route('/<path:slug>/')
+
+@app.route('/<path:slug>/')
 def posts(slug):
-	""" Individual post/page view """
+	"""
+	individual post/page view
+	"""
 	content = get_post_by_slug(slug)
 
 	if not content:
@@ -252,17 +281,20 @@ def posts(slug):
 
 	disqus_html = ''
 	disqus_file_path = os.path.join(current_app.config['current_path'], 'disqus.html')
-	with open (disqus_file_path, 'r') as f:
+	with open(disqus_file_path, 'r') as f:
 		disqus_html = f.read()
 
 	return render_template('content.html', content=content[0],
 		disqus_html=disqus_html)
 
+
 # Tag views
 
-@flask_app.route('/tags/')
+@app.route('/tags/')
 def tags():
-	""" List of tags view """
+	"""
+	list of tags view
+	"""
 	tags = [tag for post in contents
 				for tag in post.meta.get('tags', [])]
 	tags = sorted(Counter(tags).items())  # Count tag occurances
@@ -271,17 +303,23 @@ def tags():
 
 	return render_template('tags.html', tags=tags, max_occ=max_occ)
 
-@flask_app.route('/tags/<string:tag>/')
+
+@app.route('/tags/<string:tag>/')
 def tag_page(tag):
-	""" Individual tag view """
+	"""
+	individual tag view
+	"""
 	posts, post_meta = get_posts(tag=tag, page_no=1, abort=True)
 	return render_template('tag.html', tag=tag, posts=posts,
 			page_no=1, next_page=(post_meta['max_pages'] > 1),
 			len = post_meta['total_pages'])
 
-@flask_app.route('/tags/<string:tag>/pages/<int:page_no>/')
+
+@app.route('/tags/<string:tag>/pages/<int:page_no>/')
 def tag_pages(tag, page_no):
-	""" Pagination for Individual tags """
+	"""
+	pagination for Individual tags
+	"""
 	posts, post_meta = get_posts(tag=tag, page_no=page_no, abort=True)
 
 	# Redirect if it is a first page
@@ -292,22 +330,31 @@ def tag_pages(tag, page_no):
 			page_no=page_no, next_page=(post_meta['max_pages'] > page_no),
 			len = post_meta['total_pages'], previous_page=(page_no > 1))
 
-@flask_app.route('/list/posts/')
+
+@app.route('/list/posts/')
 def list_posts():
-	""" All posts list view """
+	"""
+	all posts list view
+	"""
 	return render_template("list_posts.html", posts=get_posts()[0])
 
-@flask_app.route('/list/pages/')
+
+@app.route('/list/pages/')
 def list_pages():
-	""" All pages list view """
+	"""
+	all pages list view
+	"""
 	pages = [page for page in contents
 				if page.path.startswith('pages/')]
 
 	return render_template("list_pages.html", pages=pages)
 
-@flask_app.route('/archive/')
+
+@app.route('/archive/')
 def archive():
-	""" Date based archive view """
+	"""
+	date based archive view
+	"""
 	# Get all posts dates in format (year, month)
 	dates = [(post.meta['date'].year, post.meta['date'].month)
 			for post in contents if post.meta.get('date')]
@@ -329,25 +376,31 @@ def archive():
 	return render_template('archive.html', archive=yearly_dict)
 
 
-@flask_app.route('/archive/<int:year>/')
+@app.route('/archive/<int:year>/')
 def yearly_archive(year):
-	""" Yearly archive view """
+	"""
+	yearly archive view
+	"""
 	posts, post_meta = get_posts(year=year, abort=True)
 	return render_template('archive_page.html', tag=year, year=year, posts=posts)
 
 
-@flask_app.route('/archive/<int:year>/<int:month>/')
+@app.route('/archive/<int:year>/<int:month>/')
 def monthly_archive(year, month):
-	""" Monthly archive view """
+	"""
+	monthly archive view
+	"""
 	date_string = date_tostring(year, month, format='%b %Y')
 	posts, post_meta = get_posts(year=year, month=month, abort=True)
 	return render_template('archive_page.html', tag=date_string, year=year,
 			month=month, posts=posts)
 
 
-@flask_app.route('/recent.atom')
+@app.route('/recent.atom')
 def recent_feed():
-	""" Atom feed generator """
+	"""
+	atom feed generator
+	"""
 	feed = AtomFeed('Recent Articles',
 					feed_url=request.url, url=request.url_root)
 	posts, max_page = get_posts()
@@ -359,23 +412,29 @@ def recent_feed():
 		if post.meta.get('updated'):
 			updated = post.meta['updated']
 
-		feed.add(post.meta.get('title'), unicode(post.html),
-					content_type='html',
-					author=post.meta.get('author', current_app.config['SITE'].get('author', '')),
-					url=urljoin(request.url_root, post.path.split('posts/')[1]),
-					updated=updated,
-					published=dated)
+		feed.add(
+			post.meta.get('title'),
+			unicode(post.html),
+			content_type='html',
+			author=post.meta.get(
+				'author', current_app.config['SITE'].get('author', '')),
+			url=urljoin(request.url_root, post.path.split('posts/')[1]),
+			updated=updated,
+			published=dated)
 
 	return feed.get_response()
 
 
-@flask_app.route('/sitemap.xml', methods=['GET'])
+@app.route('/sitemap.xml', methods=['GET'])
 def sitemap():
-	""" XML sitemap generator """
+	"""
+	XML sitemap generator
+	"""
 	pages = []
 
 	# Set last updated date for static pages as 10 days before
-	ten_days_ago = (datetime.datetime.now() -
+	ten_days_ago = (
+		datetime.datetime.now() -
 		datetime.timedelta(days=10)).date().isoformat()
 
 	# Add static pages

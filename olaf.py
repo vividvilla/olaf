@@ -134,10 +134,12 @@ def run(theme, port, host):
 		# If theme not found in bundled themes then get from sites directory
 		theme_path = os.path.join(current_path, 'themes', theme)
 
-	# create app
-	app = blog.create_app(current_path, theme_path)
-	# import pdb; pdb.set_trace()
-	app.run(port=port, host=host)
+	try:
+		# create app
+		app = blog.create_app(current_path, theme_path)
+		app.run(port=port, host=host)
+	except ValueError as e:
+		click.secho(e, fg='red')
 
 @cli.command()
 @click.option(

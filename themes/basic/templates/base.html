@@ -11,14 +11,14 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
 
-		<link href="{{ url_for('flask_app.recent_feed') }}" rel="alternate" title="Recent Changes" type="application/atom+xml">
+		<link href="{{ url_for('app.recent_feed') }}" rel="alternate" title="Recent Changes" type="application/atom+xml">
 		<!-- Fonts -->
 		<link href='http://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic' rel='stylesheet' type='text/css'>
 		<link href='http://fonts.googleapis.com/css?family=Raleway:500,100,300' rel='stylesheet' type='text/css'>
 
 		<!-- Stylesheets -->
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}">
-		<link rel="stylesheet" href="{{ url_for('flask_app.pygments_css') }}">
+		<link rel="stylesheet" href="{{ url_for('app.pygments_css') }}">
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/skeleton.css') }}">
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
@@ -36,9 +36,9 @@
 				</span> &mdash;
 				<nav class="nav">
 					<ul class="flat">
-						<li><a href="{{ url_for('flask_app.tags') }}">tags</a></li>
-						<li><a href="{{ url_for('flask_app.list_posts') }}">list</a></li>
-						<li><a href="{{ url_for('flask_app.archive') }}">archive</a></li>
+						<li><a href="{{ url_for('app.tags') }}">tags</a></li>
+						<li><a href="{{ url_for('app.list_posts') }}">list</a></li>
+						<li><a href="{{ url_for('app.archive') }}">archive</a></li>
 					</ul>
 				</nav>
 			</div>
@@ -49,9 +49,9 @@
 			{% endblock %}
 		</main><!-- /main -->
 		<footer class="footer row">
-			<div class="">&#169; Copyright 2014 by {{ config.SITE.name or 'Vivek'}} - <a href="{{ url_for('flask_app.recent_feed') }}"
+			<div class="">&#169; Copyright 2014 by {{ config.SITE.name or 'Vivek'}} - <a href="{{ url_for('app.recent_feed') }}"
 			rel="alternate" title="Recent Changes" type="application/atom+xml">Atom feed</a>
-			- <a href="{{ url_for('flask_app.sitemap') }}">XML sitemap</a></div>
+			- <a href="{{ url_for('app.sitemap') }}">XML sitemap</a></div>
 			<div class="">Blog frozen by - <a href="https://github.com/vividvilla/frog">Olaf</a></div>
 		</footer><!-- /footer -->
 		<script src="{{ url_for('static', filename='js/main.js') }}"></script>

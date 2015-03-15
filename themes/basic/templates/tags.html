@@ -10,7 +10,7 @@
 	{% endif %}
 	<ul class="tags tags-cloud">
 		{% for tag in tags %}
-			<li><a href="{{ url_for('flask_app.tag_page', tag=tag[0] ) }}" style="font-size: {{ font_size(100, 200, max_occ, tag[1]) }}%">{{ tag[0] }}</a></li>
+			<li><a href="{{ url_for('app.tag_page', tag=tag[0] ) }}" style="font-size: {{ font_size(100, 200, max_occ, tag[1]) }}%">{{ tag[0] }}</a></li>
 		{% endfor %}
 	</ul>
 {% endblock %}

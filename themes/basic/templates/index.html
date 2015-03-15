@@ -6,7 +6,7 @@
 	{% for post in posts %}
 		<div class="row post">
 			<div class="post-description ten columns">
-				<a class="page-title" href="{{ url_for('flask_app.posts', slug=post.path.split('posts/')[1]) }}">{{ post.title }}</a>
+				<a class="page-title" href="{{ url_for('app.posts', slug=post.path.split('posts/')[1]) }}">{{ post.title }}</a>
 				<span class="summary">&mdash; {{ post.meta.get('summary', post.body[:config.SITE.summary_offset]+'...') }}</span>
 			</div>
 			<div class="post-date two columns">
@@ -18,12 +18,12 @@
 	<div class="pagination row">
 		<span class="previous prevent-collapse six columns">
 			{% if previous_page %}
-				<a href="{{ url_for('flask_app.pagination', page_no=page_no-1) }}">&#8592; Previous</a>
+				<a href="{{ url_for('app.pagination', page_no=page_no-1) }}">&#8592; Previous</a>
 			{% endif %}
 		</span>
 		<span class="next prevent-collapse six columns">
 			{% if next_page %}
-				<a href="{{ url_for('flask_app.pagination', page_no=page_no+1) }}">Next &#8594;</a>
+				<a href="{{ url_for('app.pagination', page_no=page_no+1) }}">Next &#8594;</a>
 			{% endif %}
 		</span>
 	</div>
