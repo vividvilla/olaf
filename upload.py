@@ -13,10 +13,9 @@ import os
 import sys
 import click
 import subprocess
-import argparse
 
 from olaf import current_path
-from utils import console_message, change_dir
+from utils import change_dir
 
 config_path = os.path.join(current_path, 'config.py')
 
@@ -52,12 +51,12 @@ def update_cname(path):
 			pass
 
 
-def upload(path, commit, branch):
+def upload(path, message, branch):
 	if not os.path.isdir(os.path.join(path, '.git')):
 		click.secho('Initializing git repo', fg='green')
 		git_init(path)
 
-	add_commit_push(commit, branch)
+	add_commit_push(path, message, branch)
 	click.secho('Successfully updated recent changes', fg='green')
 
 
@@ -85,35 +84,23 @@ def git_init(path):
 		sys_exit()
 
 
-def add_commit_push(message, branch):
-	os.system('cd build && git add .')
-	os.system('cd build && git commit -m "{}"'.format(message))
-	pull_status = os.system('cd build && git pull origin {repo}'.format(
-		repo=branch))
+def add_commit_push(path, message, branch):
+	with change_dir(path):
+		subprocess.call(['git', 'add', '.'])
+		subprocess.call(
+			['git', 'commit', '-m', '"{}"'.format(message)])
+		status_pull = subprocess.call(['git', 'pull', 'origin', branch])
 
-	if pull_status == 256:
-		console_message('MERGE CONFLICT', 'FAIL')
-		console_message('Discarding remote changes and pushing local changes', '')
+	if status_pull == 256:
+		click.secho('MERGE CONFLICT', fg='red')
+		click.secho(
+			'Discarding remote changes and pushing local changes',
+			fg='yello')
 
-		os.system('cd build && git checkout --ours .')
-		os.system('cd build && git add -u && git commit -m "{}"'.format(
-			"Ignored remote changes"))
+		with change_dir(path):
+			subprocess.call(['git', 'checkout', '--ours', '.'])
+			subprocess.call(['git', 'add', '-u'])
+			subprocess.call(['git', 'commit', '-m',
+				'"{}"'.format('Ignored remote changes')])
 
-	os.system('cd build && git push origin {}'.format(branch))
-
-
-if __name__ == '__main__':
-	parser = argparse.ArgumentParser(description='Olaf Github helper')
-	parser.add_argument(
-		'-m', '--message', type=str, default='new update', help='commit message')
-	parser.add_argument(
-		'-b', '--branch', type=str, default='master', help='Git branch')
-	parser.add_argument(
-		'-c', '--cname', action='store_true', help='CNAME update')
-
-	args = parser.parse_args()
-
-	if args.cname:
-		update_cname()
-	else:
-		upload(args.message, args.branch)
+	subprocess.call(['git', 'push', 'origin', branch])

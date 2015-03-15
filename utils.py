@@ -15,30 +15,6 @@ import datetime
 import contextlib
 from unicodedata import normalize
 
-#Shell script colors
-bcolors = {
-	"HEADER": "\033[95m",
-	"OKBLUE": "\033[94m",
-	"OKGREEN": "\033[92m",
-	"WARNING": "\033[93m",
-	"FAIL": "\033[91m",
-	"ENDC": "\033[0m",
-	"BOLD": "\033[1m",
-	"UNDERLINE": "\033[4m"
-}
-
-# Colored std out messages
-def console_message(message, type,
-			upper = True, newline = False):
-	if upper:
-		message = message.upper()
-
-	if type:
-		sys.stdout.write(bcolors[type] + bcolors['BOLD'] + '\n' +
-				message + bcolors['ENDC'] + '\n' if newline else '')
-	else:
-		sys.stdout.write('\n' + message + '\n' if newline else '')
-
 # Create a directory recursively
 def create_directory(path):
 	if not os.path.isdir(path):

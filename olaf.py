@@ -52,8 +52,7 @@ def create_project_site(project_name):
 	try:
 		# create init file
 		open(
-			os.path.join(current_path, project_name, '__init__.py'),
-			'a'
+			os.path.join(current_path, project_name, '__init__.py'), 'a'
 		).close()
 		# disqus file
 		open(
@@ -62,8 +61,10 @@ def create_project_site(project_name):
 		).close()
 		# create contents directory
 		os.mkdir(os.path.join(current_path, project_name, '_contents'))
-		os.mkdir(os.path.join(current_path, project_name, '_contents', 'posts'))
-		os.mkdir(os.path.join(current_path, project_name, '_contents', 'pages'))
+		os.mkdir(
+			os.path.join(current_path, project_name, '_contents', 'posts'))
+		os.mkdir(
+			os.path.join(current_path, project_name, '_contents', 'pages'))
 	except OSError:
 		click.secho(
 			'Error while creating site - {}'.format(e), fg='red')
@@ -153,7 +154,7 @@ def run(theme, port, host):
 @click.option(
 	'--theme', default='basic', help='blog theme (default: basic)')
 @click.option(
-	'--path', default=False,
+	'--path', default='',
 	help='Freeze directory (default: current directory)')
 @click.option(
 	'--static', default=False, type=bool,
@@ -173,6 +174,8 @@ def freeze(theme, path, static):
 
 	if path:
 		path = os.path.join(current_path, slugify(path))
+	else:
+		path = current_path
 
 	try:
 		# create app
@@ -182,6 +185,11 @@ def freeze(theme, path, static):
 			freeze_path = path,
 			freeze_static = static)
 		blog.freeze.freeze()
+
+		if not os.path.exists(os.path.join(path, '.nojekyll')):
+			open(os.path.join(path, '.nojekyll'), 'a').close()
+
+		click.secho('successfully freezed app', fg='green')
 	except ValueError as e:
 		click.secho(e, fg='red')
 
@@ -190,7 +198,7 @@ def freeze(theme, path, static):
 	'--path', default='',
 	help='Directory where site has been freezed (default: current directory)')
 @click.option(
-	'--message', default='new updates', help='commit message')
+	'--message', default='new update', help='commit message')
 @click.option(
 	'--branch', default='master',
 	help='branch to be pushed (default: master)')
@@ -201,9 +209,8 @@ def upload(path, message, branch):
 	full_path = os.path.join(current_path, path)
 	check_path(os.path.join(current_path, path))
 
-	print full_path
 	import upload
-	upload.git_init(full_path)
+	upload.upload(full_path, message, branch)
 
 @cli.command()
 @click.option(

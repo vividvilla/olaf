@@ -15,7 +15,8 @@ import argparse
 from distutils import util
 from datetime import datetime
 
-from olaf import config
+import click
+
 from utils import bcolors, console_message, \
 	create_directory, get_unix_time
 
@@ -35,25 +36,23 @@ def get_input():
 	"""
 
 	# Initial header messages
-	console_message('\nCreate new content', 'HEADER')
-	console_message('\nYou can always change these settings later \n',
-			'OKBLUE', upper=False)
+	click.secho('Create new content', fg='white', bg='blue')
 
 	# Get page type
-	console_message('Set content type', 'OKBLUE')
+	click.secho('Set content type', fg='white', bg='blue')
 	page_type = raw_input('\nEnter page type (post/page)'
 			'[default: post]: ') or 'post'
 
 	if page_type not in ('post', 'page'):
-		console_message('Invalid page type.', 'FAIL', newline=True)
-		sys.exit()
+		click.secho('Invalid content type.', fg='red')
+		sys.exit(0)
 
 	# Get creation date
-	console_message('Set content creation date', 'OKBLUE')
+	click.secho('Set content date', fg='white', bg='blue')
 	created_date = get_date()
 
 	# Get title
-	console_message('Set content title', 'OKBLUE')
+	click.secho('Set content title', fg='white', bg='blue')
 	title = raw_input('\nEnter title : ')
 	create_slug = True  # By default dont take slug from title
 
@@ -69,31 +68,31 @@ def get_input():
 	# Get slug
 	if create_slug:
 		# Get page file name
-		console_message('Set content slug', 'OKBLUE')
+		click.secho('Set content slug', fg='white', bg='blue')
 		while True:
 			filename = raw_input('\nEnter slug (required) : ')
 			if filename:
 				filename = filename.strip().replace(' ', '-')
 				break
 			else:
-				console_message('Page filename is a required field, '
-						'Please try again.', 'WARNING')
+				click.secho('Page filename is a required field, '
+						'Please try again.', fg='yellow')
 	else:
 		filename = title.strip().replace(' ', '-')
 
 	# Get summary
-	console_message('Set content summary', 'OKBLUE')
+	click.secho('Set content summary', fg='white', bg='blue')
 	summary = (raw_input('\nEnter {} summary : '.format(page_type)) or
 			'Summary of your new content in few words')
 
 	# Get tags (post specific fields)
 	if page_type == 'post':
-		console_message('Set post tags', 'OKBLUE')
+		click.secho('Set post tags', fg='white', bg='blue')
 		raw_tags = raw_input('\nPost tags with comma seperated : ') or ''
 		try:
 			tags = [i.strip() for i in raw_tags.split(',')]
 		except ValueError as e:
-			console_message(e.message, 'FAIL', upper=False)
+			click.secho(e.message, fg='red')
 
 	return (page_type, created_date, filename, title, summary, tags)
 
@@ -125,7 +124,7 @@ def get_date():
 			hour, minutes = [int(i.strip()) for i in time.split(',')]
 			post_date = datetime(year, month, day, hour, minutes)
 		except ValueError as e:
-			console_message(e.message, 'FAIL', upper=False)
+			click.secho(e.message, fg='red')
 			retry = util.strtobool(raw_input('\nWant to re-enter the date '
 					'(Current date will be set if not) ? (y/n): ') or 'n')
 		if retry:
@@ -167,13 +166,13 @@ def create(data):
 	# If file exists ask for a overwrite
 	overwrite = False
 	if os.path.exists(full_path):
-		console_message('File already exists with same date and same name',
-				'WARNING')
+		click.secho('File already exists with same date and same name',
+			fg='yellow')
 		overwrite = util.strtobool(raw_input('\nDo you want to over write the '
 				'existing post ? (y/n): ') or 'n')
 
 		if not overwrite:
-			console_message('Aborted', 'WARNING', newline=True)
+			click.secho('Aborted', fg='yellow')
 			return None
 
 	# Write post meta to file
@@ -182,8 +181,8 @@ def create(data):
 			f.write((meta[0] + ': ' + meta[1] or '') + ' \n')
 		f.write('\n' + 'Your content goes here, Happy blogging !!!')
 
-	console_message('Successfully created post at : {}'.format(full_path),
-			'OKGREEN', upper=False, newline=True)
+	click.secho('Successfully created post at : {}'.format(full_path),
+		fg='green')
 
 	# Open created file in preferred text editor
 	open_file = util.strtobool(raw_input('\nDo you want to open the file '

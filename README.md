@@ -57,7 +57,7 @@ Olaf freezes your complex and slower dynamic blog to simple and faster static bl
 - [ ] Unit tests
 - [ ] Document example settings
 - [ ] Project Documentation
-- [ ] Package as a installer
+- [x] Package as a installer
 - [x] Pluggable themes
 
 - [x] Cli post creator
