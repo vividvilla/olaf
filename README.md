@@ -2,7 +2,7 @@
 
 Olaf freezes your complex and slower dynamic blog to simple and faster static blog. BTW its not made of ice but Python(Flask).
 
-![Olaf dancing](https://raw.githubusercontent.com/vividvilla/olaf/master/static/img/olaf.gif "Olaf")
+![Olaf blinking](https://raw.githubusercontent.com/vividvilla/olaf/master/themes/basic/static/img/olaf.gif "Olaf")
 
 ### Basic features
 	- Markdown support
@@ -53,12 +53,12 @@ Olaf freezes your complex and slower dynamic blog to simple and faster static bl
 - [x] Mobile responsive design
 - [x] Set page description tag for SEO
 - [ ] Google CSE integration // Later
-- [ ] Clean up api (posts and page)
+- [x] Clean up api (posts and page)
 - [ ] Unit tests
 - [ ] Document example settings
 - [ ] Project Documentation
 - [ ] Package as a installer
-- [ ] Pluggable themes
+- [x] Pluggable themes
 
 - [x] Cli post creator
 	- [x] New posts

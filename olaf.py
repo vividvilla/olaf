@@ -23,6 +23,14 @@ dir_path = os.path.dirname(path)
 current_path = os.getcwd()
 default_themes = ['basic']
 
+def check_path(path):
+	"""
+	check if path exists
+	"""
+	if not os.path.exists(path):
+		click.secho(
+			'path "{}" does not exist'.format(path), fg='red')
+		sys.exit(0)
 
 def create_project_site(project_name):
 	try:
@@ -179,23 +187,37 @@ def freeze(theme, path, static):
 
 @cli.command()
 @click.option(
+	'--path', default='',
+	help='Directory where site has been freezed (default: current directory)')
+@click.option(
 	'--message', default='new updates', help='commit message')
 @click.option(
 	'--branch', default='master',
 	help='branch to be pushed (default: master)')
-def upload():
+def upload(path, message, branch):
 	'''
 	Git upload helper
 	'''
-	pass
+	full_path = os.path.join(current_path, path)
+	check_path(os.path.join(current_path, path))
 
+	print full_path
+	import upload
+	upload.git_init(full_path)
 
 @cli.command()
-def cname():
+@click.option(
+	'--path', default='',
+	help='Directory where site has been freezed (default: current directory)')
+def cname(path):
 	'''
 	Update CNAME file
 	'''
-	pass
+	full_path = os.path.join(current_path, path)
+	check_path(os.path.join(current_path, path))
+
+	import upload
+	upload.update_cname(full_path)
 
 
 @cli.command()

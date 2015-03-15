@@ -12,6 +12,7 @@
 import os
 import sys
 import datetime
+import contextlib
 from unicodedata import normalize
 
 #Shell script colors
@@ -76,3 +77,10 @@ def slugify(text, encoding=None,
     ascii_text = normalize('NFKD', clean_text).encode('ascii', 'ignore')
     strict_text = map(lambda x: x if x in permitted_chars else '', ascii_text)
     return ''.join(strict_text)
+
+@contextlib.contextmanager
+def change_dir(newPath):
+    savedPath = os.getcwd()
+    os.chdir(newPath)
+    yield
+    os.chdir(savedPath)
