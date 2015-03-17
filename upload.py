@@ -14,17 +14,13 @@ import sys
 import click
 import subprocess
 
-from olaf import current_path
+from olaf import current_path, check_valid_site
 from utils import change_dir
 
 config_path = os.path.join(current_path, 'config.py')
 
-# check if inside site directory
-if not os.path.exists(config_path):
-	click.secho(
-		'Cannot find config file, please make sure'
-		' you are inside the site directory', fg='red')
-	sys.exit(0)
+# check for valid site directory
+check_valid_site()
 
 # Load config from relative path
 sys.path.append(os.path.dirname(os.path.expanduser(config_path)))

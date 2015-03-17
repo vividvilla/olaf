@@ -21,7 +21,7 @@ from utils import slugify
 path = os.path.abspath(__file__)
 dir_path = os.path.dirname(path)
 current_path = os.getcwd()
-default_themes = ['basic']
+default_theme = 'basic'
 
 
 def check_path(path):
@@ -32,6 +32,86 @@ def check_path(path):
 		click.secho(
 			'path "{}" does not exist'.format(path), fg='red')
 		sys.exit(0)
+
+
+def check_valid_site():
+	"""
+	check if the current path is a valid site directory
+	"""
+	config_path = os.path.join(current_path, 'config.py')
+
+	# check if inside site directory
+	if not os.path.exists(config_path):
+		click.secho(
+			'Cannot find config file, please make sure'
+			' you are inside the site directory', fg='red')
+		sys.exit(0)
+
+
+def get_themes_list(path):
+	"""
+	Get list of themes from a given themes path
+	"""
+	if not os.path.exists(path):
+		child_dir = []
+	else:
+		child_dir = os.walk(path).next()[1]
+
+	valid_themes = []
+	for dir in child_dir:
+		if (os.listdir(os.path.join(path, dir))
+			and not dir.startswith('.')):
+			valid_themes.append(
+				dict(name=dir, path=os.path.join(path, dir)))
+	return valid_themes
+
+
+def get_theme_by_name(theme):
+	# get list of inbuilt themes
+	inbuilt_themes = get_themes_list(os.path.join(dir_path, 'themes'))
+	# get list of custom themes
+	custom_themes = get_themes_list(os.path.join(current_path, 'themes'))
+
+	# check for theme in inbuilt themes directory
+	theme_exists_in_inbuilt = [
+		item['name'] for item in inbuilt_themes if item['name'] == theme]
+
+	# check for theme in custom themes directory
+	theme_exists_in_custom = [
+		item['name'] for item in custom_themes if item['name'] == theme]
+
+	theme_path = None
+
+	if theme_exists_in_inbuilt:
+		# If theme in bundled themes list then get from default themes directory
+		theme_path = os.path.join(dir_path, 'themes', theme)
+	elif theme_exists_in_custom:
+		# If theme not found in bundled themes then get from sites directory
+		theme_path = os.path.join(current_path, 'themes', theme)
+
+	return theme_path
+
+
+def get_default_theme_name(theme):
+	"""
+	get theme from config or set it default
+	"""
+
+	# return theme name if its set via commandline argument
+	if theme:
+		return theme
+
+	# load config file
+	config_path = os.path.join(current_path, 'config.py')
+	sys.path.append(os.path.dirname(os.path.expanduser(config_path)))
+	import config
+
+	# If theme specified as option then ignore other rules
+	# else get from config file, if not found in config file set default theme
+	if config.SITE.get('theme'):
+		return config.SITE.get('theme')
+	else:
+		return default_theme
 
 
 def create_project_site(project_name):
@@ -83,7 +163,7 @@ def cli():
 
 @cli.command()
 @click.argument('project_name', type=str, required=True)
-@click.option('--demo', type=bool, default=True)
+@click.option('-d', '--demo', type=bool, default=True)
 def createsite(project_name, demo):
 	"""
 	create a blog
@@ -118,35 +198,30 @@ def createsite(project_name, demo):
 
 @cli.command()
 @click.option(
-	'--theme', default='basic', help='blog theme (default: basic)')
+	'-t', '--theme', help='blog theme (default: basic)')
 @click.option(
-	'--port', default=5000, help='port to run (default: 5000)')
+	'-p', '--port', default=5000, help='port to run (default: 5000)')
 @click.option(
-	'--host', default='localhost',
+	'-h', '--host', default='localhost',
 	help='hostname to run (default: localhost)')
 def run(theme, port, host):
 	"""
 	run olaf local server
 	"""
-	config_path = os.path.join(current_path, 'config.py')
 
-	# check if inside site directory
-	if not os.path.exists(config_path):
+	# check for a valid site directory
+	check_valid_site()
+
+	# get specified theme path
+	theme_name = get_default_theme_name(theme)
+	theme_path = get_theme_by_name(theme_name)
+	if not theme_path:
+		# sepcified theme not found
 		click.secho(
-			'Cannot find config file, please make sure'
-			' you are inside the site directory', fg='red')
+			'Sepcified theme "{}" not found'.format(theme_name), fg='red')
 		sys.exit(0)
 
-	# get theme directory
-	if theme in default_themes:
-		# If theme in bundled themes list then get from default themes directory
-		theme_path = os.path.join(dir_path, 'themes', theme)
-	else:
-		# If theme not found in bundled themes then get from sites directory
-		theme_path = os.path.join(current_path, 'themes', theme)
-
 	try:
-		# create app
 		app = blog.create_app(current_path, theme_path)
 		app.run(port=port, host=host)
 	except ValueError as e:
@@ -155,24 +230,28 @@ def run(theme, port, host):
 
 @cli.command()
 @click.option(
-	'--theme', default='basic', help='blog theme (default: basic)')
+	'-t', '--theme', default='basic', help='blog theme (default: basic)')
 @click.option(
-	'--path', default='',
+	'-p', '--path', default='',
 	help='Freeze directory (default: current directory)')
 @click.option(
-	'--static', default=False, type=bool, help='Freeze with relative urls'
+	'-s', '--static', default=False, type=bool, help='Freeze with relative urls'
 	'(Run without web server) (default: False)')
 def freeze(theme, path, static):
 	"""
 	freeze blog to static files
 	"""
-	# get theme directory
-	if theme in default_themes:
-		# If theme in bundled themes list then get from default themes directory
-		theme_path = os.path.join(dir_path, 'themes', theme)
-	else:
-		# If theme not found in bundled themes then get from sites directory
-		theme_path = os.path.join(current_path, 'themes', theme)
+	# check for a valid site directory
+	check_valid_site()
+
+	# get specified theme path
+	theme_name = get_default_theme_name(theme)
+	theme_path = get_theme_by_name(theme_name)
+	if not theme_path:
+		# sepcified theme not found
+		click.secho(
+			'Sepcified theme "{}" not found'.format(theme_name), fg='red')
+		sys.exit(0)
 
 	if path:
 		path = os.path.join(current_path, slugify(path))
@@ -198,12 +277,12 @@ def freeze(theme, path, static):
 
 @cli.command()
 @click.option(
-	'--path', default='',
+	'-p', '--path', default='',
 	help='Directory where site has been freezed (default: current directory)')
 @click.option(
-	'--message', default='new update', help='commit message')
+	'-m', '--message', default='new update', help='commit message')
 @click.option(
-	'--branch', default='master',
+	'-b', '--branch', default='master',
 	help='branch to be pushed (default: master)')
 def upload(path, message, branch):
 	"""
@@ -218,7 +297,7 @@ def upload(path, message, branch):
 
 @cli.command()
 @click.option(
-	'--path', default='',
+	'-p', '--path', default='',
 	help='Directory where site has been freezed (default: current directory)')
 def cname(path):
 	"""
@@ -232,13 +311,50 @@ def cname(path):
 
 
 @cli.command()
-def utils():
+@click.option(
+	'-p', '--pygments-styles', count=True, help='Get list of pygments styles')
+@click.option(
+	'-i', '--inbuilt-themes', count=True, help='Get list of inbuilt themes')
+@click.option(
+	'-t', '--themes', count=True, help='Get list of all themes')
+def utils(pygments_styles, inbuilt_themes, themes):
 	"""
 	olaf utils
-
-	pygments styles
 	"""
-	pass
+
+	if pygments_styles:
+		from pygments.styles import STYLE_MAP
+		styles = STYLE_MAP.keys()
+		click.secho('list of pygments styles', fg='cyan')
+		for style in styles:
+			if style == 'tango':
+				click.echo('tango' + click.style(' (default)', fg='green'))
+			else:
+				click.echo(style)
+
+	if inbuilt_themes or themes:
+		inbuilt_themes_list = get_themes_list(os.path.join(dir_path, 'themes'))
+
+		click.secho('list of inbuilt themes', fg='blue', bold=True)
+		for theme in inbuilt_themes_list:
+			if theme['name'] == 'basic':
+				click.secho(
+					' - ' + theme['name'] + click.style(' (default)', fg='green'))
+			else:
+				click.echo(theme['name'])
+
+			if not inbuilt_themes_list:
+				click.secho(' - no inbuilt themes available', fg='red')
+
+		if themes:
+			custom_themes_list = get_themes_list(
+				os.path.join(current_path, 'themes'))
+			click.secho('list of custom themes', fg='blue', bold=True)
+			for theme in custom_themes_list:
+				click.echo(' - ' + theme['name'])
+
+			if not custom_themes_list:
+				click.secho(' - no custom themes available', fg='red')
 
 
 @cli.command()

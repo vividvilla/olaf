@@ -241,7 +241,7 @@ def pygments_css():
 	"""
 	default pygments style
 	"""
-	pyments_style = current_app.config['SITE'].get('pygments') or 'tango'
+	pyments_style = current_app.config['SITE'].get('pygments_style') or 'tango'
 	return (pygments_style_defs(pyments_style), 200, {'Content-Type': 'text/css'})
 
 exclude_from_sitemap.append('/pygments.css')  # Excludes url from sitemap
