@@ -284,15 +284,15 @@ def freeze(theme, path, static):
 @click.option(
 	'-b', '--branch', default='master',
 	help='branch to be pushed (default: master)')
-def upload(path, message, branch):
+def git(path, message, branch):
 	"""
-	Git upload helper
+	Git uploader tool
 	"""
 	full_path = os.path.join(current_path, path)
 	check_path(os.path.join(current_path, path))
 
-	import upload
-	upload.upload(full_path, message, branch)
+	import git_tools
+	git_tools.upload(full_path, message, branch)
 
 
 @cli.command()
@@ -306,8 +306,8 @@ def cname(path):
 	full_path = os.path.join(current_path, path)
 	check_path(os.path.join(current_path, path))
 
-	import upload
-	upload.update_cname(full_path)
+	import git_tools
+	git_tools.update_cname(full_path)
 
 
 @cli.command()

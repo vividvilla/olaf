@@ -3,7 +3,7 @@
 	Olaf
 	~~~~~~~~~
 
-	Github pages uploader utility
+	Git and github pages utility tool
 
 	:copyright: (c) 2015 by Vivek R.
 	:license: BSD, see LICENSE for more details.
@@ -26,8 +26,10 @@ check_valid_site()
 sys.path.append(os.path.dirname(os.path.expanduser(config_path)))
 import config
 
+
 def sys_exit():
 	sys.exit(0)
+
 
 def update_cname(path):
 	"""
@@ -36,13 +38,13 @@ def update_cname(path):
 	"""
 
 	if config.SITE.get('github_domain'):
-		f = open(os.path.join(path,'CNAME'), 'w+')
+		f = open(os.path.join(path, 'CNAME'), 'w+')
 		f.write(config.SITE['github_domain'])
 		f.close()
 		click.secho('CNAME updated', fg='green')
 	else:
 		try:
-			os.remove(os.path.join(path,'CNAME'))
+			os.remove(os.path.join(path, 'CNAME'))
 		except OSError:
 			pass
 
@@ -67,10 +69,10 @@ def git_init(path):
 				['git', 'remote', 'add', 'origin',
 				config.SITE['github_repo']])
 
-		if init_status !=0:
+		if init_status != 0:
 			click.secho('Error while intiializing git repo', fg='red')
 			sys_exit()
-		elif remote_add_status !=0:
+		elif remote_add_status != 0:
 			click.secho('Error while addming remote url', fg='red')
 			sys_exit()
 	else:
