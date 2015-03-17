@@ -23,6 +23,7 @@ dir_path = os.path.dirname(path)
 current_path = os.getcwd()
 default_themes = ['basic']
 
+
 def check_path(path):
 	"""
 	check if path exists
@@ -31,6 +32,7 @@ def check_path(path):
 		click.secho(
 			'path "{}" does not exist'.format(path), fg='red')
 		sys.exit(0)
+
 
 def create_project_site(project_name):
 	try:
@@ -73,9 +75,9 @@ def create_project_site(project_name):
 
 @click.group()
 def cli():
-	'''
+	"""
 	Olaf command line utility
-	'''
+	"""
 	pass
 
 
@@ -83,9 +85,9 @@ def cli():
 @click.argument('project_name', type=str, required=True)
 @click.option('--demo', type=bool, default=True)
 def createsite(project_name, demo):
-	'''
+	"""
 	create a blog
-	'''
+	"""
 	project_name = slugify(project_name)  # santize project name
 	create_project_site(project_name)
 	click.secho('site "{}" has been successfully created'.format(
@@ -120,12 +122,12 @@ def createsite(project_name, demo):
 @click.option(
 	'--port', default=5000, help='port to run (default: 5000)')
 @click.option(
-	'--host', default='127.0.0.1',
-	help='hostname to run (default: 127.0.0.1)')
+	'--host', default='localhost',
+	help='hostname to run (default: localhost)')
 def run(theme, port, host):
-	'''
+	"""
 	run olaf local server
-	'''
+	"""
 	config_path = os.path.join(current_path, 'config.py')
 
 	# check if inside site directory
@@ -150,6 +152,7 @@ def run(theme, port, host):
 	except ValueError as e:
 		click.secho(e, fg='red')
 
+
 @cli.command()
 @click.option(
 	'--theme', default='basic', help='blog theme (default: basic)')
@@ -157,13 +160,12 @@ def run(theme, port, host):
 	'--path', default='',
 	help='Freeze directory (default: current directory)')
 @click.option(
-	'--static', default=False, type=bool,
-	help='Freeze with relative urls (Run without web server)'
-		' (default: False)')
+	'--static', default=False, type=bool, help='Freeze with relative urls'
+	'(Run without web server) (default: False)')
 def freeze(theme, path, static):
-	'''
+	"""
 	freeze blog to static files
-	'''
+	"""
 	# get theme directory
 	if theme in default_themes:
 		# If theme in bundled themes list then get from default themes directory
@@ -182,8 +184,8 @@ def freeze(theme, path, static):
 		app = blog.create_app(
 			current_path,
 			theme_path,
-			freeze_path = path,
-			freeze_static = static)
+			freeze_path=path,
+			freeze_static=static)
 		blog.freeze.freeze()
 
 		if not os.path.exists(os.path.join(path, '.nojekyll')):
@@ -192,6 +194,7 @@ def freeze(theme, path, static):
 		click.secho('successfully freezed app', fg='green')
 	except ValueError as e:
 		click.secho(e, fg='red')
+
 
 @cli.command()
 @click.option(
@@ -203,23 +206,24 @@ def freeze(theme, path, static):
 	'--branch', default='master',
 	help='branch to be pushed (default: master)')
 def upload(path, message, branch):
-	'''
+	"""
 	Git upload helper
-	'''
+	"""
 	full_path = os.path.join(current_path, path)
 	check_path(os.path.join(current_path, path))
 
 	import upload
 	upload.upload(full_path, message, branch)
 
+
 @cli.command()
 @click.option(
 	'--path', default='',
 	help='Directory where site has been freezed (default: current directory)')
 def cname(path):
-	'''
+	"""
 	Update CNAME file
-	'''
+	"""
 	full_path = os.path.join(current_path, path)
 	check_path(os.path.join(current_path, path))
 
@@ -229,23 +233,25 @@ def cname(path):
 
 @cli.command()
 def utils():
-	'''
+	"""
 	olaf utils
-	'''
+
+	pygments styles
+	"""
 	pass
 
 
 @cli.command()
 def importer():
-	'''
+	"""
 	Importer tools
-	'''
+	"""
 	pass
 
 
 @cli.command()
 def export():
-	'''
+	"""
 	Export tools
-	'''
+	"""
 	pass

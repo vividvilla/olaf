@@ -33,6 +33,7 @@ app = Blueprint('app', __name__)  # create blueprint
 
 exclude_from_sitemap = []  # List of urls to be excluded from XML sitemap
 
+
 def create_app(current_path, theme_path, **kwargs):
 	"""
 	Create app with dynamic configurations
@@ -106,6 +107,7 @@ def filter_valid_contents(contents):
 			or post.path.startswith('pages/')):
 			post.slug = post.path[6:]
 
+
 def check_content_type(path, content_type):
 	"""
 	check for specific content type
@@ -135,6 +137,7 @@ def check_duplicate_slugs(contents):
 
 		if slug and slug in slugs:
 			raise ValueError('Duplicate slug : {}'.format())
+
 
 def get_posts(**filters):
 	"""
@@ -193,7 +196,7 @@ def get_posts(**filters):
 
 	# Filter based on page number and pagination limit
 	page_no = filters.get('page_no')
-	limit = filters.get('limit') or current_app.config['SITE']['limit']
+	limit = filters.get('limit') or current_app.config['SITE']['limit'] or 10
 	max_pages = 0
 	if(page_no):
 		paginated = [posts[n:n + limit] for n in range(0, len(posts), limit)]
@@ -223,6 +226,7 @@ def get_post_by_slug(slug):
 """
 Views
 """
+
 
 @app.route('/404.html')
 def custom_404():
@@ -452,7 +456,8 @@ def recent_feed():
 			unicode(post.html),
 			content_type='html',
 			author=post.meta.get(
-				'author', current_app.config['SITE'].get('author', '')),
+				'author', ', '.join(
+					current_app.config['SITE'].get('author', []))),
 			url=urljoin(domain_url, post.slug),
 			updated=updated,
 			published=dated)

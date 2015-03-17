@@ -1,62 +1,80 @@
 # -*- coding: utf-8 -*-
 """
-    Olaf
-    ~~~~~~~~~
+	utility.py
+	~~~~~~~~~
 
-    Tools used all around the project, independent of any other module in project.
+	common utilitity functions independent of other modules in project.
 
-    :copyright: (c) 2015 by Vivek R.
-    :license: BSD, see LICENSE for more details.
+	:copyright: (c) 2015 by Vivek R.
+	:license: BSD, see LICENSE for more details.
 """
 
 import os
-import sys
 import datetime
 import contextlib
 from unicodedata import normalize
 
-# Create a directory recursively
+
 def create_directory(path):
+	"""
+	create directories recursively
+	"""
 	if not os.path.isdir(path):
 		os.makedirs(path)
 	return path
 
-def get_unix_time():
-	date = get_date()
-	return date.strftime('%s')
 
-def timestamp_tostring(timestamp, format = '%d %m %Y'):
-	#Converts unix timestamp to date string with given format
+def timestamp_tostring(timestamp, format='%d %m %Y'):
+	"""
+	Converts unix timestamp to date string with given format
+	"""
 	return datetime.datetime.fromtimestamp(
-			int(timestamp)).strftime(format)
+		int(timestamp)).strftime(format)
 
-def date_format(date, format = '%d %m %Y'):
+
+def date_format(date, format='%d %m %Y'):
+	"""
+	convert date to string in a given format
+	"""
 	return date.strftime(format)
 
-def date_tostring(year, month, day = 1, format = '%d %b %Y'):
-	#Returns date string for given year, month and day with given format
+
+def date_tostring(year, month, day=1, format='%d %b %Y'):
+	"""
+	create date string from year, month and day with given format
+	"""
 	date = datetime.datetime(int(year), int(month), int(day))
 	return date.strftime(format)
 
+
 def font_size(min, max, high, n):
-	# Calculate font size for tags
-	return (n/high)*(max-min) + min
+	"""
+	calculate font size by min and max occurances
+	"""
+	return (n / high) * (max - min) + min
+
 
 def slugify(text, encoding=None,
-         permitted_chars='abcdefghijklmnopqrstuvwxyz0123456789-'):
-	# sanatize slug
-    if isinstance(text, str):
-        text = text.decode(encoding or 'ascii')
-    clean_text = text.strip().replace(' ', '-').lower()
-    while '--' in clean_text:
-        clean_text = clean_text.replace('--', '-')
-    ascii_text = normalize('NFKD', clean_text).encode('ascii', 'ignore')
-    strict_text = map(lambda x: x if x in permitted_chars else '', ascii_text)
-    return ''.join(strict_text)
+	permitted_chars='abcdefghijklmnopqrstuvwxyz0123456789-'):
+	"""
+	sanatize string and convert to a url slug
+	"""
+	if isinstance(text, str):
+		text = text.decode(encoding or 'ascii')
+	clean_text = text.strip().replace(' ', '-').lower()
+	while '--' in clean_text:
+		clean_text = clean_text.replace('--', '-')
+	ascii_text = normalize('NFKD', clean_text).encode('ascii', 'ignore')
+	strict_text = map(lambda x: x if x in permitted_chars else '', ascii_text)
+	return ''.join(strict_text)
+
 
 @contextlib.contextmanager
 def change_dir(newPath):
-    savedPath = os.getcwd()
-    os.chdir(newPath)
-    yield
-    os.chdir(savedPath)
+	"""
+	mimics unix cd command
+	"""
+	savedPath = os.getcwd()
+	os.chdir(newPath)
+	yield
+	os.chdir(savedPath)

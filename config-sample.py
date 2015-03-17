@@ -1,17 +1,62 @@
+# set flask server to debug mode
 DEBUG = True
 
+# site specific settings
 SITE = {
-	'title': 'Your blog title', # Required
-	'description': 'Your blog description', # Required
-	'author': 'Your name', # Required
-	'limit': 10, # Required
-	'custom_home_page' : '', # Enter slug to set any page as homepage (default to list style)
-	'summary_offset': 180, # Optional
-	'feed_limit': 15, # Optional
-	'analytics': 'UA-XXX-VVV', # Optional
-	'disqus': True, # Optional,
-	'domain_url': 'http://vivek.github.io', # with http or https
-	'github_domain': 'vivek.github.io', # Optional
-	'github_repo': 'https://github.com/vividvilla/vividvilla.github.io.git', # Optional
-	'pygments': '' # set pygments style
+	# Required settings
+
+	# Site title
+	'title': 'Your blog title',
+
+
+	# Theme specific settings
+
+	# Site description
+	'description': 'Your blog description',
+
+	# Summary length, used by specific themes
+	'summary_offset': 180,
+
+
+	# Optional settings
+
+	# Default pagination limit, defaults to 10 if not set
+	'limit': 10,
+
+	# Site author(s) name
+	# used in atom feeds and by themes
+	'author': ['Your name'],
+
+	# Set default home page using page/post slug
+	# defaults to recent posts list
+	'custom_home_page': '',
+
+	# Feeds page limit, defaults to 10 if not set
+	'feed_limit': 15,
+
+	# Google analytics tracking id
+	# if not set analytics scripts not included (depends on themes)
+	'analytics': 'UA-XXX-VVV',
+
+	# Enable or disable disqus comments
+	# If enabled add disqus script to disqus.html page in site root
+	'disqus': True,
+
+	# Base domain to be used in xm sitemaps and feed urls
+	# Please add full url with http or https
+	# defaults to host name of the app("localhost")
+	'domain_url': 'http://vivek.github.io',
+
+	# Domain name to be used for Github pages
+	# If setting changed run "olaf cname" from site root directory to update CNAME file
+	'github_domain': 'vivek.github.io',
+
+	# Sites git url - required if  you are using git uploads commandline tool
+	# Try "olaf upload --help" from site root directory for more help
+	'github_repo': 'https://github.com/vividvilla/vividvilla.github.io.git',
+
+	# Set syntax highlighting style (pygments styles)
+	# Try "olaf utils syntax-styles" to get list of inbuilt styles
+	'pygments': ''
+
 }
