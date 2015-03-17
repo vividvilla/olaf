@@ -22,7 +22,7 @@ SITE = {
 
 	# default theme, defaults to 'basic' or theme provided via commandline utility
 	# try "olaf utils -t" to get list of inbuilt and custom themes installed
-	'theme': ''
+	'theme': '',
 
 	# Default pagination limit, defaults to 10 if not set
 	'limit': 10,
