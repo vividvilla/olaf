@@ -19,15 +19,14 @@ from flask_frozen import Freezer
 from werkzeug.contrib.atom import AtomFeed
 from flask import render_template, abort, redirect, url_for, \
 	request, make_response, current_app, Blueprint
-
 from flask_flatpages import FlatPages, pygments_style_defs
 
-from utils import timestamp_tostring, date_tostring, \
+from olaf.utils import timestamp_tostring, date_tostring, \
 	font_size, date_format
 
 # initialize extensions
-contents = FlatPages()
 freeze = Freezer()
+contents = FlatPages()
 
 app = Blueprint('app', __name__)  # create blueprint
 

@@ -31,6 +31,6 @@ setup(
 	],
 	entry_points='''
 		[console_scripts]
-		olaf=olaf:cli
+		olaf=olaf.cli:cli
 	'''
 )

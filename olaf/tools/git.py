@@ -14,13 +14,13 @@ import sys
 import click
 import subprocess
 
-from olaf import current_path, check_valid_site
-from utils import change_dir
+from olaf.utils import change_dir
+from olaf import current_dir, is_valid_site
 
-config_path = os.path.join(current_path, 'config.py')
+config_path = os.path.join(current_dir, 'config.py')
 
 # check for valid site directory
-check_valid_site()
+is_valid_site()
 
 # Load config from relative path
 sys.path.append(os.path.dirname(os.path.expanduser(config_path)))

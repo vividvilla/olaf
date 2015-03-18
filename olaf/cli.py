@@ -15,142 +15,11 @@ import shutil
 
 import click
 
-import blog
-from utils import slugify
-
-path = os.path.abspath(__file__)
-dir_path = os.path.dirname(path)
-current_path = os.getcwd()
-default_theme = 'basic'
-
-
-def check_path(path):
-	"""
-	check if path exists
-	"""
-	if not os.path.exists(path):
-		click.secho(
-			'path "{}" does not exist'.format(path), fg='red')
-		sys.exit(0)
-
-
-def check_valid_site():
-	"""
-	check if the current path is a valid site directory
-	"""
-	config_path = os.path.join(current_path, 'config.py')
-
-	# check if inside site directory
-	if not os.path.exists(config_path):
-		click.secho(
-			'Cannot find config file, please make sure'
-			' you are inside the site directory', fg='red')
-		sys.exit(0)
-
-
-def get_themes_list(path):
-	"""
-	Get list of themes from a given themes path
-	"""
-	if not os.path.exists(path):
-		child_dir = []
-	else:
-		child_dir = os.walk(path).next()[1]
-
-	valid_themes = []
-	for dir in child_dir:
-		if (os.listdir(os.path.join(path, dir))
-			and not dir.startswith('.')):
-			valid_themes.append(
-				dict(name=dir, path=os.path.join(path, dir)))
-	return valid_themes
-
-
-def get_theme_by_name(theme):
-	# get list of inbuilt themes
-	inbuilt_themes = get_themes_list(os.path.join(dir_path, 'themes'))
-	# get list of custom themes
-	custom_themes = get_themes_list(os.path.join(current_path, 'themes'))
-
-	# check for theme in inbuilt themes directory
-	theme_exists_in_inbuilt = [
-		item['name'] for item in inbuilt_themes if item['name'] == theme]
-
-	# check for theme in custom themes directory
-	theme_exists_in_custom = [
-		item['name'] for item in custom_themes if item['name'] == theme]
-
-	theme_path = None
-
-	if theme_exists_in_inbuilt:
-		# If theme in bundled themes list then get from default themes directory
-		theme_path = os.path.join(dir_path, 'themes', theme)
-	elif theme_exists_in_custom:
-		# If theme not found in bundled themes then get from sites directory
-		theme_path = os.path.join(current_path, 'themes', theme)
-
-	return theme_path
-
-
-def get_default_theme_name(theme):
-	"""
-	get theme from config or set it default
-	"""
-
-	# return theme name if its set via commandline argument
-	if theme:
-		return theme
-
-	# load config file
-	config_path = os.path.join(current_path, 'config.py')
-	sys.path.append(os.path.dirname(os.path.expanduser(config_path)))
-	import config
-
-	# If theme specified as option then ignore other rules
-	# else get from config file, if not found in config file set default theme
-	if config.SITE.get('theme'):
-		return config.SITE.get('theme')
-	else:
-		return default_theme
-
-
-def create_project_site(project_name):
-	try:
-		# create project directory
-		os.mkdir(project_name)
-	except OSError as e:
-		click.secho('Error while creating site - {}'.format(e), fg='red')
-		sys.exit(0)
-
-	try:
-		# copy config file
-		shutil.copyfile(
-			os.path.join(dir_path, 'config-sample.py'),
-			os.path.join(current_path, project_name, 'config.py'))
-	except IOError:
-		click.secho('Error while creating site - {}'.format(e), fg='red')
-		sys.exit(0)
-
-	try:
-		# create init file
-		open(
-			os.path.join(current_path, project_name, '__init__.py'), 'a'
-		).close()
-		# disqus file
-		open(
-			os.path.join(current_path, project_name, 'disqus.html'),
-			'a'
-		).close()
-		# create contents directory
-		os.mkdir(os.path.join(current_path, project_name, '_contents'))
-		os.mkdir(
-			os.path.join(current_path, project_name, '_contents', 'posts'))
-		os.mkdir(
-			os.path.join(current_path, project_name, '_contents', 'pages'))
-	except OSError:
-		click.secho(
-			'Error while creating site - {}'.format(e), fg='red')
-		sys.exit(0)
+from olaf import app
+from olaf.utils import slugify
+from olaf import module_path, current_dir, \
+	is_valid_path, is_valid_site, get_themes_list, get_theme_by_name, \
+	get_default_theme_name, create_project_site
 
 
 @click.group()
@@ -176,21 +45,21 @@ def createsite(project_name, demo):
 	# populate demo files (True by default)
 	if demo:
 		shutil.copyfile(
-			os.path.join(dir_path, 'demo-files', 'hello-world.md'),
+			os.path.join(module_path, 'demo-files', 'hello-world.md'),
 			os.path.join(
-				current_path, project_name, '_contents',
+				current_dir, project_name, '_contents',
 				'posts', 'hello-world.md'))
 
 		shutil.copyfile(
-			os.path.join(dir_path, 'demo-files', 'typography.md'),
+			os.path.join(module_path, 'demo-files', 'typography.md'),
 			os.path.join(
-				current_path, project_name, '_contents',
+				current_dir, project_name, '_contents',
 				'posts', 'typography.md'))
 
 		shutil.copyfile(
-			os.path.join(dir_path, 'demo-files', 'sample-page.md'),
+			os.path.join(module_path, 'demo-files', 'sample-page.md'),
 			os.path.join(
-				current_path, project_name, '_contents',
+				current_dir, project_name, '_contents',
 				'pages', 'sample-page.md'))
 
 	click.secho('demo files successfully populated', fg='green')
@@ -210,7 +79,7 @@ def run(theme, port, host):
 	"""
 
 	# check for a valid site directory
-	check_valid_site()
+	is_valid_site()
 
 	# get specified theme path
 	theme_name = get_default_theme_name(theme)
@@ -222,8 +91,8 @@ def run(theme, port, host):
 		sys.exit(0)
 
 	try:
-		app = blog.create_app(current_path, theme_path)
-		app.run(port=port, host=host)
+		app_ = app.create_app(current_dir, theme_path)
+		app_.run(port=port, host=host)
 	except ValueError as e:
 		click.secho(e, fg='red')
 
@@ -242,7 +111,7 @@ def freeze(theme, path, static):
 	freeze blog to static files
 	"""
 	# check for a valid site directory
-	check_valid_site()
+	is_valid_site()
 
 	# get specified theme path
 	theme_name = get_default_theme_name(theme)
@@ -254,18 +123,18 @@ def freeze(theme, path, static):
 		sys.exit(0)
 
 	if path:
-		path = os.path.join(current_path, slugify(path))
+		path = os.path.join(current_dir, slugify(path))
 	else:
-		path = current_path
+		path = current_dir
 
 	try:
 		# create app
-		app = blog.create_app(
-			current_path,
+		app_ = app.create_app(
+			current_dir,
 			theme_path,
 			freeze_path=path,
 			freeze_static=static)
-		blog.freeze.freeze()
+		app.freeze.freeze()
 
 		if not os.path.exists(os.path.join(path, '.nojekyll')):
 			open(os.path.join(path, '.nojekyll'), 'a').close()
@@ -288,11 +157,11 @@ def git(path, message, branch):
 	"""
 	Git uploader tool
 	"""
-	full_path = os.path.join(current_path, path)
-	check_path(os.path.join(current_path, path))
+	full_path = os.path.join(current_dir, path)
+	is_valid_path(os.path.join(current_dir, path))
 
-	import git_tools
-	git_tools.upload(full_path, message, branch)
+	from olaf.tools import git
+	git.upload(full_path, message, branch)
 
 
 @cli.command()
@@ -303,11 +172,11 @@ def cname(path):
 	"""
 	Update CNAME file
 	"""
-	full_path = os.path.join(current_path, path)
-	check_path(os.path.join(current_path, path))
+	full_path = os.path.join(current_dir, path)
+	is_valid_path(os.path.join(current_dir, path))
 
-	import git_tools
-	git_tools.update_cname(full_path)
+	from olaf.tools import git
+	git.update_cname(full_path)
 
 
 @cli.command()
@@ -333,7 +202,7 @@ def utils(pygments_styles, inbuilt_themes, themes):
 				click.echo(style)
 
 	if inbuilt_themes or themes:
-		inbuilt_themes_list = get_themes_list(os.path.join(dir_path, 'themes'))
+		inbuilt_themes_list = get_themes_list(os.path.join(module_path, 'themes'))
 
 		click.secho('list of inbuilt themes', fg='blue', bold=True)
 		for theme in inbuilt_themes_list:
@@ -348,7 +217,7 @@ def utils(pygments_styles, inbuilt_themes, themes):
 
 		if themes:
 			custom_themes_list = get_themes_list(
-				os.path.join(current_path, 'themes'))
+				os.path.join(current_dir, 'themes'))
 			click.secho('list of custom themes', fg='blue', bold=True)
 			for theme in custom_themes_list:
 				click.echo(' - ' + theme['name'])

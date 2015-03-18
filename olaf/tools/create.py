@@ -17,7 +17,7 @@ from datetime import datetime
 
 import click
 
-from utils import bcolors, console_message, \
+from olaf.utils import bcolors, console_message, \
 	create_directory, get_unix_time
 
 
