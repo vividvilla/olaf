@@ -10,15 +10,132 @@
 """
 
 import os
-import sys
 import argparse
-from distutils import util
 from datetime import datetime
+from functools import wraps
 
 import click
 
-from olaf.utils import bcolors, console_message, \
-	create_directory, get_unix_time
+from olaf.utils import slugify, \
+	create_directory
+
+
+def get_confirmation(message):
+	click.secho(message + ' (y/n) : ', nl=False)
+	choice = click.getchar()
+	if choice == 'y':
+		return True
+	elif choice == 'n':
+		return False
+	else:
+		raise ValueError('Invalid type')
+
+
+def retry_option(func):
+	@wraps(func)
+	def decorated_function(*args, **kwargs):
+		fallback = None
+		retry_message = 'do you want to retry?'
+		while True:
+			retry = False
+			result = func(*args, **kwargs)
+			if result:
+				return result
+			else:
+				try:
+					retry = get_confirmation(retry_message)
+				except ValueError:
+					retry = True
+
+			if not retry:
+				return fallback
+		return func(*args, **kwargs)
+	return decorated_function
+
+
+@retry_option
+def get_content_type():
+	click.secho('\nChoose content type (page or post): ', nl=False)
+	choice = raw_input()
+	if choice not in ('post', 'page'):
+		click.secho('Invalid content type, should be either '
+			'"page" or "post"', fg='red')
+		return None
+	else:
+		return choice
+
+
+@retry_option
+def get_content_title():
+	click.secho('\nChoose content title: ', nl=False)
+	choice = raw_input()
+	if not choice:
+		click.secho('Invalid content title', fg='red')
+	return choice
+
+
+@retry_option
+def get_content_slug():
+	click.secho('\nChoose content slug(will also be the file name): ', nl=False)
+	choice = raw_input()
+	if not choice:
+		click.secho('Invalid slug', fg='red')
+	return choice
+
+
+@retry_option
+def get_content_summary():
+	click.secho('\nChoose content summary (optional): ', nl=False)
+	choice = raw_input()
+	if not choice:
+		click.secho('Invalid content summary', fg='red')
+	return choice
+
+
+@retry_option
+def get_content_tags():
+	click.secho('\nPost tags with comma seperated : ', nl=False)
+	tags_string = raw_input()
+	try:
+		tags = [i.strip() for i in tags_string.split(',')]
+	except ValueError:
+		click.secho('Invalid tags format', fg='red')
+		return None
+	else:
+		return tags
+
+
+def get_date():
+	"""
+	Utility for getting date via Commandline
+	"""
+
+	set_date = get_confirmation('\nSet todays date?')
+
+	# Return current date if user asks for it
+	if set_date:
+		return datetime.today()
+
+	# Loop till user opts out or provides valid date
+	while True:
+		retry = False
+
+		click.secho('\nCustom date in the format of "Year, Month, Day" '
+			'(ex: 2015, 1, 12): ', nl=False)
+		date_string = raw_input()
+
+		try:
+			year, month, day = [int(i.strip()) for i in date_string.split(',')]
+			date = datetime(year, month, day).today()
+		except ValueError as e:
+			click.secho(e.message, fg='red')
+			retry = get_confirmation('\nWant to re-enter the date '
+					'(Current date will be set if not)?')
+		else:
+			return date
+
+		if not retry:
+			return datetime.now().today()
 
 
 # Detailed post creator
@@ -35,102 +152,45 @@ def get_input():
 		tags : applicable only to 'post' content type
 	"""
 
-	# Initial header messages
-	click.secho('Create new content', fg='white', bg='blue')
-
 	# Get page type
-	click.secho('Set content type', fg='white', bg='blue')
-	page_type = raw_input('\nEnter page type (post/page)'
-			'[default: post]: ') or 'post'
-
-	if page_type not in ('post', 'page'):
-		click.secho('Invalid content type.', fg='red')
-		sys.exit(0)
+	content_type = get_content_type()
 
 	# Get creation date
-	click.secho('Set content date', fg='white', bg='blue')
 	created_date = get_date()
 
 	# Get title
-	click.secho('Set content title', fg='white', bg='blue')
-	title = raw_input('\nEnter title : ')
-	create_slug = True  # By default dont take slug from title
+	title = get_content_title()
 
-	# Prompt user for a custom slug or create it from title
-	if title:
-		create_slug = util.strtobool(raw_input(
-			'\nWant to create custom post slug ? \n'
-			'(else it will create from post title you have provided) [default: no] \n'
-			'Enter your choice: (y/n): ') or 'n')
+	# get slug
+	if not title:
+		slug_from_title = False
+		title = 'hello world'
 	else:
-		title = 'Title of your new content'
+		slug_from_title = get_confirmation('\nCreate a slug from content title?')
 
-	# Get slug
-	if create_slug:
-		# Get page file name
-		click.secho('Set content slug', fg='white', bg='blue')
-		while True:
-			filename = raw_input('\nEnter slug (required) : ')
-			if filename:
-				filename = filename.strip().replace(' ', '-')
-				break
-			else:
-				click.secho('Page filename is a required field, '
-						'Please try again.', fg='yellow')
-	else:
-		filename = title.strip().replace(' ', '-')
+	slug = None
+	if slug_from_title:
+		slug = slugify(title)
 
-	# Get summary
-	click.secho('Set content summary', fg='white', bg='blue')
-	summary = (raw_input('\nEnter {} summary : '.format(page_type)) or
-			'Summary of your new content in few words')
+	if not slug_from_title or slug:
+		get_slug = get_content_slug()
+		if get_slug:
+			slug = slugify(get_content_slug())
+
+	# get content summary
+	summary = get_content_summary()
 
 	# Get tags (post specific fields)
-	if page_type == 'post':
-		click.secho('Set post tags', fg='white', bg='blue')
-		raw_tags = raw_input('\nPost tags with comma seperated : ') or ''
-		try:
-			tags = [i.strip() for i in raw_tags.split(',')]
-		except ValueError as e:
-			click.secho(e.message, fg='red')
+	if content_type == 'post':
+		tags = get_content_tags()
 
-	return (page_type, created_date, filename, title, summary, tags)
-
-
-def get_date():
-	"""
-	Utility for getting date via Commandline
-	"""
-
-	set_date = util.strtobool(
-		raw_input('\nSet as current date ? (y/n): ') or 'y')
-
-	# Return current date if user asks for it
-	if set_date:
-		return datetime.now()
-
-	# Loop till user opts out or provides valid date
-	while True:
-		retry = False
-		post_date = None
-
-		date = raw_input('\nCustom date in the format of "Year, Month, Day" '
-				'(ex: 2015, 1, 12): ')
-		time = raw_input('\nTime in the format of "Hour Minutes"'
-				'(ex: 10, 55) : ') or '0 0'
-
-		try:
-			year, month, day = [int(i.strip()) for i in date.split(',')]
-			hour, minutes = [int(i.strip()) for i in time.split(',')]
-			post_date = datetime(year, month, day, hour, minutes)
-		except ValueError as e:
-			click.secho(e.message, fg='red')
-			retry = util.strtobool(raw_input('\nWant to re-enter the date '
-					'(Current date will be set if not) ? (y/n): ') or 'n')
-		if retry:
-			pass
-		else:
-			return post_date or datetime.now()
+	return dict(
+		type=content_type,
+		date=created_date,
+		slug=slug,
+		title=title,
+		summary=summary,
+		tags=tags)
 
 
 def create(data):
@@ -145,7 +205,8 @@ def create(data):
 		summary
 		tags [can be empty]
 	"""
-
+	pass
+"""
 	page_type, date, filename, title, summary, tags = data
 
 	# Lis of post meta
@@ -226,3 +287,4 @@ if __name__ == '__main__':
 		console_message(get_unix_time(), 'OKGREEN')
 	else:
 		create_manually()
+"""
