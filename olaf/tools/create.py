@@ -20,9 +20,10 @@ from olaf.utils import slugify, \
 	create_directory
 
 
-def get_confirmation(message):
-	click.secho(message + ' (y/n) : ', nl=False)
+def get_confirmation(message, fg=''):
+	click.secho(message + ' (y/n) : ', nl=False, fg=fg)
 	choice = click.getchar()
+	click.echo()
 	if choice == 'y':
 		return True
 	elif choice == 'n':
@@ -30,33 +31,35 @@ def get_confirmation(message):
 	else:
 		raise ValueError('Invalid type')
 
-
-def retry_option(func):
-	@wraps(func)
-	def decorated_function(*args, **kwargs):
-		fallback = None
-		retry_message = 'do you want to retry?'
-		while True:
-			retry = False
-			result = func(*args, **kwargs)
-			if result:
-				return result
-			else:
-				try:
-					retry = get_confirmation(retry_message)
-				except ValueError:
+def retry(force_retry=False, fallback=None,
+	retry_message='do you want to retry?', return_check=None):
+	def retry_decorator(func):
+		def decorated_function(*args, **kwargs):
+			while True:
+				retry = False
+				result = func(*args, **kwargs)
+				if not result == return_check:
+					return result
+				elif force_retry:
 					retry = True
+				else:
+					try:
+						retry = get_confirmation(retry_message, fg='cyan')
+					except ValueError:
+						retry = True
 
-			if not retry:
-				return fallback
-		return func(*args, **kwargs)
-	return decorated_function
+				if not retry:
+					return fallback
+			return func(*args, **kwargs)
+		return decorated_function
+	return retry_decorator
 
 
-@retry_option
+@retry(force_retry=True)
 def get_content_type():
-	click.secho('\nChoose content type (page or post): ', nl=False)
+	click.secho('Choose content type (page or post): ', nl=False)
 	choice = raw_input()
+
 	if choice not in ('post', 'page'):
 		click.secho('Invalid content type, should be either '
 			'"page" or "post"', fg='red')
@@ -65,78 +68,74 @@ def get_content_type():
 		return choice
 
 
-@retry_option
+@retry()
 def get_content_title():
-	click.secho('\nChoose content title: ', nl=False)
+	click.secho('Choose content title: ', nl=False)
 	choice = raw_input()
+
 	if not choice:
 		click.secho('Invalid content title', fg='red')
+		return None
 	return choice
 
 
-@retry_option
+@retry(force_retry=True)
 def get_content_slug():
-	click.secho('\nChoose content slug(will also be the file name): ', nl=False)
+	click.secho('Choose content slug(will also be the file name): ', nl=False)
 	choice = raw_input()
+
 	if not choice:
 		click.secho('Invalid slug', fg='red')
+		return None
 	return choice
 
 
-@retry_option
 def get_content_summary():
-	click.secho('\nChoose content summary (optional): ', nl=False)
+	click.secho('Choose content summary (optional): ', nl=False)
 	choice = raw_input()
-	if not choice:
-		click.secho('Invalid content summary', fg='red')
 	return choice
 
 
-@retry_option
+@retry(return_check='retry', fallback='')
 def get_content_tags():
-	click.secho('\nPost tags with comma seperated : ', nl=False)
+	click.secho('Choose post tags, comma seperated (ex. tag1, tag2) : ', nl=False)
 	tags_string = raw_input()
+
+	if not tags_string:
+		return ''
+
 	try:
 		tags = [i.strip() for i in tags_string.split(',')]
 	except ValueError:
 		click.secho('Invalid tags format', fg='red')
-		return None
+		return 'retry'
 	else:
 		return tags
 
-
+@retry(fallback=datetime.now().date())
 def get_date():
 	"""
 	Utility for getting date via Commandline
 	"""
 
-	set_date = get_confirmation('\nSet todays date?')
+	set_date = get_confirmation('Set todays date?')
 
 	# Return current date if user asks for it
 	if set_date:
-		return datetime.today()
+		return datetime.now().date()
 
-	# Loop till user opts out or provides valid date
-	while True:
-		retry = False
+	click.secho('Custom date in the format of "Year, Month, Day" '
+		'(ex: 2015, 1, 12): ', nl=False)
+	date_string = raw_input()
 
-		click.secho('\nCustom date in the format of "Year, Month, Day" '
-			'(ex: 2015, 1, 12): ', nl=False)
-		date_string = raw_input()
-
-		try:
-			year, month, day = [int(i.strip()) for i in date_string.split(',')]
-			date = datetime(year, month, day).today()
-		except ValueError as e:
-			click.secho(e.message, fg='red')
-			retry = get_confirmation('\nWant to re-enter the date '
-					'(Current date will be set if not)?')
-		else:
-			return date
-
-		if not retry:
-			return datetime.now().today()
-
+	try:
+		year, month, day = [int(i.strip()) for i in date_string.split(',')]
+		date = datetime(year, month, day).date()
+	except ValueError:
+		click.secho('Invalid date format', fg='red')
+		return None
+	else:
+		return date
 
 # Detailed post creator
 def get_input():
@@ -166,16 +165,18 @@ def get_input():
 		slug_from_title = False
 		title = 'hello world'
 	else:
-		slug_from_title = get_confirmation('\nCreate a slug from content title?')
+		try:
+			slug_from_title = get_confirmation(
+				'Create a slug from content title?')
+		except ValueError:
+			slug_from_title = False
 
 	slug = None
 	if slug_from_title:
 		slug = slugify(title)
 
-	if not slug_from_title or slug:
-		get_slug = get_content_slug()
-		if get_slug:
-			slug = slugify(get_content_slug())
+	if not slug:
+		slug = slugify(get_content_slug())
 
 	# get content summary
 	summary = get_content_summary()
