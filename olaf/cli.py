@@ -227,6 +227,31 @@ def utils(pygments_styles, inbuilt_themes, themes):
 
 
 @cli.command()
+@click.argument(
+	'post', type=str, metavar='POST-SLUG',
+	help='quick create post cotent type by slug',)
+@click.argument(
+	'page', type=str, metavar='PAGE-SLUG',
+	help='quick create page cotent type by slug')
+@click.argument(
+	'verbose', count=True,
+	help='launch command line content creator')
+def create(post, page, verbose):
+	"""
+	content creator
+	"""
+	from olaf.tools import create
+
+	if post:
+		create.quick_create('post', post)
+
+	if page:
+		create.quick_create('page', page)
+
+	if verbose:
+		create.verbose_create()
+
+@cli.command()
 def importer():
 	"""
 	Importer tools

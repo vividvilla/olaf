@@ -290,7 +290,7 @@ def verbose_create():
 def quick_create(type, slug):
 	create(dict(
 		type=type,
-		date=datetime.datetime.now().strftime('%Y-%m-%d'),
+		date=datetime.now().strftime('%Y-%m-%d'),
 		slug=slug,
 		title='Hello world',
 		)
