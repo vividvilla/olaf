@@ -21,6 +21,7 @@ from flask import render_template, abort, redirect, url_for, \
 	request, make_response, current_app, Blueprint
 from flask_flatpages import FlatPages, pygments_style_defs
 
+from olaf import contents_dir, content_extension
 from olaf.utils import timestamp_tostring, date_tostring, \
 	font_size, date_format
 
@@ -60,8 +61,8 @@ def create_app(current_path, theme_path, **kwargs):
 		FREEZER_RELATIVE_URLS=freeze_static,
 		FREEZER_REMOVE_EXTRA_FILES=False,
 		FLATPAGES_AUTO_RELOAD=True,
-		FLATPAGES_EXTENSION='.md',
-		FLATPAGES_ROOT=os.path.join(current_path, '_contents'))
+		FLATPAGES_EXTENSION=content_extension,
+		FLATPAGES_ROOT=os.path.join(current_path, contents_dir))
 
 	# initialize with current flask app
 	contents.init_app(flask_app)

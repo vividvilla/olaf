@@ -17,7 +17,7 @@ import click
 
 from olaf import app
 from olaf.utils import slugify
-from olaf import module_path, current_dir, \
+from olaf import module_path, current_dir, contents_dir, \
 	is_valid_path, is_valid_site, get_themes_list, get_theme_by_name, \
 	get_default_theme_name, create_project_site
 
@@ -47,19 +47,19 @@ def createsite(project_name, demo):
 		shutil.copyfile(
 			os.path.join(module_path, 'demo-files', 'hello-world.md'),
 			os.path.join(
-				current_dir, project_name, '_contents',
+				current_dir, project_name, contents_dir,
 				'posts', 'hello-world.md'))
 
 		shutil.copyfile(
 			os.path.join(module_path, 'demo-files', 'typography.md'),
 			os.path.join(
-				current_dir, project_name, '_contents',
+				current_dir, project_name, contents_dir,
 				'posts', 'typography.md'))
 
 		shutil.copyfile(
 			os.path.join(module_path, 'demo-files', 'sample-page.md'),
 			os.path.join(
-				current_dir, project_name, '_contents',
+				current_dir, project_name, contents_dir,
 				'pages', 'sample-page.md'))
 
 	click.secho('demo files successfully populated', fg='green')

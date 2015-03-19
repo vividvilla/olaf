@@ -18,6 +18,10 @@ import click
 default_theme = 'basic'
 current_dir = os.getcwd()
 module_path = os.path.dirname(os.path.abspath(__file__))
+contents_dir = '_contents'
+posts_dir = 'posts'
+pages_dir = 'pages'
+content_extension = '.md'
 
 
 def is_valid_path(path):
@@ -138,11 +142,11 @@ def create_project_site(project_name):
 			'a'
 		).close()
 		# create contents directory
-		os.mkdir(os.path.join(current_dir, project_name, '_contents'))
+		os.mkdir(os.path.join(current_dir, project_name, contents_dir))
 		os.mkdir(
-			os.path.join(current_dir, project_name, '_contents', 'posts'))
+			os.path.join(current_dir, project_name, contents_dir, 'posts'))
 		os.mkdir(
-			os.path.join(current_dir, project_name, '_contents', 'pages'))
+			os.path.join(current_dir, project_name, contents_dir, 'pages'))
 	except OSError:
 		click.secho(
 			'Error while creating site - {}'.format(e), fg='red')

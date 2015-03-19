@@ -3,24 +3,24 @@
 	Olaf
 	~~~~~~~~~
 
-	Simple commandline utility for creating post/page
+	Commandline utility for creating post/page
 
 	:copyright: (c) 2015 by Vivek R.
 	:license: BSD, see LICENSE for more details.
 """
 
 import os
-import argparse
+import sys
 from datetime import datetime
-from functools import wraps
 
 import click
 
-from olaf.utils import slugify, \
-	create_directory
+from olaf import contents_dir, posts_dir, pages_dir, current_dir, \
+	content_extension
+from olaf.utils import slugify, create_directory
 
 
-def get_confirmation(message, fg=''):
+def get_confirmation(message, fallback='error', fg=''):
 	click.secho(message + ' (y/n) : ', nl=False, fg=fg)
 	choice = click.getchar()
 	click.echo()
@@ -29,7 +29,11 @@ def get_confirmation(message, fg=''):
 	elif choice == 'n':
 		return False
 	else:
-		raise ValueError('Invalid type')
+		if fallback == 'error':
+			raise ValueError('Invalid type')
+		else:
+			return fallback
+
 
 def retry(force_retry=False, fallback=None,
 	retry_message='do you want to retry?', return_check=None):
@@ -112,6 +116,7 @@ def get_content_tags():
 	else:
 		return tags
 
+
 @retry(fallback=datetime.now().date())
 def get_date():
 	"""
@@ -136,6 +141,7 @@ def get_date():
 		return None
 	else:
 		return date
+
 
 # Detailed post creator
 def get_input():
@@ -206,86 +212,109 @@ def create(data):
 		summary
 		tags [can be empty]
 	"""
-	pass
-"""
-	page_type, date, filename, title, summary, tags = data
 
-	# Lis of post meta
-	post_meta = [('type', page_type), ('timestamp', date.strftime('%s')),
-			('updated', date.strftime('%s')), ('title', title), ('summary', summary)]
+	content_meta = {
+		'date': data.get('date'),
+		'title': data.get('title'),
+		'summary': data.get('summary', '')
+	}
 
-	if page_type == 'post':
-		# If its a post then add tags
-		path = create_directory(config.FLATPAGES_ROOT + date.strftime('/%Y/%m/%d/'))
-		post_meta.append(('tags', str(tags)))
-	elif page_type == 'page':
-		# It its a page then create file in contents directory
-		path = config.FLATPAGES_ROOT + '/'
-
-	# Fina file path
-	full_path = path + filename + config.FLATPAGES_EXTENSION
+	if data['type'] == 'post':
+		content_directory = os.path.join(
+			current_dir, contents_dir, posts_dir)
+		content_path = os.path.join(
+			content_directory, data['slug'] + content_extension)
+		content_meta['tags'] = data.get('tags', [])
+	elif data['type'] == 'page':
+		content_directory = os.path.join(
+			current_dir, contents_dir, pages_dir)
+		content_path = os.path.join(
+			content_directory, data['slug'] + content_extension)
+	else:
+		raise ValueError('Invalid content type "{}"'.format(data['type']))
 
 	# If file exists ask for a overwrite
 	overwrite = False
-	if os.path.exists(full_path):
-		click.secho('File already exists with same date and same name',
+	if os.path.exists(content_path):
+		click.secho('File already exists with file name (slug)',
 			fg='yellow')
-		overwrite = util.strtobool(raw_input('\nDo you want to over write the '
-				'existing post ? (y/n): ') or 'n')
+
+		overwrite = get_confirmation('Do you want to over write the '
+			'existing content?')
 
 		if not overwrite:
 			click.secho('Aborted', fg='yellow')
-			return None
+			sys.exit(0)
+
+	try:
+		create_directory(content_directory)
+	except Exception as e:
+		click.secho('unable to create content directory : {}'.format(e),
+			fg='red')
+		sys.exit(0)
 
 	# Write post meta to file
-	with open(full_path, 'wb+') as f:
-		for meta in post_meta:
-			f.write((meta[0] + ': ' + meta[1] or '') + ' \n')
-		f.write('\n' + 'Your content goes here, Happy blogging !!!')
+	try:
+		with open(content_path, 'wb+') as f:
+			for meta_key, meta_value in content_meta:
+				f.write(meta_key + ': ' + meta_value + '\n')
+			f.write('\n' + 'Your content goes here, Happy blogging !!!')
+	except Exception as e:
+		click.secho('unable to create content : {}'.format(e),
+			fg='red')
+		sys.exit(0)
 
-	click.secho('Successfully created post at : {}'.format(full_path),
+	click.secho('Successfully created content at : {}'
+		'you can preview it on url /{}'.format(content_path, data['slug']),
 		fg='green')
 
 	# Open created file in preferred text editor
-	open_file = util.strtobool(raw_input('\nDo you want to open the file '
-		'in your preferred text editor ? (y/n): ') or 'n')
+	open_file = get_confirmation(
+		'Want to open the file in a text editor?', fallback=False)
 
 	if open_file:
-		text_editor = raw_input('\nPlease enter your preferred text editor '
-				'(vim, vi, nano, subl, etc.. : ')
+		click.secho('Please enter your preferred text editor '
+				'(vim, vi, nano, subl, etc.. : ', nl=False)
+		text_editor = raw_input()
 
-		if text_editor:
-			os.system('{} {}'.format(text_editor, full_path))
+		try:
+			click.edit(filename=content_path, editor=text_editor)
+		except:
+			click.secho('Unable to open the file in given text editor', fg=False)
 
 
-def create_manually():
+def verbose_create():
 	create(get_input())
 
 
-def quick_create(type, filename):
-	filename = filename.strip().replace(' ', '-')
-	create((type, datetime.now(), filename,
-			'My new post', 'Summary of my new post', []))
+def quick_create(type, slug):
+	create(dict(
+		type=type,
+		date=datetime.datetime.now().strftime('%Y-%m-%d'),
+		slug=slug,
+		title='Hello world',
+		)
+	)
 
 
 if __name__ == '__main__':
-	parser = argparse.ArgumentParser(
-		description='Olaf Commandline content creator')
-	parser.add_argument(
-		'-post', type=str, help='Quickly create a post [required: slug/filename]')
-	parser.add_argument(
-		'-page', type=str, help='Quickly create a page [required: slug/filename]')
-	parser.add_argument(
-		'-t', '--time', action='store_true', help='Get unix time')
+	pass
+	# parser = argparse.ArgumentParser(
+	# 	description='Olaf Commandline content creator')
+	# parser.add_argument(
+	# 	'-post', type=str, help='Quickly create a post [required: slug/filename]')
+	# parser.add_argument(
+	# 	'-page', type=str, help='Quickly create a page [required: slug/filename]')
+	# parser.add_argument(
+	# 	'-t', '--time', action='store_true', help='Get unix time')
 
-	args = parser.parse_args()
+	# args = parser.parse_args()
 
-	if args.post:
-		quick_create('post', args.post)
-	elif args.page:
-		quick_create('page', args.page)
-	elif args.time:
-		console_message(get_unix_time(), 'OKGREEN')
-	else:
-		create_manually()
-"""
+	# if args.post:
+	# 	quick_create('post', args.post)
+	# elif args.page:
+	# 	quick_create('page', args.page)
+	# elif args.time:
+	# 	console_message(get_unix_time(), 'OKGREEN')
+	# else:
+	# 	create_manually()
