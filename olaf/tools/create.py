@@ -212,9 +212,11 @@ def create(data):
 		summary
 		tags [can be empty]
 	"""
+	if data.get('date'):
+		date_string = data['date'].strftime('%Y-%m-%d')
 
 	content_meta = {
-		'date': data.get('date'),
+		'date': date_string,
 		'title': data.get('title'),
 		'summary': data.get('summary', '')
 	}
@@ -224,7 +226,7 @@ def create(data):
 			current_dir, contents_dir, posts_dir)
 		content_path = os.path.join(
 			content_directory, data['slug'] + content_extension)
-		content_meta['tags'] = data.get('tags', [])
+		content_meta['tags'] = str(data.get('tags', []))
 	elif data['type'] == 'page':
 		content_directory = os.path.join(
 			current_dir, contents_dir, pages_dir)
@@ -256,15 +258,16 @@ def create(data):
 	# Write post meta to file
 	try:
 		with open(content_path, 'wb+') as f:
-			for meta_key, meta_value in content_meta:
+			for meta_key, meta_value in content_meta.iteritems():
 				f.write(meta_key + ': ' + meta_value + '\n')
 			f.write('\n' + 'Your content goes here, Happy blogging !!!')
 	except Exception as e:
+		raise
 		click.secho('unable to create content : {}'.format(e),
 			fg='red')
 		sys.exit(0)
 
-	click.secho('Successfully created content at : {}'
+	click.secho('Successfully created content at : {} '
 		'you can preview it on url /{}'.format(content_path, data['slug']),
 		fg='green')
 
@@ -290,8 +293,8 @@ def verbose_create():
 def quick_create(type, slug):
 	create(dict(
 		type=type,
-		date=datetime.now().strftime('%Y-%m-%d'),
-		slug=slug,
+		date=datetime.now(),
+		slug=slugify(slug),
 		title='Hello world',
 		)
 	)

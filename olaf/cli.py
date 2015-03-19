@@ -27,8 +27,6 @@ def cli():
 	"""
 	Olaf command line utility
 	"""
-	pass
-
 
 @cli.command()
 @click.argument('project_name', type=str, required=True)
@@ -226,30 +224,37 @@ def utils(pygments_styles, inbuilt_themes, themes):
 				click.secho(' - no custom themes available', fg='red')
 
 
-@cli.command()
-@click.argument(
-	'post', type=str, metavar='POST-SLUG',
-	help='quick create post cotent type by slug',)
-@click.argument(
-	'page', type=str, metavar='PAGE-SLUG',
-	help='quick create page cotent type by slug')
-@click.argument(
-	'verbose', count=True,
-	help='launch command line content creator')
-def create(post, page, verbose):
+@cli.group(invoke_without_command=True)
+@click.pass_context
+def create(ctx):
 	"""
 	content creator
 	"""
+	if ctx.invoked_subcommand is None:
+		# check for a valid site directory
+		is_valid_site()
+
+		from olaf.tools import create
+		create.verbose_create()
+
+@create.command()
+@click.option('-t', '--type', required=True,
+	type=click.Choice(['post', 'page']),
+	help='content type(either post or page)')
+@click.option(
+	'-s', '--slug', type=str, metavar='CONTENT-SLUG', required=True,
+	help='content slug(will also be the filename)',)
+def quick(type, slug):
+	"""
+	Quickly create a new content
+	"""
+	# check for a valid site directory
+	is_valid_site()
+
 	from olaf.tools import create
 
-	if post:
-		create.quick_create('post', post)
-
-	if page:
-		create.quick_create('page', page)
-
-	if verbose:
-		create.verbose_create()
+	if slug:
+		create.quick_create(type, slug)
 
 @cli.command()
 def importer():
