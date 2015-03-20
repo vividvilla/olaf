@@ -84,7 +84,10 @@ def run(theme, port, host):
 	"""
 
 	# check for a valid site directory
-	is_valid_site()
+	try:
+		is_valid_site()
+	except OSError:
+		sys.exit(1)
 
 	# get specified theme path
 	theme_name = get_default_theme_name(theme)
@@ -92,7 +95,7 @@ def run(theme, port, host):
 	if not theme_path:
 		# sepcified theme not found
 		click.secho(
-			'Sepcified theme "{}" not found'.format(theme_name), fg='red')
+			'Sepcified theme "{}" not found'.format(theme_path), fg='red')
 		sys.exit(1)
 
 	try:
@@ -100,6 +103,7 @@ def run(theme, port, host):
 		app_.run(port=port, host=host)
 	except ValueError as e:
 		click.secho(e, fg='red')
+		sys.exit(1)
 
 
 @cli.command()
@@ -109,14 +113,17 @@ def run(theme, port, host):
 	'-p', '--path', default='',
 	help='Freeze directory (default: current directory)')
 @click.option(
-	'-s', '--static', default=False, type=bool, help='Freeze with relative urls'
+	'-s', '--static', is_flag=True, help='Freeze with relative urls'
 	'(Run without web server) (default: False)')
 def freeze(theme, path, static):
 	"""
 	freeze blog to static files
 	"""
 	# check for a valid site directory
-	is_valid_site()
+	try:
+		is_valid_site()
+	except OSError:
+		sys.exit(1)
 
 	# get specified theme path
 	theme_name = get_default_theme_name(theme)
@@ -186,11 +193,11 @@ def cname(path):
 
 @cli.command()
 @click.option(
-	'-p', '--pygments-styles', count=True, help='Get list of pygments styles')
+	'-p', '--pygments-styles', is_flag=True, help='Get list of pygments styles')
 @click.option(
-	'-i', '--inbuilt-themes', count=True, help='Get list of inbuilt themes')
+	'-i', '--inbuilt-themes', is_flag=True, help='Get list of inbuilt themes')
 @click.option(
-	'-t', '--themes', count=True, help='Get list of all themes')
+	'-t', '--themes', is_flag=True, help='Get list of all themes')
 def utils(pygments_styles, inbuilt_themes, themes):
 	"""
 	olaf utils
@@ -239,7 +246,10 @@ def create(ctx):
 	"""
 	if ctx.invoked_subcommand is None:
 		# check for a valid site directory
-		is_valid_site()
+		try:
+			is_valid_site()
+		except OSError:
+			sys.exit(1)
 
 		from olaf.tools import create
 		create.verbose_create()
@@ -257,7 +267,10 @@ def quick(type, slug):
 	Quickly create a new content
 	"""
 	# check for a valid site directory
-	is_valid_site()
+	try:
+		is_valid_site()
+	except OSError:
+		sys.exit(1)
 
 	from olaf.tools import create
 

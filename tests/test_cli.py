@@ -36,12 +36,16 @@ class TestCli(unittest.TestCase):
 
 			self.assertEqual(result.exit_code, 0)
 
+			project_path = os.path.join(os.getcwd(), site_name)
+			posts_path = os.path.join(project_path, contents_dir, posts_dir)
+
+			config_path = os.path.join(project_path, 'config.py')
+			self.assertTrue(os.path.exists(config_path))
+
 			# try to create again
 			recreate = runner.invoke(cli.createsite, [site_name])
 			self.assertEqual(recreate.exit_code, 1)
 
-			project_path = os.path.join(os.getcwd(), site_name)
-			posts_path = os.path.join(project_path, contents_dir, posts_dir)
 
 			# check for created directory
 			self.assertTrue(os.path.isdir(project_path))
@@ -69,7 +73,33 @@ class TestCli(unittest.TestCase):
 
 
 	def test_run(self):
-		pass
+		runner = CliRunner()
+		with runner.isolated_filesystem():
+			self.assertEqual(
+				runner.invoke(cli.run).exit_code, 1)
+
+		# check with demo
+		with runner.isolated_filesystem():
+			site_name = self.get_random_string()
+			site = runner.invoke(cli.createsite, [site_name])
+			self.assertEqual(site.exit_code, 0)
+
+			project_path = os.path.join(os.getcwd(), site_name)
+
+			# change dir to project and run
+			with change_dir(project_path):
+				result = runner.invoke(cli.run)
+				self.assertEqual(result.exit_code, 0)
+
+				with_invalid_theme = runner.invoke(cli.run,
+					['--theme', 'invalid-theme'])
+				self.assertEqual(with_invalid_theme.exit_code, 1)
+
+				# need to write test for __init__ functions first
+				os.makedirs(os.path.join(project_path, 'themes', site_name))
+				with_valid_theme = runner.invoke(cli.run,
+					['--theme', site_name])
+				self.assertEqual(with_valid_theme.exit_code, 0)
 
 	def test_freeze(self):
 		pass

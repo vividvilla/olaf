@@ -46,8 +46,8 @@ def is_valid_site():
 		click.secho(
 			'Cannot find config file, please make sure'
 			' you are inside the site directory', fg='red')
-		sys.exit(0)
-
+		raise OSError('Cannot find config file, please make sure'
+			' you are inside the site directory')
 
 def get_themes_list(path):
 	"""
