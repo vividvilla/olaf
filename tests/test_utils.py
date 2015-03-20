@@ -10,9 +10,9 @@
 """
 
 import os
+import shutil
 import unittest
 import datetime
-import shutil
 
 from olaf import utils
 

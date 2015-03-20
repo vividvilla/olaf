@@ -87,7 +87,7 @@ def run(theme, port, host):
 		# sepcified theme not found
 		click.secho(
 			'Sepcified theme "{}" not found'.format(theme_name), fg='red')
-		sys.exit(0)
+		sys.exit(1)
 
 	try:
 		app_ = app.create_app(current_dir, theme_path)
@@ -119,7 +119,7 @@ def freeze(theme, path, static):
 		# sepcified theme not found
 		click.secho(
 			'Sepcified theme "{}" not found'.format(theme_name), fg='red')
-		sys.exit(0)
+		sys.exit(1)
 
 	if path:
 		path = os.path.join(current_dir, slugify(path))
