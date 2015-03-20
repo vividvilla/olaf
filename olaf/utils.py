@@ -17,10 +17,13 @@ from unicodedata import normalize
 
 def create_directory(path):
 	"""
-	create directories recursively
+	create multilevel directories
 	"""
 	if not os.path.isdir(path):
-		os.makedirs(path)
+		try:
+			os.makedirs(path)
+		except OSError:
+			raise
 	return path
 
 
@@ -47,11 +50,21 @@ def date_tostring(year, month, day=1, format='%d %b %Y'):
 	return date.strftime(format)
 
 
-def font_size(min, max, high, n):
+def font_size(min, max, high, current_value):
 	"""
 	calculate font size by min and max occurances
+	min - minimum output value
+	max - maximum output value
+	high - maximum input value
+	n - current occurances
 	"""
-	return (n / high) * (max - min) + min
+	if max < min:
+		raise ValueError('Max cannot be lesser then Min')
+
+	if current_value > high:
+		raise ValueError('current_value cannot be greatter then high_value')
+
+	return int((float(current_value) / high) * (max - min) + min)
 
 
 def slugify(text, encoding=None,
@@ -62,10 +75,13 @@ def slugify(text, encoding=None,
 	if isinstance(text, str):
 		text = text.decode(encoding or 'ascii')
 	clean_text = text.strip().replace(' ', '-').lower()
+
 	while '--' in clean_text:
 		clean_text = clean_text.replace('--', '-')
+
 	ascii_text = normalize('NFKD', clean_text).encode('ascii', 'ignore')
 	strict_text = map(lambda x: x if x in permitted_chars else '', ascii_text)
+
 	return ''.join(strict_text)
 
 

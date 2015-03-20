@@ -28,6 +28,7 @@ def cli():
 	Olaf command line utility
 	"""
 
+
 @cli.command()
 @click.argument('project_name', type=str, required=True)
 @click.option('-d', '--demo', type=bool, default=True)
@@ -237,6 +238,7 @@ def create(ctx):
 		from olaf.tools import create
 		create.verbose_create()
 
+
 @create.command()
 @click.option('-t', '--type', required=True,
 	type=click.Choice(['post', 'page']),
@@ -255,6 +257,7 @@ def quick(type, slug):
 
 	if slug:
 		create.quick_create(type, slug)
+
 
 @cli.command()
 def importer():
