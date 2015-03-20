@@ -16,13 +16,14 @@ import shutil
 import click
 
 default_theme = 'basic'
-current_dir = os.getcwd()
 module_path = os.path.dirname(os.path.abspath(__file__))
 contents_dir = '_contents'
 posts_dir = 'posts'
 pages_dir = 'pages'
 content_extension = '.md'
 
+def get_current_dir():
+	return os.getcwd()
 
 def is_valid_path(path):
 	"""
@@ -38,7 +39,7 @@ def is_valid_site():
 	"""
 	check if the current path is a valid site directory
 	"""
-	config_path = os.path.join(current_dir, 'config.py')
+	config_path = os.path.join(get_current_dir(), 'config.py')
 
 	# check if inside site directory
 	if not os.path.exists(config_path):
@@ -70,7 +71,7 @@ def get_theme_by_name(theme):
 	# get list of inbuilt themes
 	inbuilt_themes = get_themes_list(os.path.join(module_path, 'themes'))
 	# get list of custom themes
-	custom_themes = get_themes_list(os.path.join(current_dir, 'themes'))
+	custom_themes = get_themes_list(os.path.join(get_current_dir(), 'themes'))
 
 	# check for theme in inbuilt themes directory
 	theme_exists_in_inbuilt = [
@@ -87,7 +88,7 @@ def get_theme_by_name(theme):
 		theme_path = os.path.join(module_path, 'themes', theme)
 	elif theme_exists_in_custom:
 		# If theme not found in bundled themes then get from sites directory
-		theme_path = os.path.join(current_dir, 'themes', theme)
+		theme_path = os.path.join(get_current_dir(), 'themes', theme)
 
 	return theme_path
 
@@ -102,7 +103,7 @@ def get_default_theme_name(theme):
 		return theme
 
 	# load config file
-	config_path = os.path.join(current_dir, 'config.py')
+	config_path = os.path.join(get_current_dir(), 'config.py')
 	sys.path.append(os.path.dirname(os.path.expanduser(config_path)))
 	import config
 
@@ -117,37 +118,32 @@ def get_default_theme_name(theme):
 def create_project_site(project_name):
 	try:
 		# create project directory
-		os.mkdir(project_name)
+		os.mkdir(os.path.join(get_current_dir(), project_name))
 	except OSError as e:
-		click.secho('Error while creating site - {}'.format(e), fg='red')
-		sys.exit(0)
+		raise
 
 	try:
 		# copy config file
 		shutil.copyfile(
 			os.path.join(module_path, 'config-sample.py'),
-			os.path.join(current_dir, project_name, 'config.py'))
+			os.path.join(get_current_dir(), project_name, 'config.py'))
 	except IOError:
-		click.secho('Error while creating site - {}'.format(e), fg='red')
-		sys.exit(0)
+		raise
 
 	try:
 		# create init file
 		open(
-			os.path.join(current_dir, project_name, '__init__.py'), 'a'
+			os.path.join(get_current_dir(), project_name, '__init__.py'), 'a'
 		).close()
 		# disqus file
 		open(
-			os.path.join(current_dir, project_name, 'disqus.html'),
-			'a'
+			os.path.join(get_current_dir(), project_name, 'disqus.html'), 'a'
 		).close()
 		# create contents directory
-		os.mkdir(os.path.join(current_dir, project_name, contents_dir))
+		os.mkdir(os.path.join(get_current_dir(), project_name, contents_dir))
 		os.mkdir(
-			os.path.join(current_dir, project_name, contents_dir, 'posts'))
+			os.path.join(get_current_dir(), project_name, contents_dir, 'posts'))
 		os.mkdir(
-			os.path.join(current_dir, project_name, contents_dir, 'pages'))
+			os.path.join(get_current_dir(), project_name, contents_dir, 'pages'))
 	except OSError:
-		click.secho(
-			'Error while creating site - {}'.format(e), fg='red')
-		sys.exit(0)
+		raise

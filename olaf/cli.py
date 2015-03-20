@@ -15,9 +15,8 @@ import shutil
 
 import click
 
-from olaf import app
 from olaf.utils import slugify
-from olaf import module_path, current_dir, contents_dir, \
+from olaf import app, module_path, get_current_dir, contents_dir, \
 	is_valid_path, is_valid_site, get_themes_list, get_theme_by_name, \
 	get_default_theme_name, create_project_site
 
@@ -37,7 +36,14 @@ def createsite(project_name, demo):
 	create a blog
 	"""
 	project_name = slugify(project_name)  # santize project name
-	create_project_site(project_name)
+
+	try:
+		create_project_site(project_name)
+	except Exception as e:
+		click.secho(
+			'Error while creating site - {}'.format(e), fg='red')
+		sys.exit(1)
+
 	click.secho('site "{}" has been successfully created'.format(
 		project_name), fg='green')
 
@@ -46,19 +52,19 @@ def createsite(project_name, demo):
 		shutil.copyfile(
 			os.path.join(module_path, 'demo-files', 'hello-world.md'),
 			os.path.join(
-				current_dir, project_name, contents_dir,
+				get_current_dir(), project_name, contents_dir,
 				'posts', 'hello-world.md'))
 
 		shutil.copyfile(
 			os.path.join(module_path, 'demo-files', 'typography.md'),
 			os.path.join(
-				current_dir, project_name, contents_dir,
+				get_current_dir(), project_name, contents_dir,
 				'posts', 'typography.md'))
 
 		shutil.copyfile(
 			os.path.join(module_path, 'demo-files', 'sample-page.md'),
 			os.path.join(
-				current_dir, project_name, contents_dir,
+				get_current_dir(), project_name, contents_dir,
 				'pages', 'sample-page.md'))
 
 	click.secho('demo files successfully populated', fg='green')
@@ -90,7 +96,7 @@ def run(theme, port, host):
 		sys.exit(1)
 
 	try:
-		app_ = app.create_app(current_dir, theme_path)
+		app_ = app.create_app(get_current_dir(), theme_path)
 		app_.run(port=port, host=host)
 	except ValueError as e:
 		click.secho(e, fg='red')
@@ -122,14 +128,14 @@ def freeze(theme, path, static):
 		sys.exit(1)
 
 	if path:
-		path = os.path.join(current_dir, slugify(path))
+		path = os.path.join(get_current_dir(), slugify(path))
 	else:
-		path = current_dir
+		path = get_current_dir()
 
 	try:
 		# create app
 		app_ = app.create_app(
-			current_dir,
+			get_current_dir(),
 			theme_path,
 			freeze_path=path,
 			freeze_static=static)
@@ -156,8 +162,8 @@ def git(path, message, branch):
 	"""
 	Git uploader tool
 	"""
-	full_path = os.path.join(current_dir, path)
-	is_valid_path(os.path.join(current_dir, path))
+	full_path = os.path.join(get_current_dir(), path)
+	is_valid_path(os.path.join(get_current_dir(), path))
 
 	from olaf.tools import git
 	git.upload(full_path, message, branch)
@@ -171,8 +177,8 @@ def cname(path):
 	"""
 	Update CNAME file
 	"""
-	full_path = os.path.join(current_dir, path)
-	is_valid_path(os.path.join(current_dir, path))
+	full_path = os.path.join(get_current_dir(), path)
+	is_valid_path(os.path.join(get_current_dir(), path))
 
 	from olaf.tools import git
 	git.update_cname(full_path)
@@ -216,7 +222,7 @@ def utils(pygments_styles, inbuilt_themes, themes):
 
 		if themes:
 			custom_themes_list = get_themes_list(
-				os.path.join(current_dir, 'themes'))
+				os.path.join(get_current_dir(), 'themes'))
 			click.secho('list of custom themes', fg='blue', bold=True)
 			for theme in custom_themes_list:
 				click.echo(' - ' + theme['name'])
@@ -273,3 +279,6 @@ def export():
 	Export tools
 	"""
 	pass
+
+def sample():
+	return get_current_dir()
