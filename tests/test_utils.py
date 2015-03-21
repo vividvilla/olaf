@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-	utility tests
-	~~~~~~~~~~~~~
+	tests - utility
+	~~~~~~~~~~~~~~~
 
 	test cases for utility functions
 

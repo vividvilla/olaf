@@ -1,3 +1,14 @@
+# -*- coding: utf-8 -*-
+"""
+ 	tests - helper functions
+	~~~~~~~~~~~~~~~~~~~~~~~~
+
+	test cases for olaf helper function
+
+	:copyright: (c) 2015 by Vivek R.
+	:license: BSD, see LICENSE for more details.
+"""
+
 import os
 import unittest
 import random

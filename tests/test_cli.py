@@ -1,3 +1,14 @@
+# -*- coding: utf-8 -*-
+"""
+	tests - cli
+	~~~~~~~~~~~
+
+	test cases for click commandline functions
+
+	:copyright: (c) 2015 by Vivek R.
+	:license: BSD, see LICENSE for more details.
+"""
+
 import os
 import random
 import shutil
