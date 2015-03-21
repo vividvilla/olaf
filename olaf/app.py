@@ -330,8 +330,10 @@ def tags():
 	"""
 	list of tags view
 	"""
-	tags = [tag for post in contents
-				for tag in post.meta.get('tags', [])]
+	# import pdb; pdb.set_trace()
+	tags = [tag for post in contents if post.meta.get('tags')
+		for tag in post.meta['tags']]
+
 	tags = sorted(Counter(tags).items())  # Count tag occurances
 
 	max_occ = 0 if not tags else max([tag[1] for tag in tags])

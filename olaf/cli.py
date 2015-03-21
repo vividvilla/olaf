@@ -170,7 +170,10 @@ def git(path, message, branch):
 	Git uploader tool
 	"""
 	full_path = os.path.join(get_current_dir(), path)
-	is_valid_path(os.path.join(get_current_dir(), path))
+	try:
+		is_valid_path(os.path.join(get_current_dir(), path))
+	except OSError:
+		sys.exit(1)
 
 	from olaf.tools import git
 	git.upload(full_path, message, branch)
@@ -185,7 +188,10 @@ def cname(path):
 	Update CNAME file
 	"""
 	full_path = os.path.join(get_current_dir(), path)
-	is_valid_path(os.path.join(get_current_dir(), path))
+	try:
+		is_valid_path(os.path.join(get_current_dir(), path))
+	except OSError:
+		sys.exit(1)
 
 	from olaf.tools import git
 	git.update_cname(full_path)

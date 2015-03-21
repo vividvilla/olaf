@@ -11,34 +11,39 @@
 
 import os
 import shutil
+import random
+import string
 import unittest
 import datetime
 
-from olaf import utils
+import click
+from click.testing import CliRunner
 
+from olaf import utils
 
 class TestUtils(unittest.TestCase):
 	def setUp(self):
-		self.current_dir = os.path.dirname(os.path.abspath(__file__))
-		self.temp_dir = os.path.join(self.current_dir, 'tmp')
-		self.test_dir = os.path.join(self.current_dir, 'tmp/tmp1/tmp2')
+		self.runner = CliRunner()
 
 	def tearDown(self):
-		# if temp_dir created then delete it
-		if os.path.isdir(self.temp_dir):
-			shutil.rmtree(self.temp_dir)
+		pass
 
-		# if test_dir created then delete it
-		if os.path.isdir(self.test_dir):
-			shutil.rmtree(self.test_dir)
+	@staticmethod
+	def get_random_string():
+		return ''.join(random.choice(
+			string.ascii_lowercase + string.digits) for _ in range(10))
 
 	def test_create_directory(self):
-		# create directory
-		self.assertEqual(
-			utils.create_directory(self.test_dir), self.test_dir)
+		random_string = self.get_random_string()
+		with self.runner.isolated_filesystem():
+			temp_path = os.path.join(os.getcwd(), random_string)
 
-		# check for created directory
-		self.assertTrue(os.path.isdir(self.test_dir))
+			# create directory
+			self.assertEqual(
+				utils.create_directory(temp_path), temp_path)
+
+			# check for created directory
+			self.assertTrue(os.path.isdir(temp_path))
 
 	def test_date_tostring(self):
 		# default output format
@@ -84,7 +89,9 @@ class TestUtils(unittest.TestCase):
 			permitted_chars='@#$%-^&*()'), '@#$%-^&*()')
 
 	def test_change_dir(self):
-		os.mkdir(self.temp_dir)
-
-		with utils.change_dir(self.temp_dir):
-			self.assertEqual(self.temp_dir, os.getcwd())
+		random_string = self.get_random_string()
+		with self.runner.isolated_filesystem():
+			temp_path = os.path.join(os.getcwd(), random_string)
+			os.mkdir(temp_path)
+			with utils.change_dir(temp_path):
+				self.assertEqual(temp_path, os.getcwd())

@@ -12,7 +12,7 @@ from olaf.utils import change_dir
 
 class TestCli(unittest.TestCase):
 	def setUp(self):
-		pass
+		self.runner = CliRunner()
 
 	def tearDown(self):
 		pass
@@ -24,15 +24,14 @@ class TestCli(unittest.TestCase):
 
 	def test_createsite(self):
 
-		runner = CliRunner()
-		with runner.isolated_filesystem():
+		with self.runner.isolated_filesystem():
 			self.assertNotEqual(
-				runner.invoke(cli.createsite).exit_code, 0)
+				self.runner.invoke(cli.createsite).exit_code, 0)
 
 		# check with demo
-		with runner.isolated_filesystem():
+		with self.runner.isolated_filesystem():
 			site_name = self.get_random_string()
-			result = runner.invoke(cli.createsite, [site_name])
+			result = self.runner.invoke(cli.createsite, [site_name])
 
 			self.assertEqual(result.exit_code, 0)
 
@@ -43,7 +42,7 @@ class TestCli(unittest.TestCase):
 			self.assertTrue(os.path.exists(config_path))
 
 			# try to create again
-			recreate = runner.invoke(cli.createsite, [site_name])
+			recreate = self.runner.invoke(cli.createsite, [site_name])
 			self.assertEqual(recreate.exit_code, 1)
 
 
@@ -55,9 +54,9 @@ class TestCli(unittest.TestCase):
 
 
 		# check without demo
-		with runner.isolated_filesystem():
+		with self.runner.isolated_filesystem():
 			site_name = self.get_random_string()
-			result = runner.invoke(
+			result = self.runner.invoke(
 				cli.createsite, [site_name, '--demo', False])
 
 			self.assertEqual(result.exit_code, 0)
@@ -73,33 +72,32 @@ class TestCli(unittest.TestCase):
 
 
 	def test_run(self):
-		runner = CliRunner()
-		with runner.isolated_filesystem():
+		with self.runner.isolated_filesystem():
 			self.assertEqual(
-				runner.invoke(cli.run).exit_code, 1)
+				self.runner.invoke(cli.run).exit_code, 1)
 
 		# check with demo
-		with runner.isolated_filesystem():
+		with self.runner.isolated_filesystem():
 			site_name = self.get_random_string()
-			site = runner.invoke(cli.createsite, [site_name])
+			site = self.runner.invoke(cli.createsite, [site_name])
 			self.assertEqual(site.exit_code, 0)
 
 			project_path = os.path.join(os.getcwd(), site_name)
 
 			# change dir to project and run
 			with change_dir(project_path):
-				result = runner.invoke(cli.run)
+				result = self.runner.invoke(cli.run)
 				self.assertEqual(result.exit_code, 0)
 
-				with_invalid_theme = runner.invoke(cli.run,
+				with_invalid_theme = self.runner.invoke(cli.run,
 					['--theme', 'invalid-theme'])
 				self.assertEqual(with_invalid_theme.exit_code, 1)
 
 				# need to write test for __init__ functions first
-				os.makedirs(os.path.join(project_path, 'themes', site_name))
-				with_valid_theme = runner.invoke(cli.run,
-					['--theme', site_name])
-				self.assertEqual(with_valid_theme.exit_code, 0)
+				# os.makedirs(os.path.join(project_path, 'themes', site_name))
+				# with_valid_theme = runner.invoke(cli.run,
+				# 	['--theme', site_name])
+				# self.assertEqual(with_valid_theme.exit_code, 0)
 
 	def test_freeze(self):
 		pass

@@ -32,7 +32,8 @@ def is_valid_path(path):
 	if not os.path.exists(path):
 		click.secho(
 			'path "{}" does not exist'.format(path), fg='red')
-		sys.exit(0)
+		raise OSError('path "{}" does not exist'.format(path))
+	return True
 
 
 def is_valid_site():
