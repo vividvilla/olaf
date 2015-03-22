@@ -49,6 +49,7 @@ def is_valid_site():
 			' you are inside the site directory', fg='red')
 		raise OSError('Cannot find config file, please make sure'
 			' you are inside the site directory')
+	return True
 
 def get_themes_list(path):
 	"""
@@ -111,7 +112,7 @@ def get_default_theme_name(theme):
 	# If theme specified as option then ignore other rules
 	# else get from config file, if not found in config file set default theme
 	if config.SITE.get('theme'):
-		return config.SITE.get('theme')
+		return config.SITE['theme']
 	else:
 		return default_theme
 
@@ -143,8 +144,10 @@ def create_project_site(project_name):
 		# create contents directory
 		os.mkdir(os.path.join(get_current_dir(), project_name, contents_dir))
 		os.mkdir(
-			os.path.join(get_current_dir(), project_name, contents_dir, 'posts'))
+			os.path.join(get_current_dir(), project_name, contents_dir, posts_dir))
 		os.mkdir(
-			os.path.join(get_current_dir(), project_name, contents_dir, 'pages'))
+			os.path.join(get_current_dir(), project_name, contents_dir, pages_dir))
 	except OSError:
 		raise
+
+	return True
