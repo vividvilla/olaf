@@ -1,3 +1,4 @@
+import setuptools
 from setuptools import setup
 
 setup(
@@ -9,7 +10,6 @@ setup(
 	author='Vivek R',
 	author_email='vividvilla@gmail.com',
 	description='A static site generator based on flask and markdown',
-	packages=['olaf'],
 	platforms='any',
 	install_requires=[
 		'Click',
@@ -19,6 +19,8 @@ setup(
 		'Markdown',
 		'Pygments'
 	],
+	packages=['olaf', 'olaf.tools'],
+	include_package_data=True,
 	classifiers=[
 		'Development Status :: 1 - Alpha',
 		'Framework :: Flask',
@@ -31,8 +33,8 @@ setup(
 		'Topic :: Internet :: WWW/HTTP :: Dynamic Content'
 	],
 	entry_points={
-	'console_scripts': [
-		'olaf = olaf.cli:cli',
-	]
-}
+		'console_scripts': [
+			'olaf = olaf.cli:cli',
+			]
+		}
 )

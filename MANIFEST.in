@@ -1,0 +1,2 @@
+recursive-include olaf *.html *.css *.js *png *gif *jpg *.md *.xml *.py
+include LICENSE
