@@ -9,6 +9,7 @@ setup(
 	author='Vivek R',
 	author_email='vividvilla@gmail.com',
 	description='A static site generator based on flask and markdown',
+	packages=['olaf'],
 	platforms='any',
 	install_requires=[
 		'Click',
@@ -29,8 +30,9 @@ setup(
 		'Programming Language :: Python :: 2.7',
 		'Topic :: Internet :: WWW/HTTP :: Dynamic Content'
 	],
-	entry_points='''
-		[console_scripts]
-		olaf=olaf.cli:cli
-	'''
+	entry_points={
+	'console_scripts': [
+		'olaf = olaf.cli:cli',
+	]
+}
 )
