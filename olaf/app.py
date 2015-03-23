@@ -453,6 +453,16 @@ def recent_feed():
 		if post.meta.get('updated'):
 			updated = post.meta['updated']
 
+		# if its a date object convert to datetime object
+		# since tzinfo needed to create feeds
+		if isinstance(updated, datetime.date):
+			updated = datetime.datetime.combine(
+				updated, datetime.datetime.min.time())
+
+		if isinstance(dated, datetime.date):
+			dated = datetime.datetime.combine(
+				dated, datetime.datetime.min.time())
+
 		feed.add(
 			post.meta.get('title'),
 			unicode(post.html),

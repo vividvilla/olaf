@@ -15,9 +15,9 @@ import click
 import subprocess
 
 from olaf.utils import change_dir
-from olaf import current_dir, is_valid_site
+from olaf import get_current_dir, is_valid_site
 
-config_path = os.path.join(current_dir, 'config.py')
+config_path = os.path.join(get_current_dir(), 'config.py')
 
 # check for valid site directory
 is_valid_site()
