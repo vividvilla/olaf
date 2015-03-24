@@ -15,7 +15,7 @@ from datetime import datetime
 
 import click
 
-from olaf import contents_dir, posts_dir, pages_dir, current_dir, \
+from olaf import contents_dir, posts_dir, pages_dir, get_current_dir, \
 	content_extension
 from olaf.utils import slugify, create_directory
 
@@ -223,13 +223,13 @@ def create(data):
 
 	if data['type'] == 'post':
 		content_directory = os.path.join(
-			current_dir, contents_dir, posts_dir)
+			get_current_dir(), contents_dir, posts_dir)
 		content_path = os.path.join(
 			content_directory, data['slug'] + content_extension)
 		content_meta['tags'] = str(data.get('tags', []))
 	elif data['type'] == 'page':
 		content_directory = os.path.join(
-			current_dir, contents_dir, pages_dir)
+			get_current_dir(), contents_dir, pages_dir)
 		content_path = os.path.join(
 			content_directory, data['slug'] + content_extension)
 	else:

@@ -10,16 +10,15 @@
 """
 
 import os
-import shutil
 import random
 import string
 import unittest
 import datetime
 
-import click
 from click.testing import CliRunner
 
 from olaf import utils
+
 
 class TestUtils(unittest.TestCase):
 	def setUp(self):

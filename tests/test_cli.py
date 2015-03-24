@@ -11,15 +11,14 @@
 
 import os
 import random
-import shutil
 import unittest
 import string
 
-import click
 from click.testing import CliRunner
 
 from olaf import cli, contents_dir, posts_dir
 from olaf.utils import change_dir
+
 
 class TestCli(unittest.TestCase):
 	def setUp(self):
@@ -56,13 +55,11 @@ class TestCli(unittest.TestCase):
 			recreate = self.runner.invoke(cli.createsite, [site_name])
 			self.assertEqual(recreate.exit_code, 1)
 
-
 			# check for created directory
 			self.assertTrue(os.path.isdir(project_path))
 
 			# check for demo files
 			self.assertGreater(len(os.listdir(posts_path)), 0)
-
 
 		# check without demo
 		with self.runner.isolated_filesystem():
@@ -80,7 +77,6 @@ class TestCli(unittest.TestCase):
 
 			# check for demo files
 			self.assertEqual(len(os.listdir(posts_path)), 0)
-
 
 	def test_run(self):
 		with self.runner.isolated_filesystem():

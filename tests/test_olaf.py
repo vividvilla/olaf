@@ -10,15 +10,14 @@
 """
 
 import os
-import unittest
 import random
 import string
-import sys
+import unittest
 
-import click
 from click.testing import CliRunner
 
 import olaf
+
 
 class TestOlaf(unittest.TestCase):
 	def setUp(self):

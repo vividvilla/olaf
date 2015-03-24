@@ -8,6 +8,8 @@ SITE = {
 	# Site title
 	'title': 'Your blog title',
 
+	# assets folder
+	'assets': '',
 
 	# Theme specific settings
 

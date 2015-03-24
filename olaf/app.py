@@ -18,12 +18,12 @@ from urlparse import urljoin
 from flask_frozen import Freezer
 from werkzeug.contrib.atom import AtomFeed
 from flask import render_template, abort, redirect, url_for, \
-	request, make_response, current_app, Blueprint
+	request, make_response, current_app, Blueprint, send_from_directory
 from flask_flatpages import FlatPages, pygments_style_defs
 
-from olaf import contents_dir, content_extension
+from olaf import contents_dir, content_extension, get_current_dir
 from olaf.utils import timestamp_tostring, date_tostring, \
-	font_size, date_format
+	font_size, date_format, create_directory
 
 # initialize extensions
 freeze = Freezer()
@@ -245,6 +245,23 @@ def pygments_css():
 	return (pygments_style_defs(pyments_style), 200, {'Content-Type': 'text/css'})
 
 exclude_from_sitemap.append('/pygments.css')  # Excludes url from sitemap
+
+
+@app.route('/assets/<path:filename>')
+def custom_static(filename):
+	"""
+	custom assets folder
+	"""
+	# custom assets folder
+	assets_path = os.path.join(
+		get_current_dir(),
+		current_app.config['SITE'].get('assets') or 'assets')
+
+	# create assets folder if not there
+	if not os.path.exists(assets_path):
+		create_directory(assets_path)
+
+	return send_from_directory(assets_path, filename)
 
 
 def get_index():

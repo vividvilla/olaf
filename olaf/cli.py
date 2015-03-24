@@ -298,6 +298,3 @@ def export():
 	Export tools
 	"""
 	pass
-
-def sample():
-	return get_current_dir()

@@ -22,8 +22,10 @@ posts_dir = 'posts'
 pages_dir = 'pages'
 content_extension = '.md'
 
+
 def get_current_dir():
 	return os.getcwd()
+
 
 def is_valid_path(path):
 	"""
@@ -50,6 +52,7 @@ def is_valid_site():
 		raise OSError('Cannot find config file, please make sure'
 			' you are inside the site directory')
 	return True
+
 
 def get_themes_list(path):
 	"""
@@ -121,7 +124,7 @@ def create_project_site(project_name):
 	try:
 		# create project directory
 		os.mkdir(os.path.join(get_current_dir(), project_name))
-	except OSError as e:
+	except OSError:
 		raise
 
 	try:
