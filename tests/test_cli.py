@@ -107,25 +107,50 @@ class TestCli(unittest.TestCase):
 				# self.assertEqual(with_valid_theme.exit_code, 0)
 
 	def test_freeze(self):
-		pass
+		with self.runner.isolated_filesystem():
+			self.assertEqual(
+				self.runner.invoke(cli.freeze).exit_code, 1)
 
-	def test_git(self):
-		pass
+		with self.runner.isolated_filesystem():
+			site_name = self.get_random_string()
+			result = self.runner.invoke(cli.createsite, [site_name])
+			self.assertEqual(result.exit_code, 0)
 
-	def test_cname(self):
-		pass
+			with change_dir(os.path.join(os.getcwd(), site_name)):
+				self.assertEqual(
+					self.runner.invoke(cli.freeze).exit_code, 0)
 
-	def test_utils(self):
-		pass
+				result_invalid_theme = self.runner.invoke(cli.freeze,
+					['--theme', self.get_random_string()])
+				self.assertEqual(result_invalid_theme.exit_code, 1)
 
-	def test_content_create(self):
-		pass
+				self.assertEqual(
+					self.runner.invoke(cli.freeze, ['-s']).exit_code, 0)
 
-	def test_quick_content_create(self):
-		pass
+				random_path = self.get_random_string()
+				result_with_path = self.runner.invoke(cli.freeze,
+					['-p', random_path])
 
-	def test_importer(self):
-		pass
+				self.assertGreater(len(os.listdir(random_path)), 0)
 
-	def test_exporter(self):
-		pass
+
+	# def test_git(self):
+	# 	pass
+
+	# def test_cname(self):
+	# 	pass
+
+	# def test_utils(self):
+	# 	pass
+
+	# def test_content_create(self):
+	# 	pass
+
+	# def test_quick_content_create(self):
+	# 	pass
+
+	# def test_importer(self):
+	# 	pass
+
+	# def test_exporter(self):
+	# 	pass

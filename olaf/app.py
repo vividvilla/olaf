@@ -11,10 +11,10 @@
 
 import os
 import datetime
+from urlparse import urljoin
 from collections import Counter, OrderedDict
 
 from flask import Flask
-from urlparse import urljoin
 from flask_frozen import Freezer
 from werkzeug.contrib.atom import AtomFeed
 from flask import render_template, abort, redirect, url_for, \
@@ -176,7 +176,7 @@ def get_posts(**filters):
 	tag = filters.get('tag')
 	if(tag):
 		posts = [post for post in posts
-			if tag in post.meta.get('tags', [])]
+			if tag in (post.meta.get('tags') or [])]
 
 	# Filter based on year and month
 	year = filters.get('year')

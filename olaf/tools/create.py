@@ -21,6 +21,9 @@ from olaf.utils import slugify, create_directory
 
 
 def get_confirmation(message, fallback='error', fg=''):
+	"""
+	Get user get_confirmation
+	"""
 	click.secho(message + ' (y/n) : ', nl=False, fg=fg)
 	choice = click.getchar()
 	click.echo()
@@ -37,6 +40,9 @@ def get_confirmation(message, fallback='error', fg=''):
 
 def retry(force_retry=False, fallback=None,
 	retry_message='do you want to retry?', return_check=None):
+	"""
+	Decorator which helps to repeat a teask untill the function returns true output
+	"""
 	def retry_decorator(func):
 		def decorated_function(*args, **kwargs):
 			while True:
@@ -287,10 +293,16 @@ def create(data):
 
 
 def verbose_create():
+	"""
+	Initiate detailed post creation process
+	"""
 	create(get_input())
 
 
 def quick_create(type, slug):
+	"""
+	create post or page quickly with some sensible defaults
+	"""
 	create(dict(
 		type=type,
 		date=datetime.now(),
@@ -298,26 +310,3 @@ def quick_create(type, slug):
 		title='Hello world',
 		)
 	)
-
-
-if __name__ == '__main__':
-	pass
-	# parser = argparse.ArgumentParser(
-	# 	description='Olaf Commandline content creator')
-	# parser.add_argument(
-	# 	'-post', type=str, help='Quickly create a post [required: slug/filename]')
-	# parser.add_argument(
-	# 	'-page', type=str, help='Quickly create a page [required: slug/filename]')
-	# parser.add_argument(
-	# 	'-t', '--time', action='store_true', help='Get unix time')
-
-	# args = parser.parse_args()
-
-	# if args.post:
-	# 	quick_create('post', args.post)
-	# elif args.page:
-	# 	quick_create('page', args.page)
-	# elif args.time:
-	# 	console_message(get_unix_time(), 'OKGREEN')
-	# else:
-	# 	create_manually()
