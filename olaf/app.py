@@ -455,14 +455,17 @@ def recent_feed():
 	"""
 	atom feed generator
 	"""
-	feed = AtomFeed('Recent Articles',
-					feed_url=request.url, url=request.url_root)
 	posts, max_page = get_posts()
 	feed_limit = current_app.config['SITE'].get('feed_limit', 10)
 
 	domain_url = current_app.config['SITE'].get('domain_url')
 	if not domain_url:
 		domain_url = request.url_root
+
+	feed = AtomFeed('Recent Articles',
+					url=domain_url,
+					feed_url=urljoin(domain_url, '/recent.atom'),
+					id=urljoin(domain_url, '/recent.atom'))
 
 	for post in posts[:feed_limit]:
 		dated = post.meta['date']
@@ -489,7 +492,8 @@ def recent_feed():
 					current_app.config['SITE'].get('author', []))),
 			url=urljoin(domain_url, post.slug),
 			updated=updated,
-			published=dated)
+			published=dated,
+			xml_base=urljoin(domain_url, '/recent.atom'))
 
 	return feed.get_response()
 
