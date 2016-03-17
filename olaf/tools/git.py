@@ -13,6 +13,7 @@ import os
 import sys
 import click
 import subprocess
+from urlparse import urlparse
 
 from olaf.utils import change_dir
 from olaf import get_current_dir, is_valid_site
@@ -37,9 +38,10 @@ def update_cname(path):
 	else delete CNAME file.
 	"""
 
-	if config.SITE.get('github_domain'):
+	if config.SITE.get('domain_url'):
+		domain_url = urlparse(config.SITE['domain_url']).netloc
 		f = open(os.path.join(path, 'CNAME'), 'w+')
-		f.write(config.SITE['github_domain'])
+		f.write(domain_url)
 		f.close()
 		click.secho('CNAME updated', fg='green')
 	else:
