@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
 	name='olaf',
-	version='1.0.0',
+	version='1.0.1',
 	url='https://github.com/vividvilla/olaf',
 	pymodules=['olaf'],
 	license='BSD',

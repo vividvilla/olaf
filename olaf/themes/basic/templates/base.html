@@ -23,7 +23,7 @@
 		<link rel="stylesheet" href="{{ url_for('app.pygments_css') }}">
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/skeleton.css') }}">
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-		{% if config.enforce_ssl %}
+		{% if config.SITE.enforce_ssl %}
 		<!-- Enforce ssl -->
 		<script type="text/javascript">
 			var host = "{{ config.SITE.domain_url }}";
