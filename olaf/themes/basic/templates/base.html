@@ -1,17 +1,19 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+	<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+	<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+	<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+	<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<title>{% block page_title %}Home{% endblock %} - {{ config.SITE.title }}</title>
 		<meta itemprop="description" name="description" content="{% block page_description %}{{config.SITE.description}}{% endblock %}">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
 
+		<link rel="canonical" href="{{ config.domain_url }}" />
+		<link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
 		<link href="{{ url_for('app.recent_feed') }}" rel="alternate" title="Recent Changes" type="application/atom+xml">
+
 		<!-- Fonts -->
 		<link href="//fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic" rel="stylesheet" type="text/css">
 		<link href="//fonts.googleapis.com/css?family=Raleway:500,100,300" rel="stylesheet" type="text/css">
@@ -21,6 +23,15 @@
 		<link rel="stylesheet" href="{{ url_for('app.pygments_css') }}">
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/skeleton.css') }}">
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+		{% if config.enforce_ssl %}
+		<!-- Enforce ssl -->
+		<script type="text/javascript">
+			var host = "{{ domain_url }}";
+			if ((host.indexOf(window.location.host) !== -1) && (window.location.protocol != "https:"))
+				window.location.protocol = "https";
+		</script>
+		{% endif %}
 
 		<!-- Js files -->
 		<script src="{{ url_for('static', filename='js/vendor/modernizr-2.6.2.min.js') }}"></script>

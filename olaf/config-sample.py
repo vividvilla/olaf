@@ -53,6 +53,11 @@ SITE = {
 	# defaults to host name of the app("localhost")
 	'domain_url': 'http://vivek.github.io',
 
+	# enforce SSL
+	# if ssl enforced then canonical link will be added and users will redireced to ssl version of the site
+	# please make sure domain_url has https:// if its enabled
+	'enforce_ssl': False,
+
 	# Domain name to be used for Github pages
 	# If setting changed run "olaf cname" from site root directory to update CNAME file
 	'github_domain': 'vivek.github.io',
