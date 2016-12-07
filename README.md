@@ -49,8 +49,9 @@ Markdown files can be directly edited to modify existing contents.
 You can edit site settings such as title, description etc from `config.py` file.
 
 ## Features in pipeline
-	- Ghost/WordPress like GUI content creator/editor
-	- Admin tools
-	- Themes ecosystem
-	- Migration tools for popular blog such as WordPress
-	- PDF Generator (Publish entire site as a ebook)
+
+- Ghost/WordPress like GUI content creator/editor
+- Admin tools
+- Themes ecosystem
+- Migration tools for popular blog such as WordPress
+- PDF Generator (Publish entire site as a ebook)
