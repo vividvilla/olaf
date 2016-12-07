@@ -41,8 +41,8 @@ Olaf is a simple static site generator written on Python. You can run dynamic bl
 
 		olaf create
 
-Contents are stored as a markdown formatted file at `_contents` folder.
-So you can directly edit the markdown files to edit existing contents.
+Contents are stored as a markdown formatted files in `_contents` folder.
+Markdown files can be directly edited to modify existing contents.
 
 ## What to do next
 
