@@ -7,7 +7,7 @@ setup(
 	version='1.0.1',
 	url='https://github.com/vividvilla/olaf',
 	pymodules=['olaf'],
-	license='BSD',
+	license='MIT',
 	author='Vivek R',
 	author_email='vividvilla@gmail.com',
 	description='A static site generator based on flask and markdown',
