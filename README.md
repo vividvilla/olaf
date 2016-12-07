@@ -1,25 +1,24 @@
 # Olaf
 
-Simple static site generator based on Python. 
-Run dynamic blog locally and freeze it as static pages which can be hosted anywhere including Github.
+Olaf is a simple static site generator written on Python. You can run dynamic blog locally and freeze it as static pages which can be hosted anywhere including Github.
 
 ## [Demo blog](http://olaf.vivekr.net)
 
-## Basic features
-	- Markdown support
-	- Content types (Posts and pages)
-	- Custom content slug
-	- Custom home page
-	- Tags and Archives list
-	- Synatx highlighting
-	- Disqus comments
-	- XML sitemap
-	- Atom feed
-	- Google Analytics integration
-	- Custom themes
-	- Commandline tool for content creation
-	- Host it on Github
-	
+## Features
+- Markdown support
+- Content types (Posts and pages)
+- Custom content slug
+- Custom home page
+- Tags and Archives list
+- Synatx highlighting
+- Disqus comments
+- XML sitemap
+- Atom feed
+- Google Analytics integration
+- Custom themes
+- Commandline tool for content creation
+- Host it on Github
+
 ## Get started
 
 1. Install from pip
@@ -47,8 +46,7 @@ So you can directly edit the markdown files to edit existing contents.
 
 ## What to do next
 
-1. You can edit site settings such as title, description etc from `config.py` file.
-2. Edit file 
+You can edit site settings such as title, description etc from `config.py` file.
 
 ## Features in pipeline
 	- Ghost/WordPress like GUI content creator/editor

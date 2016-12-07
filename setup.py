@@ -1,5 +1,7 @@
 from setuptools import setup
 
+README = open('README.md').read()
+
 setup(
 	name='getolaf',
 	version='1.0.1',
@@ -9,6 +11,7 @@ setup(
 	author='Vivek R',
 	author_email='vividvilla@gmail.com',
 	description='A static site generator based on flask and markdown',
+	long_description=README,
 	platforms='any',
 	install_requires=[
 		'Click',
