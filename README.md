@@ -1,72 +1,58 @@
-### Olaf - because some blogs are worth freezing for.
+# Olaf
 
-Olaf freezes your complex and slower dynamic blog to simple and faster static blog. BTW its not made of ice but Python(Flask).
+Simple static site generator based on Python. 
+Run dynamic blog locally and freeze it as static pages which can be hosted anywhere including Github.
 
-![Olaf blinking](http://i.imgur.com/wIZFNMa.gif "Olaf")
+## [Demo blog](http://olaf.vivekr.net)
 
-### Basic features
+## Basic features
 	- Markdown support
-	- Posts
-	- Pages
+	- Content types (Posts and pages)
 	- Custom content slug
-	- Tags
-	- Archives
+	- Custom home page
+	- Tags and Archives list
 	- Synatx highlighting
-	- Comments (Disqus)
+	- Disqus comments
 	- XML sitemap
 	- Atom feed
 	- Google Analytics integration
-	- Minimal design with responsive layout
-	- Custom home page
-
-### Other features
-	- Github pages uploader
-	- Commandline content generator
-
-### Features you can expect in future
-	- Ghost/WordPress like GUI content creator editor
-	- Admin tools
 	- Custom themes
-	- Importers for other blogging platforms
+	- Commandline tool for content creation
+	- Host it on Github
+	
+## Get started
+
+1. Install from pip
+
+		pip install getolaf
+		
+2. Create a blog
+
+		olaf createsite myblog
+
+3. Change directory to `myblog` and Run dev server
+
+		olaf run --port 3000
+
+4. Freeze the current version
+
+		olaf freeze
+
+5. Create content via Commandline
+
+		olaf create
+
+Contents are stored as a markdown formatted file at `_contents` folder.
+So you can directly edit the markdown files to edit existing contents.
+
+## What to do next
+
+1. You can edit site settings such as title, description etc from `config.py` file.
+2. Edit file 
+
+## Features in pipeline
+	- Ghost/WordPress like GUI content creator/editor
+	- Admin tools
+	- Themes ecosystem
+	- Migration tools for popular blog such as WordPress
 	- PDF Generator (Publish entire site as a ebook)
-	- 301 redirect url
-
-### To do's
-
-- [x] Posts
-- [x] Pages
-- [x] Tags
-- [x] Pagination to index
-- [x] Pagination to tags
-- [x] Date based archives
-- [x] Pagination for archives
-- [x] Basic theming
-- [x] Native syntax highlighting
-- [x] Atom feeds
-- [x] Disqus comments
-- [x] Google analytics integration
-- [x] XML sitemap
-- [x] Github pages uploader
-- [x] Github custom domain adder
-- [x] custom 404 page
-- [x] Favicon
-- [x] Mobile responsive design
-- [x] Set page description tag for SEO
-- [ ] Google CSE integration // Later
-- [x] Clean up api (posts and page)
-- [ ] Unit tests
-- [ ] Document example settings
-- [ ] Project Documentation
-- [x] Package as a installer
-- [x] Pluggable themes
-
-- [x] Cli post creator
-	- [x] New posts
-	- [ ] Edit posts
-	- [ ] Delete posts
-
-- [ ] Visual post creator
-	- [ ] New posts
-	- [ ] Edit posts
-	- [ ] Delete posts
-	- [ ] markdown preview

@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(
-	name='olaf',
+	name='getolaf',
 	version='1.0.1',
 	url='https://github.com/vividvilla/olaf',
 	pymodules=['olaf'],
@@ -21,7 +21,6 @@ setup(
 	packages=['olaf', 'olaf.tools'],
 	include_package_data=True,
 	classifiers=[
-		'Development Status :: 1 - Alpha',
 		'Framework :: Flask',
 		'Environment :: Console',
 		'Environment :: Web Environment',
