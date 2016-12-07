@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title type="text">Recent Articles</title>
+  <id>http://vivek.github.io/recent.atom</id>
+  <updated>2015-03-10T00:00:00Z</updated>
+  <link href="http://vivek.github.io" />
+  <link href="http://vivek.github.io/recent.atom" rel="self" />
+  <generator>Werkzeug</generator>
+  <entry xml:base="http://vivek.github.io/recent.atom">
+    <title type="text">Hello world!</title>
+    <id>http://vivek.github.io/hello-world</id>
+    <updated>2015-03-10T00:00:00Z</updated>
+    <published>2015-03-09T00:00:00Z</published>
+    <link href="http://vivek.github.io/hello-world" />
+    <author>
+      <name>Your name</name>
+    </author>
+    <content type="html">&lt;p&gt;Your content goes here, Happy blogging !!!&lt;/p&gt;
+&lt;p&gt;Olaf is super simple to setup and use, Learn handy commands &lt;a href=&quot;http://olaf.com&quot;&gt;here&lt;/a&gt;&lt;/p&gt;</content>
+  </entry>
+  <entry xml:base="http://vivek.github.io/recent.atom">
+    <title type="text">Typography</title>
+    <id>http://vivek.github.io/typography</id>
+    <updated>2015-01-01T00:00:00Z</updated>
+    <published>2015-01-01T00:00:00Z</published>
+    <link href="http://vivek.github.io/typography" />
+    <author>
+      <name>Your name</name>
+    </author>
+    <content type="html">&lt;p&gt;Lid est laborum et dolorum fuga. Et harum quidem rerum facilis est et expeditasi distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihilse impedit quo minus id quod amets untra dolor amet sad. Sed ut perspser iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laste. Dolores sadips ipsums sits.&lt;/p&gt;
+&lt;h1&gt;Heading 1&lt;/h1&gt;
+&lt;p&gt;Lid est laborum et dolorum fuga. Et harum quidem rerum facilis est et expeditasi distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihilse impedit quo minus id quod amets untra dolor amet sad. Sed ut perspser iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laste. Dolores sadips ipsums sits.&lt;/p&gt;
+&lt;h2&gt;Heading 2&lt;/h2&gt;
+&lt;p&gt;Lid est laborum et dolorum fuga. Et harum quidem rerum facilis est et expeditasi distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihilse impedit quo minus id quod amets untra dolor amet sad. Sed ut perspser iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laste. Dolores sadips ipsums sits.&lt;/p&gt;
+&lt;h3&gt;Heading 3&lt;/h3&gt;
+&lt;p&gt;Lid est laborum et dolorum fuga. Et harum quidem rerum facilis est et expeditasi distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihilse impedit quo minus id quod amets untra dolor amet sad. Sed ut perspser iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laste. Dolores sadips ipsums sits.&lt;/p&gt;
+&lt;h4&gt;Heading 4&lt;/h4&gt;
+&lt;p&gt;Lid est laborum et dolorum fuga. Et harum quidem rerum facilis est et expeditasi distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihilse impedit quo minus id quod amets untra dolor amet sad. Sed ut perspser iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laste. Dolores sadips ipsums sits.&lt;/p&gt;
+&lt;h5&gt;Heading 5&lt;/h5&gt;
+&lt;p&gt;Lid est laborum et dolorum fuga. Et harum quidem rerum facilis est et expeditasi distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihilse impedit quo minus id quod amets untra dolor amet sad. Sed ut perspser iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laste. Dolores sadips ipsums sits.&lt;/p&gt;
+&lt;h6&gt;Heading 6&lt;/h6&gt;
+&lt;p&gt;Lid est laborum et dolorum fuga. Et harum quidem rerum facilis est et expeditasi distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihilse impedit quo minus id quod amets untra dolor amet sad. Sed ut perspser iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laste. Dolores sadips ipsums sits.&lt;/p&gt;
+&lt;h2&gt;Typography&lt;/h2&gt;
+&lt;p&gt;Lid est laborum et dolorum fuga, This is &lt;a href=&quot;http://example.com/&quot; title=&quot;Title&quot;&gt;an example&lt;/a&gt; inline link. Et harum quidem rerum facilis, &lt;strong&gt;This is bold&lt;/strong&gt; and &lt;em&gt;emphasis&lt;/em&gt; cumque nihilse impedit quo minus id quod amets untra dolor amet sad. While this is &lt;code&gt;code block()&lt;/code&gt; and following is a &lt;code&gt;pre&lt;/code&gt; tag&lt;/p&gt;
+&lt;div class=&quot;codehilite&quot;&gt;&lt;pre&gt;print &amp;#39;this is pre tag&amp;#39;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Following is the syntax highlighted code block&lt;/p&gt;
+&lt;table class=&quot;codehilitetable&quot;&gt;&lt;tr&gt;&lt;td class=&quot;linenos&quot;&gt;&lt;div class=&quot;linenodiv&quot;&gt;&lt;pre&gt;1
+2&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;div class=&quot;codehilite&quot;&gt;&lt;pre&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;hello_world&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;hello world !!!&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+
+&lt;p&gt;This is blockquote, Will make it better now&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;'I want to do with you what spring does with the cherry trees.' &lt;cite&gt;cited ~Pablo Neruda&lt;/cite&gt;*&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Unordered list&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Red&lt;/li&gt;
+&lt;li&gt;Green&lt;/li&gt;
+&lt;li&gt;Blue&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Ordered list&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Red&lt;/li&gt;
+&lt;li&gt;Green&lt;/li&gt;
+&lt;li&gt;Blue&lt;/li&gt;
+&lt;/ol&gt;</content>
+  </entry>
+</feed>
