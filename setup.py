@@ -1,10 +1,11 @@
+from codecs import open
 from setuptools import setup
 
-README = open('README.md').read()
+README = open('README.rst').read()
 
 setup(
 	name='getolaf',
-	version='1.0.1',
+	version='1.0.2',
 	url='https://github.com/vividvilla/olaf',
 	pymodules=['olaf'],
 	license='MIT',
